@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageOnBoarding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/tricolor"/>
+
+        <!-- NOTE font Available from android 4.1 API level 16
+        android:fontFamily="sans-serif-medium"
+        android:fontFamily="sans-serif"-->
+
+        <TextView
+            android:id="@+id/titleOnBoarding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Quick orders"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/subtitleOnBoarding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="bla bla bla bla bla bla"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
+
+</FrameLayout>
