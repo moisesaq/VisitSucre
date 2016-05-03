@@ -12,12 +12,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.apaza.moises.visitsucre.fragment.LoginFragment;
 import com.apaza.moises.visitsucre.fragment.OnBoardingFragment;
+import com.apaza.moises.visitsucre.fragment.SignUpFragment;
 
-public class SignUpActivity extends AppCompatActivity implements OnBoardingFragment.OnBoardingFragmentListener{
+public class SignUpActivity extends AppCompatActivity implements OnBoardingFragment.OnBoardingFragmentListener,
+                                                                    LoginFragment.OnLoginFragmentListener,
+                                                                    SignUpFragment.OnSignUpFragmentListener{
 
     Toolbar toolbar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,19 +33,17 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
     public void showFragment(Fragment fragment){
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        if(fragment instanceof OnBoardingFragment){
-            toolbar.setVisibility(View.GONE);
-        }else{
-            toolbar.setVisibility(View.VISIBLE);
-
-        }
         ft.addToBackStack(fragment.getClass().getSimpleName());
         ft.replace(R.id.containerSignUp, fragment);
         ft.commit();
     }
 
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem menuItem = menu.findItem(android.R.id.home);
+        /*View view = menuItem.setAction*/
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -56,24 +57,45 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onBackPressed() {
-        if(getFragmentManager().getBackStackEntryCount()>1){
-            getFragmentManager().popBackStack();
-        }else{
-            finish();
-        }
-    }
-
     //Methods override of OnBoardingFragment
     @Override
     public void onSignUpClick() {
-        //showFragment(SignUpFragment.newInstance(""));
+        showFragment(SignUpFragment.newInstance(""));
     }
 
     @Override
     public void onAccessClick() {
-        //showFragment(LoginFragment.newInstance());
+        showFragment(LoginFragment.newInstance());
+    }
+
+    //Methods override of LoginFragment
+    @Override
+    public void onForgotPasswordClick() {
+
+    }
+
+    @Override
+    public void onSignUpFromLoginClick() {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getFragmentManager().getBackStackEntryCount() > 1)
+            getFragmentManager().popBackStack();
+        else
+            finish();
+    }
+
+    //Methods override of SignUpFragment
+    @Override
+    public void onCreateAccountClick() {
+
+    }
+
+    @Override
+    public void onAccessFromSignUpClick() {
+
     }
 
 }

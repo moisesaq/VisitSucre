@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,8 @@ import me.relex.circleindicator.CircleIndicator;
 public class OnBoardingFragment extends Fragment implements View.OnClickListener, RippleView.OnRippleCompleteListener{
 
     private View view;
-
     private OnBoardingFragmentListener mListener;
+    private Toolbar toolbar;
 
     public static OnBoardingFragment newInstance() {
         OnBoardingFragment fragment = new OnBoardingFragment();
@@ -42,6 +43,7 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        toolbar = (Toolbar)getActivity().findViewById(R.id.toolbar);
     }
 
     @Override
@@ -104,6 +106,12 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
                 mListener.onAccessClick();
                 break;
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        toolbar.setVisibility(View.GONE);
     }
 
     public interface OnBoardingFragmentListener {

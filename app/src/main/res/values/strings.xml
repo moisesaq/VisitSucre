@@ -23,4 +23,5 @@
     <string name="last_name">Last Name</string>
     <string name="phone">Phone number</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="or_create_account">Or create an account</string>
 </resources>
