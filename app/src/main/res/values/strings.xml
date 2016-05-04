@@ -24,4 +24,8 @@
     <string name="phone">Phone number</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="or_create_account">Or create an account</string>
+    <string name="foods">Foods</string>
+    <string name="hotel">Hotel</string>
+    <string name="config">Setting</string>
+    <string name="log_out">Logout</string>
 </resources>

@@ -2,6 +2,7 @@ package com.apaza.moises.visitsucre.fragment;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.andexert.library.RippleView;
+import com.apaza.moises.visitsucre.MainActivity;
 import com.apaza.moises.visitsucre.R;
 
 
@@ -94,6 +96,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener, Rip
                 break;
             case R.id.login:
                 Toast.makeText(getActivity(), "Login", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+                getActivity().finish();
                 break;
             case R.id.forgotPassword:
                 mListener.onForgotPasswordClick();
