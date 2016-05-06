@@ -12,12 +12,25 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private DrawerLayout drawerLayout;
     private String drawerTitle;
     private ActionBar actionBar;
+    private TextView text;
+    private Button connect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +39,42 @@ public class MainActivity extends AppCompatActivity {
         setupToolbar();
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayout);
         NavigationView navigationView = (NavigationView)findViewById(R.id.navView);
+
+        text = (TextView)findViewById(R.id.text);
+        connect = (Button)findViewById(R.id.connect);
+        connect.setOnClickListener(this);
+    }
+
+
+
+    @Override
+    public void onClick(View view){
+        if(view.getId() == connect.getId()){
+            testVolley();
+        }
+    }
+
+    private void testVolley(){
+        try{
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            String url = "http://192.168.1.100:3000/api/placesSucre";
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            text.setText(response.toString());
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            text.setText("Error: " + error.toString());
+                        }
+                    });
+            requestQueue.add(jsonObjectRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
