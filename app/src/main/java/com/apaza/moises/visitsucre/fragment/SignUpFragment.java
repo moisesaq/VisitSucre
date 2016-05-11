@@ -2,6 +2,7 @@ package com.apaza.moises.visitsucre.fragment;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -113,12 +114,12 @@ public class SignUpFragment extends Fragment implements RippleView.OnRippleCompl
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (OnSignUpFragmentListener) activity;
+            mListener = (OnSignUpFragmentListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnSignUpFragmentListener");
         }
     }

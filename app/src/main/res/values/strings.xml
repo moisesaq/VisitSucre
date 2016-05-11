@@ -28,4 +28,7 @@
     <string name="hotel">Hotel</string>
     <string name="config">Setting</string>
     <string name="log_out">Logout</string>
+    <string name="register">Register</string>
+    <string name="address">Address</string>
+    <string name="description">Description</string>
 </resources>

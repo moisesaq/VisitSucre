@@ -16,4 +16,7 @@
     <string name="last_name">Apellido</string>
     <string name="name">Nombre</string>
     <string name="phone">Número de teléfono</string>
+    <string name="register">Registrar</string>
+    <string name="address">Dirección</string>
+    <string name="description">Descripción</string>
 </resources>
