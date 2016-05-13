@@ -22,35 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:visibility="gone">
+        android:visibility="visible">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Text"
-            android:id="@+id/text"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Connect"
-            android:id="@+id/connect"
-            android:layout_gravity="center_horizontal|bottom"
-            android:layout_marginBottom="80dp"
-            android:visibility="gone"/>
-
-        <com.android.volley.toolbox.NetworkImageView
-            android:layout_width="180dp"
-            android:layout_height="120dp"
-            android:id="@+id/imagePost"
-            android:src="@mipmap/ic_launcher"
-            android:layout_gravity="right|bottom"
-            android:scaleType="centerCrop"
-            android:visibility="gone"/>
     </FrameLayout>
 
     <!--<include layout="@layout/content_sign_up" />-->
