@@ -105,8 +105,8 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
                 }
             });
             //requestQueue.add(jsonArrayRequest);
-            Global.getIntance(getActivity().getApplicationContext()).addToRequestQueue(jsonArrayRequest);
-            ImageLoader imageLoader = Global.getIntance(getActivity().getApplicationContext()).getImageLoader();
+            Global.getIntance(getActivity()).addToRequestQueue(jsonArrayRequest);
+            ImageLoader imageLoader = Global.getIntance(getActivity()).getImageLoader();
             imageLoader.get(urlImage, ImageLoader.getImageListener(imagePost, R.mipmap.ic_communication, R.mipmap.default_profile));
             imagePost.setImageUrl(urlImage, imageLoader);
         }catch (Exception e){
