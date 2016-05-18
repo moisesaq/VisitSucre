@@ -1,6 +1,5 @@
 package com.apaza.moises.visitsucre.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -105,8 +104,8 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
                 }
             });
             //requestQueue.add(jsonArrayRequest);
-            Global.getIntance(getActivity()).addToRequestQueue(jsonArrayRequest);
-            ImageLoader imageLoader = Global.getIntance(getActivity()).getImageLoader();
+            Global.getInstance(getActivity()).addToRequestQueue(jsonArrayRequest);
+            ImageLoader imageLoader = Global.getInstance(getActivity()).getImageLoader();
             imageLoader.get(urlImage, ImageLoader.getImageListener(imagePost, R.mipmap.ic_communication, R.mipmap.default_profile));
             imagePost.setImageUrl(urlImage, imageLoader);
         }catch (Exception e){
@@ -138,8 +137,7 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 }

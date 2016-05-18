@@ -33,7 +33,7 @@ public final class Global {
         });
     }
 
-    public static synchronized Global getIntance(Context context){
+    public static synchronized Global getInstance(Context context){
         if(global == null)
             global = new Global(context);
         return  global;
