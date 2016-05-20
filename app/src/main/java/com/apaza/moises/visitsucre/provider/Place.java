@@ -2,13 +2,48 @@ package com.apaza.moises.visitsucre.provider;
 
 import java.util.Date;
 
-/**
- * Created by moises on 18/05/16.
- */
 public class Place {
-    String code, name, address, description, pathImage, category;
+
+    /*String ID = "id";
+    String CODE = "code";
+    String NAME = "name";
+    String ADDRESS = "address";
+    String LATITUDE = "latitude";
+    String LONGITUDE = "longitude";
+    String DESCRIPTION = "description";
+    String PATH_IMAGE = "pathImage";
+    String DATE = "date";
+    String ID_CATEGORY = "idCategory";*/
+
+    String idPlace, code, name, address, description, pathImage, idCategory;
     double latitude, longitude;
     Date date;
+
+    public Place(){
+
+    }
+
+    public Place(String idPlace, String code, String name, String address,
+                 double latitude, double longitude, String description, Date date, String idCategory){
+        this.idPlace = idPlace;
+        this.code = code;
+        this.name = name;
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+        this.date = date;
+        this.idCategory = idCategory;
+    }
+
+    public String getIdPlace(){
+        return idPlace;
+    }
+
+    public Place setIdPlace(String idPlace){
+        this.idPlace = idPlace;
+        return this;
+    }
 
     public String getCode() {
         return code;
@@ -55,12 +90,12 @@ public class Place {
         return this;
     }
 
-    public String getCategory() {
-        return category;
+    public String getIdCategory() {
+        return idCategory;
     }
 
-    public Place setCategory(String category) {
-        this.category = category;
+    public Place setIdCategory(String idCategory) {
+        this.idCategory = idCategory;
         return this;
     }
 

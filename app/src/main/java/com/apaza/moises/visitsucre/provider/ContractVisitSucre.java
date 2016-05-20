@@ -4,9 +4,6 @@ import android.net.Uri;
 
 import java.util.UUID;
 
-/**
- * Created by moises on 18/05/16.
- */
 public class ContractVisitSucre {
     /* CATEGORY
     code: {type: String},
@@ -24,7 +21,7 @@ public class ContractVisitSucre {
     description: { type: String},
     pathImage:[{ type: String}],
     date: {type: String},
-    category: {type: Schema.ObjectId, ref: "Category" }*/
+    idCategory: {type: Schema.ObjectId, ref: "Category" }*/
 
     interface ColumnsCategory{
         String ID = "id";

@@ -40,7 +40,7 @@ public class PlaceContract {
         public static final String DESCRIPTION = "description";
         public static final String PATH_IMAGE = "pathImage";
         public static final String DATE = "date";
-        public static final String CATEGORY = "category";
+        public static final String CATEGORY = "idCategory";
 
         public static final String STATUS = "status";
         public static final String REMOTE_ID = "remoteId";
