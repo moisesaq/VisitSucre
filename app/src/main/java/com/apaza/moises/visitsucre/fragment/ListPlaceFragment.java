@@ -2,6 +2,7 @@ package com.apaza.moises.visitsucre.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Color;
 import android.net.Uri;
@@ -23,6 +24,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.provider.Category;
+import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.apaza.moises.visitsucre.provider.HandlerDBVisitSucre;
 import com.apaza.moises.visitsucre.provider.Place;
 
@@ -39,7 +41,7 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     private TextView text;
-    private Button connect;
+    private Button connect, delete;
     private NetworkImageView imagePost;
 
     private OnFragmentInteractionListener mListener;
@@ -78,6 +80,8 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
         text = (TextView)view.findViewById(R.id.text);
         connect = (Button)view.findViewById(R.id.connect);
         connect.setOnClickListener(this);
+        delete = (Button)view.findViewById(R.id.delete);
+        delete.setOnClickListener(this);
         imagePost = (NetworkImageView)view.findViewById(R.id.imagePost);
     }
 
@@ -85,7 +89,10 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view){
         if(view.getId() == connect.getId()){
-            testVolley();
+            //testVolley();
+            new TestDB().execute();
+        }else if(view.getId() == delete.getId()){
+            new TestDeleteDB().execute();
         }
     }
 
@@ -129,10 +136,6 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    private void testDataBaseVisitSucre(){
-
-    }
-
     public class TestDB extends AsyncTask<Void, Void, Boolean>{
         LoadToast loadToast;
         @Override
@@ -160,23 +163,73 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
                 String idCategory2 = handlerDBVisitSucre.insertCategory(category2);
                 String idCategory3 = handlerDBVisitSucre.insertCategory(category3);
 
-                Place place1 = new Place(null, "code-1", "Casa de la libertad", "adress xxxx", -34.3452341, -58.123123, "Description 1111", currentDate, idCategory1);
-                Place place2 = new Place(null, "code-2", "Muse xxxx", "adress xxxx", -34.3452341, -58.123123, "Description 2222", currentDate, idCategory2);
-                Place place3 = new Place(null, "code-3", "Tourism xxx tarabuco", "adress xxxx", -34.3452341, -58.123123, "Description 2222", currentDate, idCategory3);
+                Place place1 = new Place(null, "code-1", "Casa de la libertad", "adress xxxx", -34.3452341, -58.123123, "Description 1111", "Image3 111",currentDate, idCategory1);
+                Place place2 = new Place(null, "code-2", "Muse xxxx", "adress xxxx", -34.3452341, -58.123123, "Description 2222", "Image 222", currentDate, idCategory2);
+                Place place3 = new Place(null, "code-3", "Tourism xxx tarabuco", "adress xxxx", -34.3452341, -58.123123, "Description 2222", "Image 333", currentDate, idCategory3);
 
                 String idPlace1 = handlerDBVisitSucre.insertPlace(place1);
                 String idPlace2 = handlerDBVisitSucre.insertPlace(place2);
                 String idPlace3 = handlerDBVisitSucre.insertPlace(place3);
 
                 //Delete data
-                handlerDBVisitSucre.deleteCategory(idPlace2);
+                handlerDBVisitSucre.deletePlace(idPlace2);
 
                 //Modified data
-                handlerDBVisitSucre.updatePlace(place3.setName("CARABUCO"));
+                handlerDBVisitSucre.updatePlace(place3.setIdPlace(idPlace3).setName("CARABUCO"));
+
+                Log.d("CATEGORIES", ">>>>>>>>>>>>>>>>>> CATEGORIES");
+                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getCategories());
+                Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES");
+                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getPlaces());
+
+                handlerDBVisitSucre.getDB().setTransactionSuccessful();
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            } finally {
+                handlerDBVisitSucre.getDB().endTransaction();
+                return true;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if(result)
+                loadToast.success();
+            else
+                loadToast.error();
+        }
+    }
+
+    public class TestDeleteDB extends AsyncTask<Void, Void, Boolean>{
+        LoadToast loadToast;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadToast = new LoadToast(getActivity());
+            loadToast.setText("Deleting...");
+            loadToast.setTextColor(Color.RED).setBackgroundColor(Color.GREEN).setProgressColor(Color.BLUE);
+            loadToast.setTranslationY(120);
+            loadToast.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try{
+                handlerDBVisitSucre.getDB().beginTransaction();
+
+                //Delete data
+                Cursor cursor = handlerDBVisitSucre.getCategories();
+                if(cursor != null){
+                    for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
+                        handlerDBVisitSucre.deleteCategory(cursor.getString(1));
+                    }
+                }
 
                 Log.d("CATEGORIES", "CATEGORIES");
                 DatabaseUtils.dumpCursor(handlerDBVisitSucre.getCategories());
-                Log.d("CLIENTS", "CLIENTS");
+                Log.d("PLACES", "PLACES");
                 DatabaseUtils.dumpCursor(handlerDBVisitSucre.getPlaces());
 
                 handlerDBVisitSucre.getDB().setTransactionSuccessful();
@@ -206,12 +259,12 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
     }
 
     @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
+            throw new ClassCastException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }

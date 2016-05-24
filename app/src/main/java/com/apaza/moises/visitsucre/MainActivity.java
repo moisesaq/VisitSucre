@@ -3,6 +3,7 @@ package com.apaza.moises.visitsucre;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,7 +17,7 @@ import android.view.MenuItem;
 import com.apaza.moises.visitsucre.fragment.ListPlaceFragment;
 import com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment;
 
-public class MainActivity extends AppCompatActivity implements RegisterPlaceFragment.OnRegisterPlaceFragmentListener{
+public class MainActivity extends AppCompatActivity implements RegisterPlaceFragment.OnRegisterPlaceFragmentListener, ListPlaceFragment.OnFragmentInteractionListener{
 
     private DrawerLayout drawerLayout;
     private String drawerTitle;
@@ -101,6 +102,11 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
 
     @Override
     public void onRegisterPlaceClick() {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
     }
 

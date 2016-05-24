@@ -42,13 +42,13 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
-        "%s TEXT UNIQUE NOT NULL, %s TEXT NOT NULL, %s TEXT, %s TEXT NOT NULL, %s DATETIME NO NULL, %s TEXT",
+        "%s TEXT UNIQUE NOT NULL, %s TEXT NOT NULL, %s TEXT, %s TEXT NOT NULL, %s DATETIME NO NULL, %s TEXT)",
                 Table.CATEGORY, BaseColumns._ID, ContractVisitSucre.Category.ID, ContractVisitSucre.Category.CODE,
                 ContractVisitSucre.Category.LOGO, ContractVisitSucre.Category.NAME, ContractVisitSucre.Category.DATE, ContractVisitSucre.Category.DESCRIPTION));
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "%s TEXT UNIQUE NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, " +
-                        "%s TEXT, %s TEXT NOT NULL, %s DATETIME NOT NULL, %s TEXT NOT NULL %s",
+                        "%s TEXT, %s TEXT NOT NULL, %s DATETIME NOT NULL, %s TEXT NOT NULL %s)",
                 Table.PLACE, BaseColumns._ID, ContractVisitSucre.Place.ID,
                 ContractVisitSucre.Place.CODE, ContractVisitSucre.Place.NAME,
                 ContractVisitSucre.Place.ADDRESS, ContractVisitSucre.Place.LATITUDE,

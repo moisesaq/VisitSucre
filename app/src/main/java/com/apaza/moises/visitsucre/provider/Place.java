@@ -24,7 +24,7 @@ public class Place {
     }
 
     public Place(String idPlace, String code, String name, String address,
-                 double latitude, double longitude, String description, Date date, String idCategory){
+                 double latitude, double longitude, String description, String pathImage, Date date, String idCategory){
         this.idPlace = idPlace;
         this.code = code;
         this.name = name;
@@ -32,6 +32,7 @@ public class Place {
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
+        this.pathImage = pathImage;
         this.date = date;
         this.idCategory = idCategory;
     }
