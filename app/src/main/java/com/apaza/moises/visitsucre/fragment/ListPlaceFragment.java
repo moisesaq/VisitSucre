@@ -1,9 +1,14 @@
 package com.apaza.moises.visitsucre.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.database.DatabaseUtils;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +22,16 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.provider.Category;
+import com.apaza.moises.visitsucre.provider.HandlerDBVisitSucre;
+import com.apaza.moises.visitsucre.provider.Place;
+
+import net.steamcrafted.loadtoast.LoadToast;
 
 import org.json.JSONArray;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class ListPlaceFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM1 = "param1";
@@ -30,6 +43,8 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
     private NetworkImageView imagePost;
 
     private OnFragmentInteractionListener mListener;
+
+    private HandlerDBVisitSucre handlerDBVisitSucre;
 
     public static ListPlaceFragment newInstance(String param1) {
         ListPlaceFragment fragment = new ListPlaceFragment();
@@ -49,6 +64,7 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
+        handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(getActivity());
     }
 
     @Override
@@ -110,6 +126,76 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
             imagePost.setImageUrl(urlImage, imageLoader);
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void testDataBaseVisitSucre(){
+
+    }
+
+    public class TestDB extends AsyncTask<Void, Void, Boolean>{
+        LoadToast loadToast;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadToast = new LoadToast(getActivity());
+            loadToast.setText("Testing...");
+            loadToast.setTextColor(Color.RED).setBackgroundColor(Color.GREEN).setProgressColor(Color.BLUE);
+            loadToast.setTranslationY(120);
+            loadToast.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Date currentDate = Calendar.getInstance().getTime();
+            try{
+                handlerDBVisitSucre.getDB().beginTransaction();
+
+                //Insert data
+                Category category1 = new Category(null, "code-111", "logo111", "Cathedral", "bla bla bla bla bla bla bla bla 1111111", currentDate);
+                Category category2 = new Category(null, "code-222", "logo222", "Museums", "bla bla bla bla bla bla bla bla 2222222", currentDate);
+                Category category3 = new Category(null, "code-333", "logo333", "Tourism", "bla bla bla bla bla bla bla bla 33333333", currentDate);
+
+                String idCategory1 = handlerDBVisitSucre.insertCategory(category1);
+                String idCategory2 = handlerDBVisitSucre.insertCategory(category2);
+                String idCategory3 = handlerDBVisitSucre.insertCategory(category3);
+
+                Place place1 = new Place(null, "code-1", "Casa de la libertad", "adress xxxx", -34.3452341, -58.123123, "Description 1111", currentDate, idCategory1);
+                Place place2 = new Place(null, "code-2", "Muse xxxx", "adress xxxx", -34.3452341, -58.123123, "Description 2222", currentDate, idCategory2);
+                Place place3 = new Place(null, "code-3", "Tourism xxx tarabuco", "adress xxxx", -34.3452341, -58.123123, "Description 2222", currentDate, idCategory3);
+
+                String idPlace1 = handlerDBVisitSucre.insertPlace(place1);
+                String idPlace2 = handlerDBVisitSucre.insertPlace(place2);
+                String idPlace3 = handlerDBVisitSucre.insertPlace(place3);
+
+                //Delete data
+                handlerDBVisitSucre.deleteCategory(idPlace2);
+
+                //Modified data
+                handlerDBVisitSucre.updatePlace(place3.setName("CARABUCO"));
+
+                Log.d("CATEGORIES", "CATEGORIES");
+                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getCategories());
+                Log.d("CLIENTS", "CLIENTS");
+                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getPlaces());
+
+                handlerDBVisitSucre.getDB().setTransactionSuccessful();
+            }catch (Exception e){
+                e.printStackTrace();
+                return false;
+            } finally {
+                handlerDBVisitSucre.getDB().endTransaction();
+                return true;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if(result)
+                loadToast.success();
+            else
+                loadToast.error();
         }
     }
 

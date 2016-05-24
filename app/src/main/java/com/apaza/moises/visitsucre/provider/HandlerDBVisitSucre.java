@@ -146,4 +146,8 @@ public class HandlerDBVisitSucre {
         int result = db.delete(DBVisitSucreHelper.Table.PLACE, whereClause, whereArgs);
         return result > 0;
     }
+
+    public SQLiteDatabase getDB(){
+        return dbVisitSucreHelper.getWritableDatabase();
+    }
 }
