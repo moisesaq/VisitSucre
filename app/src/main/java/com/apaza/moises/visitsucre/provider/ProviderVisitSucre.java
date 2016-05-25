@@ -5,8 +5,10 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by moises on 19/05/16.
@@ -82,11 +84,35 @@ public class ProviderVisitSucre extends ContentProvider{
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        //db.delete(DBVisitSucreHelper.Table.CATEGORY, whereClause, whereArgs)
+        Log.d(TAG, "Delete: " + uri);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String id;
+        int affects;
+
+        switch (uriMatcher.match(uri)){
+            case CATEGORY_ID:
+                id = ContractVisitSucre.Category.getIdCategory(uri);
+                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Category.ID + " = ?", new String[]{id});
+                notifyChange(uri);
+                break;
+            case PLACE_ID:
+                id = ContractVisitSucre.Place.getIdPlace(uri);
+                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Category.ID + " = ?", new String[]{id});
+                notifyChange(uri);
+                break;
+            default:
+                throw new UnsupportedOperationException(NO_SUPPORTED_URI);
+        }
+        return affects;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
+    }
+
+    private void notifyChange(Uri uri){
+        resolver.notifyChange(uri, null);
     }
 }

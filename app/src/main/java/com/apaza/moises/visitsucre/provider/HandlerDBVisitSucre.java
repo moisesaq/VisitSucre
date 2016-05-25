@@ -78,7 +78,6 @@ public class HandlerDBVisitSucre {
         String[] whereArgs = {idCategory};
 
         int result = db.delete(DBVisitSucreHelper.Table.CATEGORY, whereClause, whereArgs);
-
         return result > 0;
     }
 
