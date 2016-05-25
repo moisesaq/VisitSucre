@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:ripple="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:padding="@dimen/paddingGlobal"
+    android:padding="@dimen/paddingMaxGlobal"
     tools:context="com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment">
 
     <com.andexert.library.RippleView

@@ -5,7 +5,7 @@
     xmlns:ripple="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:scrollbars="none"
-    android:padding="@dimen/paddingGlobal"
+    android:padding="@dimen/paddingMaxGlobal"
     tools:context="com.apaza.moises.visitsucre.fragment.SignUpFragment">
 
     <LinearLayout

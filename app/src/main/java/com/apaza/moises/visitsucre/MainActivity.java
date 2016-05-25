@@ -3,16 +3,22 @@ package com.apaza.moises.visitsucre;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 import com.apaza.moises.visitsucre.fragment.ListPlaceFragment;
 import com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment;
@@ -79,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -88,10 +93,13 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id){
-            case R.id.action_settings:
-                return true;
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_settings:
+                return true;
+            case R.id.action_new_category:
+
                 return true;
         }
 
@@ -110,6 +118,29 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
 
     }
 
+    public void registerNewCategory(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getApplicationContext());
+        dialog.setTitle("New category");
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.new_category, null);
+        EditText name = (EditText)view.findViewById(R.id.name);
+        EditText description = (EditText)view.findViewById(R.id.description);
+        dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        dialog.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setView(view);
+        dialog.create().show();
+
+    }
     /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

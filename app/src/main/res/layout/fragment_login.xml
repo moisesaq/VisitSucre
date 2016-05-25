@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:ripple="http://schemas.android.com/apk/res-auto"
-    android:padding="@dimen/paddingGlobal"
+    android:padding="@dimen/paddingMaxGlobal"
     tools:context="com.apaza.moises.visitsucre.fragment.LoginFragment">
 
     <LinearLayout
