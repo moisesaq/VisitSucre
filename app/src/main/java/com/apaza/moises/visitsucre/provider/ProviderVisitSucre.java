@@ -18,9 +18,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-/**
- * Created by moises on 19/05/16.
- */
 public class ProviderVisitSucre extends ContentProvider{
 
     public static final String TAG = "PROVIDER VISIT SUCRE";

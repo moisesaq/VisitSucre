@@ -1,34 +1,35 @@
 package com.apaza.moises.visitsucre.fragment;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.apaza.moises.visitsucre.R;
 
-public class ListPlaceFragment extends Fragment implements View.OnClickListener{
+public class CategoryListFragment extends Fragment {
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private String mParam1;
+    private static final String ARG_PARAM2 = "param2";
 
-    private View view;
+    private String mParam1;
+    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
-
-
-    public static ListPlaceFragment newInstance(String param1) {
-        ListPlaceFragment fragment = new ListPlaceFragment();
+    public CategoryListFragment() {
+        // Required empty public constructor
+    }
+    public static CategoryListFragment newInstance(String param1, String param2) {
+        CategoryListFragment fragment = new CategoryListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public ListPlaceFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -36,25 +37,16 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_list_place, container, false);
-        setup();
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_category_list, container, false);
     }
-
-    private void setup(){
-    }
-
-
-    @Override
-    public void onClick(View view){
-    }
-
-
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -65,10 +57,10 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
+        if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
+        } else {
+            throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
     }
@@ -78,9 +70,8 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
         super.onDetach();
         mListener = null;
     }
-
     public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
 }

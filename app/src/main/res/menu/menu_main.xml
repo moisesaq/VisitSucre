@@ -7,6 +7,25 @@
         android:title="@string/new_category"
         android:orderInCategory="1"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_test_database"
+        android:title="Test DB"
+        android:orderInCategory="2"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_show_collections_db"
+        android:title="Show DB collections"
+        android:orderInCategory="3"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_delete_collections_db"
+        android:title="Delete DB collections"
+        android:orderInCategory="4"
+        app:showAsAction="never"/>
+
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
