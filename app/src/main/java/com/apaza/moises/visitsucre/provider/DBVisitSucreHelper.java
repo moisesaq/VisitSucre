@@ -13,7 +13,7 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
     private final Context context;
 
     interface Table{
-        String CATEGORY = "idCategory";
+        String CATEGORY = "category";
         String PLACE = "place";
     }
 

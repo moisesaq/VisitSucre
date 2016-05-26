@@ -10,6 +10,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+
+        <provider
+            android:name=".provider.ProviderVisitSucre"
+            android:authorities="com.apaza.moises.visitsucre"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".SplashActivity"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -19,6 +26,7 @@
                 <idCategory android:name="android.intent.idCategory.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

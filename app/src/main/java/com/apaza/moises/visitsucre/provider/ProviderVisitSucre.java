@@ -1,14 +1,22 @@
 package com.apaza.moises.visitsucre.provider;
 
 import android.content.ContentProvider;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.OperationApplicationException;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Created by moises on 19/05/16.
@@ -39,12 +47,12 @@ public class ProviderVisitSucre extends ContentProvider{
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(AUTHORITY, DBVisitSucreHelper.Table.CATEGORY, CATEGORIES);
-        uriMatcher.addURI(AUTHORITY, DBVisitSucreHelper.Table.CATEGORY+"/*", CATEGORY_ID);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_CATEGORY, CATEGORIES);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_CATEGORY+"/*", CATEGORY_ID);
 
-        uriMatcher.addURI(AUTHORITY, DBVisitSucreHelper.Table.PLACE, PLACES);
-        uriMatcher.addURI(AUTHORITY, DBVisitSucreHelper.Table.PLACE + "/*", PLACE_ID);
-        uriMatcher.addURI(AUTHORITY, DBVisitSucreHelper.Table.PLACE + "/*/detail", PLACE_ID_DETAIL);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE, PLACES);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/*", PLACE_ID);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/*/detail", PLACE_ID_DETAIL);
     }
 
     private static final String PLACE_JOIN_CATEGORY = "place INNER JOIN category " +
@@ -67,18 +75,85 @@ public class ProviderVisitSucre extends ContentProvider{
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String id;
+        Cursor cursor;
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        switch (uriMatcher.match(uri)){
+            case CATEGORIES:
+                cursor = db.query(DBVisitSucreHelper.Table.CATEGORY, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case CATEGORY_ID:
+                id = ContractVisitSucre.Category.getIdCategory(uri);
+                cursor = db.query(DBVisitSucreHelper.Table.CATEGORY, projection,
+                        ContractVisitSucre.Category.ID + "=" + "\'" + id + "\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
+                        selectionArgs, null , null, sortOrder);
+                break;
+            case PLACES:
+                cursor = db.query(DBVisitSucreHelper.Table.PLACE, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+
+            case PLACE_ID:
+                id = ContractVisitSucre.Place.getIdPlace(uri);
+                cursor = db.query(DBVisitSucreHelper.Table.PLACE, projection,
+                        ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
+                        selectionArgs, null, null, sortOrder);
+                break;
+
+            case PLACE_ID_DETAIL:
+                //id = ContractVisitSucre.Place.getIdPlace(uri);
+                builder.setTables(PLACE_JOIN_CATEGORY);
+                cursor = builder.query(db, projectionPlace, selection, selectionArgs, null, null, sortOrder);
+                break;
+
+            default:
+                throw new UnsupportedOperationException(NO_SUPPORTED_URI);
+        }
+        cursor.setNotificationUri(resolver, uri);
+        return cursor;
     }
 
     @Nullable
     @Override
     public String getType(Uri uri) {
-        return null;
+        switch (uriMatcher.match(uri)){
+            case CATEGORIES:
+                return ContractVisitSucre.generateMime(DBVisitSucreHelper.Table.CATEGORY);
+            case CATEGORY_ID:
+                return ContractVisitSucre.generateMimeItem(DBVisitSucreHelper.Table.CATEGORY);
+            case PLACES:
+                return ContractVisitSucre.generateMime(DBVisitSucreHelper.Table.PLACE);
+            case PLACE_ID:
+                return ContractVisitSucre.generateMimeItem(DBVisitSucreHelper.Table.PLACE);
+            default:
+                throw new UnsupportedOperationException("Uri unknown: " + uri);
+        }
     }
 
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
+        Log.d(TAG, "INSERT: " + uri + "( " + values.toString() + ")\n");
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String id = null;
+        switch (uriMatcher.match(uri)){
+            case CATEGORIES:
+                if(values.getAsString(ContractVisitSucre.Category.ID) == null){
+                    id = ContractVisitSucre.Category.generateIdCategory();
+                    values.put(ContractVisitSucre.Category.ID, id);
+                }
+                db.insertOrThrow(DBVisitSucreHelper.Table.CATEGORY, null, values);
+                notifyChange(uri);
+                return ContractVisitSucre.Category.createUriCategory(id);
+            case PLACES:
+                if(values.getAsString(ContractVisitSucre.Place.ID) == null){
+                    id = ContractVisitSucre.Place.generateIdPlace();
+                    values.put(ContractVisitSucre.Place.ID, id);
+                }
+                db.insertOrThrow(DBVisitSucreHelper.Table.PLACE, null, values);
+                notifyChange(uri);
+                return ContractVisitSucre.Place.createUriPlace(id);
+        }
         return null;
     }
 
@@ -109,10 +184,44 @@ public class ProviderVisitSucre extends ContentProvider{
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        Log.d(TAG, "UPDATE: " + uri);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String id;
+        int affects;
+        switch (uriMatcher.match(uri)){
+            case CATEGORY_ID:
+                id = ContractVisitSucre.Category.getIdCategory(uri);
+                affects = db.update(DBVisitSucreHelper.Table.CATEGORY, values, ContractVisitSucre.Category.ID + " = ?", new String[]{id});
+                notifyChange(uri);
+                break;
+            case PLACE_ID:
+                id = ContractVisitSucre.Place.getIdPlace(uri);
+                affects = db.update(DBVisitSucreHelper.Table.PLACE, values, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
+                break;
+            default:
+                throw new UnsupportedOperationException(NO_SUPPORTED_URI);
+        }
+        return affects;
     }
 
     private void notifyChange(Uri uri){
         resolver.notifyChange(uri, null);
+    }
+
+    @Override
+    public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) throws OperationApplicationException{
+        final SQLiteDatabase db = helper.getWritableDatabase();
+        db.beginTransaction();
+        try{
+            final int numOperations = operations.size();
+            final ContentProviderResult[] results = new ContentProviderResult[numOperations];
+            for (int i = 0; i < numOperations; i++){
+                results[i] = operations.get(i).apply(this, results, i);
+            }
+            db.setTransactionSuccessful();
+            return results;
+        }finally {
+            db.endTransaction();
+        }
     }
 }

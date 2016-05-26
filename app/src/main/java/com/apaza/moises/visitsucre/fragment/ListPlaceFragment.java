@@ -1,7 +1,10 @@
 package com.apaza.moises.visitsucre.fragment;
 
 import android.app.ProgressDialog;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Color;
@@ -9,6 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +36,7 @@ import net.steamcrafted.loadtoast.LoadToast;
 
 import org.json.JSONArray;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -90,7 +95,8 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view){
         if(view.getId() == connect.getId()){
             //testVolley();
-            new TestDB().execute();
+            //new TestDB().execute();
+            new TestProvider().execute();
         }else if(view.getId() == delete.getId()){
             new TestDeleteDB().execute();
         }
@@ -209,8 +215,8 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
             super.onPreExecute();
             loadToast = new LoadToast(getActivity());
             loadToast.setText("Deleting...");
-            loadToast.setTextColor(Color.RED).setBackgroundColor(Color.GREEN).setProgressColor(Color.BLUE);
-            loadToast.setTranslationY(120);
+            loadToast.setTextColor(Color.DKGRAY).setBackgroundColor(Color.WHITE).setProgressColor(Color.BLUE);
+            loadToast.setTranslationY(100);
             loadToast.show();
         }
 
@@ -240,6 +246,134 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
                 handlerDBVisitSucre.getDB().endTransaction();
                 return true;
             }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if(result)
+                loadToast.success();
+            else
+                loadToast.error();
+        }
+    }
+
+    public class TestProvider extends AsyncTask<Void, Void, Boolean>{
+        LoadToast loadToast;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadToast = new LoadToast(getActivity());
+            loadToast.setText("Testing...");
+            loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE).setProgressColor(Color.BLUE);
+            loadToast.setTranslationY(120);
+            loadToast.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Boolean status = false;
+            Date currentDate = Calendar.getInstance().getTime();
+
+            ContentResolver resolver = getActivity().getContentResolver();
+            ArrayList<ContentProviderOperation> listOperations = new ArrayList<>();
+
+            //Insert with custom provider
+            String idCategory1 = ContractVisitSucre.Category.generateIdCategory();
+            String idCategory2 = ContractVisitSucre.Category.generateIdCategory();
+            String idCategory3 = ContractVisitSucre.Category.generateIdCategory();
+
+            listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
+                    .withValue(ContractVisitSucre.Category.ID, idCategory1)
+                    .withValue(ContractVisitSucre.Category.CODE, "code-111")
+                    .withValue(ContractVisitSucre.Category.LOGO, "logo111")
+                    .withValue(ContractVisitSucre.Category.NAME, "Cathedral")
+                    .withValue(ContractVisitSucre.Category.DESCRIPTION, "bla bla bla bla bla 11111")
+                    .withValue(ContractVisitSucre.Category.DATE, currentDate.toString())
+                    .build());
+            listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
+            .withValue(ContractVisitSucre.Category.ID, idCategory2)
+            .withValue(ContractVisitSucre.Category.CODE, "code-222")
+            .withValue(ContractVisitSucre.Category.LOGO, "logo222")
+            .withValue(ContractVisitSucre.Category.NAME, "Museums")
+            .withValue(ContractVisitSucre.Category.DESCRIPTION, "bla bla bla bla bla 22222")
+            .withValue(ContractVisitSucre.Category.DATE, currentDate.toString())
+            .build());
+
+            listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
+                    .withValue(ContractVisitSucre.Category.ID, idCategory3)
+                    .withValue(ContractVisitSucre.Category.CODE, "code-333")
+                    .withValue(ContractVisitSucre.Category.LOGO, "logo333")
+                    .withValue(ContractVisitSucre.Category.NAME, "Tourism")
+                    .withValue(ContractVisitSucre.Category.DESCRIPTION, "bla bla bla bla bla 33333")
+                    .withValue(ContractVisitSucre.Category.DATE, currentDate.toString())
+                    .build());
+
+            String idPlace1 = ContractVisitSucre.Place.generateIdPlace();
+            String idPlace2 = ContractVisitSucre.Place.generateIdPlace();
+            String idPlace3 = ContractVisitSucre.Place.generateIdPlace();
+
+            listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Place.CONTENT_URI)
+            .withValue(ContractVisitSucre.Place.ID, idPlace1)
+            .withValue(ContractVisitSucre.Place.CODE, "code-1")
+            .withValue(ContractVisitSucre.Place.NAME, "Casa de la libertad")
+            .withValue(ContractVisitSucre.Place.ADDRESS, "address 123")
+            .withValue(ContractVisitSucre.Place.LATITUDE, -34.3452341)
+            .withValue(ContractVisitSucre.Place.LONGITUDE, -58.123123)
+            .withValue(ContractVisitSucre.Place.DESCRIPTION, "Description 1111")
+            .withValue(ContractVisitSucre.Place.PATH_IMAGE, "Image 111")
+            .withValue(ContractVisitSucre.Place.DATE, currentDate.toString())
+            .withValue(ContractVisitSucre.Place.ID_CATEGORY, idCategory1)
+            .build());
+
+            listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Place.CONTENT_URI)
+                    .withValue(ContractVisitSucre.Place.ID, idPlace2)
+                    .withValue(ContractVisitSucre.Place.CODE, "code-2")
+                    .withValue(ContractVisitSucre.Place.NAME, "Museo 555")
+                    .withValue(ContractVisitSucre.Place.ADDRESS, "address 123")
+                    .withValue(ContractVisitSucre.Place.LATITUDE, -34.3452341)
+                    .withValue(ContractVisitSucre.Place.LONGITUDE, -58.123123)
+                    .withValue(ContractVisitSucre.Place.DESCRIPTION, "Description 2222")
+                    .withValue(ContractVisitSucre.Place.PATH_IMAGE, "Image 222")
+                    .withValue(ContractVisitSucre.Place.DATE, currentDate.toString())
+                    .withValue(ContractVisitSucre.Place.ID_CATEGORY, idCategory2)
+                    .build());
+
+            listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Place.CONTENT_URI)
+                    .withValue(ContractVisitSucre.Place.ID, idPlace3)
+                    .withValue(ContractVisitSucre.Place.CODE, "code-3")
+                    .withValue(ContractVisitSucre.Place.NAME, "Tourism Tarabuco")
+                    .withValue(ContractVisitSucre.Place.ADDRESS, "address 123")
+                    .withValue(ContractVisitSucre.Place.LATITUDE, -34.3452341)
+                    .withValue(ContractVisitSucre.Place.LONGITUDE, -58.123123)
+                    .withValue(ContractVisitSucre.Place.DESCRIPTION, "Description 333")
+                    .withValue(ContractVisitSucre.Place.PATH_IMAGE, "Image 333")
+                    .withValue(ContractVisitSucre.Place.DATE, currentDate.toString())
+                    .withValue(ContractVisitSucre.Place.ID_CATEGORY, idCategory1)
+                    .build());
+
+            //Delete with custom provider
+            listOperations.add(ContentProviderOperation.newDelete(ContractVisitSucre.Place.createUriPlace(idPlace2)).build());
+
+            //Update with custom provider
+
+            listOperations.add(ContentProviderOperation.newUpdate(ContractVisitSucre.Place.createUriPlace(idPlace3))
+                    .withValue(ContractVisitSucre.Place.NAME, "TARABUCO").build());
+
+            try{
+                resolver.applyBatch(ContractVisitSucre.AUTHORITY, listOperations);
+                status = true;
+            }catch (RemoteException e){
+                e.printStackTrace();
+            }catch (OperationApplicationException e){
+                e.printStackTrace();
+            }
+
+            Log.d("CATEGORIES", ">>>>>>>>>>>>>>>>>>> CATEGORIES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
+            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
+            return status;
         }
 
         @Override
