@@ -19,7 +19,12 @@
             android:icon="@mipmap/ic_places_home"
             android:title="@string/hotel" />
 
-        <!-- Sección de configuración -->
+        <item
+            android:id="@+id/nav_all"
+            android:icon="@mipmap/ic_fav_off"
+            android:title="@string/all"/>
+
+        <!-- Section setting -->
         <item
             android:id="@+id/configuration_section"
             android:title="@string/config">

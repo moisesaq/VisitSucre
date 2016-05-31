@@ -19,4 +19,6 @@
     <string name="register">Registrar</string>
     <string name="address">Dirección</string>
     <string name="description">Descripción</string>
+    <string name="data_no_found">Datos no encontrados</string>
+    <string name="all">Todos</string>
 </resources>

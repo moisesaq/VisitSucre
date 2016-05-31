@@ -41,8 +41,8 @@ public class SplashActivity extends AppCompatActivity {
 
             public void onFinish() {
                 counter.setText("Go!");
-                //goToMainActivity();
-                goToSignUpActivity();
+                goToMainActivity();
+                //goToSignUpActivity();
             }
         }.start();
     }

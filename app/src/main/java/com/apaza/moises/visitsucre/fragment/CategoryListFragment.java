@@ -1,33 +1,37 @@
 package com.apaza.moises.visitsucre.fragment;
 
-import android.app.Fragment;
+import android.app.ListFragment;
+import android.app.LoaderManager;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.fragment.adapter.CategoryAdapter;
+import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
-public class CategoryListFragment extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+public class CategoryListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
-    private String mParam2;
+    private OnCategoryListFragmentListener mListener;
 
-    private OnFragmentInteractionListener mListener;
+    private CategoryAdapter categoryAdapter;
 
     public CategoryListFragment() {
         // Required empty public constructor
     }
-    public static CategoryListFragment newInstance(String param1, String param2) {
+    public static CategoryListFragment newInstance(String param1) {
         CategoryListFragment fragment = new CategoryListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,31 +41,50 @@ public class CategoryListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_category_list, container, false);
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        categoryAdapter = new CategoryAdapter(getActivity());
+        setListAdapter(categoryAdapter);
+        getLoaderManager().initLoader(0, null, this);
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id){
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(),ContractVisitSucre.Category.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        categoryAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        categoryAdapter.swapCursor(null);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnCategoryListFragmentListener) {
+            mListener = (OnCategoryListFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnCategoryListFragmentListener");
         }
     }
 
@@ -70,8 +93,22 @@ public class CategoryListFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+
+    public interface OnCategoryListFragmentListener {
+        void onCategoryItemClick(Uri uri);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        try{
+            getLoaderManager().destroyLoader(0);
+            if(categoryAdapter != null){
+                categoryAdapter.changeCursor(null);
+                categoryAdapter = null;
+            }
+        }catch (Throwable throwable){
+            throwable.printStackTrace();
+        }
     }
 }

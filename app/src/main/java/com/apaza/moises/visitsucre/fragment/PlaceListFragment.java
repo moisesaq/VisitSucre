@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.apaza.moises.visitsucre.R;
 
-public class ListPlaceFragment extends Fragment implements View.OnClickListener{
+public class PlaceListFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM1 = "param1";
     private String mParam1;
 
@@ -19,15 +19,15 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
 
 
 
-    public static ListPlaceFragment newInstance(String param1) {
-        ListPlaceFragment fragment = new ListPlaceFragment();
+    public static PlaceListFragment newInstance(String param1) {
+        PlaceListFragment fragment = new PlaceListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public ListPlaceFragment() {
+    public PlaceListFragment() {
         // Required empty public constructor
     }
 
@@ -41,7 +41,7 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_list_place, container, false);
+        view = inflater.inflate(R.layout.fragment_place_list, container, false);
         setup();
         return view;
     }
@@ -69,7 +69,7 @@ public class ListPlaceFragment extends Fragment implements View.OnClickListener{
             mListener = (OnFragmentInteractionListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnCategoryListFragmentListener");
         }
     }
 

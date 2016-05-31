@@ -28,7 +28,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +37,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.apaza.moises.visitsucre.fragment.ListPlaceFragment;
+import com.apaza.moises.visitsucre.fragment.CategoryListFragment;
+import com.apaza.moises.visitsucre.fragment.PlaceListFragment;
 import com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
@@ -55,27 +55,37 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements RegisterPlaceFragment.OnRegisterPlaceFragmentListener, ListPlaceFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
+        CategoryListFragment.OnCategoryListFragmentListener,
+        PlaceListFragment.OnFragmentInteractionListener{
 
     private DrawerLayout drawerLayout;
     private String drawerTitle;
     private ActionBar actionBar;
 
+    //For test
+    private TextView text;
+    private NetworkImageView imagePost;
+    private HandlerDBVisitSucre handlerDBVisitSucre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupToolbar();
+        setupNavigationView();
+        showFragment(PlaceListFragment.newInstance(""));
+
+        handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(getApplicationContext());
+    }
+
+    private void setupNavigationView(){
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayout);
         NavigationView navigationView = (NavigationView)findViewById(R.id.navView);
         if(navigationView != null)
-            setupDrawerContent(navigationView);
-        showFragment(ListPlaceFragment.newInstance(""));
-    }
-
-    private void setupDrawerContent(NavigationView navigationView){
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            navigationView.setNavigationItemSelectedListener(this);
+                /*new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 item.setChecked(true);
@@ -83,16 +93,27 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
                 selectItem(item, title);
                 return true;
             }
-        });
+        });*/
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        item.setChecked(true);
+        String title = item.getTitle().toString();
+        selectItem(item, title);
+        return true;
     }
 
     private void selectItem(MenuItem item, String title){
         switch (item.getItemId()){
             case R.id.nav_register_place:
                 showFragment(RegisterPlaceFragment.newInstance(""));
-                drawerLayout.closeDrawers();
+                break;
+            case R.id.nav_all:
+                showFragment(CategoryListFragment.newInstance(""));
                 break;
         }
+        drawerLayout.closeDrawers();
     }
 
     public void showFragment(Fragment fragment){
@@ -147,8 +168,6 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @Override
     public void onRegisterPlaceClick() {
 
@@ -156,6 +175,11 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onCategoryItemClick(Uri uri) {
 
     }
 
@@ -174,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
                 if(txtName.length() > 5 && txtDescription.length() > 10){
                     saveCategory(txtName, txtDescription);
                 }else{
-                    showMessage("Error");
+                    showMessage("Error missing characters");
                 }
             }
         });
@@ -214,10 +238,6 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
         Log.d("PLACES", "---------------------------PLACES------------------");
         DatabaseUtils.dumpCursor(getContentResolver().query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
     }
-
-    private TextView text;
-    private NetworkImageView imagePost;
-    private HandlerDBVisitSucre handlerDBVisitSucre;
 
     private void testVolley(){
         try{
@@ -264,7 +284,7 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loadToast = new LoadToast(getApplicationContext());
+            loadToast = new LoadToast(MainActivity.this);
             loadToast.setText("Testing...");
             loadToast.setTextColor(Color.RED).setBackgroundColor(Color.GREEN).setProgressColor(Color.BLUE);
             loadToast.setTranslationY(120);
@@ -330,7 +350,7 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loadToast = new LoadToast(getApplicationContext());
+            loadToast = new LoadToast(MainActivity.this);
             loadToast.setText("Deleting...");
             loadToast.setTextColor(Color.DKGRAY).setBackgroundColor(Color.WHITE).setProgressColor(Color.BLUE);
             loadToast.setTranslationY(100);
@@ -380,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements RegisterPlaceFrag
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loadToast = new LoadToast(getApplicationContext());
+            loadToast = new LoadToast(MainActivity.this);
             loadToast.setText("Testing...");
             loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE).setProgressColor(Color.BLUE);
             loadToast.setTranslationY(120);
