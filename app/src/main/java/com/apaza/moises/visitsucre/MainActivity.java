@@ -38,6 +38,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.fragment.CategoryListFragment;
+import com.apaza.moises.visitsucre.fragment.DetailPlaceFragment;
 import com.apaza.moises.visitsucre.fragment.PlaceListFragment;
 import com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment;
 import com.apaza.moises.visitsucre.global.Global;
@@ -75,7 +76,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         setupToolbar();
         setupNavigationView();
-        showFragment(PlaceListFragment.newInstance(""));
+        /*showFragment(PlaceListFragment.newInstance(""));*/
+        showFragment(DetailPlaceFragment.newInstance(""));
 
         handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(getApplicationContext());
     }

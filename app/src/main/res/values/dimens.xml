@@ -15,7 +15,9 @@
     <dimen name="header_left_padding">16dp</dimen>
     <dimen name="header_height">192dp</dimen>
 
-    <dimen name="perfil_image_size">64dp</dimen>
+    <dimen name="profile_image_size">64dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="cardMargen">16dp</dimen>
 
 </resources>
