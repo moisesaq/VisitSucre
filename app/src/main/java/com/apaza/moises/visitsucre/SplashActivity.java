@@ -41,6 +41,7 @@ public class SplashActivity extends AppCompatActivity {
 
             public void onFinish() {
                 counter.setText("Go!");
+                //DetailPlaceActivity.createInstance(SplashActivity.this, "");
                 goToMainActivity();
                 //goToSignUpActivity();
             }

@@ -7,8 +7,12 @@
     <color name="iconsText">#FFFFFF</color>
     <color name="textPrimary">#212121</color>
     <color name="textSecondary">#727272</color>
-    <color name="colorDivider">#B6B6B6</color>
 
+    <color name="grayTechno">#B6B6B6</color>
+    <color name="colorTextOnBoarding">#555555</color>
     <color name="blueFacebook">#3B5998</color>
     <color name="redG">#D34836</color>
+    <color name="red">#F44336</color>
+    <color name="redDark">#B20000</color>
+    <color name="transparentTechno">#80000000</color>
 </resources>

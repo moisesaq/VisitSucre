@@ -18,6 +18,8 @@
     <dimen name="profile_image_size">64dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="cardMargen">16dp</dimen>
+    <dimen name="cardMargin">16dp</dimen>
+
+    <dimen name="cornerDefault">3dp</dimen>
 
 </resources>

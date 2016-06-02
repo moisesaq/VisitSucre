@@ -82,7 +82,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
             share = (Button)v.findViewById(R.id.share);
             explore = (Button)v.findViewById(R.id.explore);
             description = (TextView) v.findViewById(R.id.description);
-            share.setOnClickListener(this);
+            explore.setOnClickListener(this);
         }
 
         @Override

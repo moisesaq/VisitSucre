@@ -51,4 +51,7 @@ dependencies {
 
     //Toast load
     compile 'net.steamcrafted:load-toast:1.0.10'
+
+    //Floating button with menu
+    compile 'com.github.clans:fab:1.6.4'
 }

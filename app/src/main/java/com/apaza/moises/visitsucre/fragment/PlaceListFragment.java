@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.apaza.moises.visitsucre.DetailPlaceActivity;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.fragment.adapter.PlaceAdapter;
 import com.apaza.moises.visitsucre.global.Utils;
@@ -73,7 +75,8 @@ public class PlaceListFragment extends Fragment implements PlaceAdapter.OnPlaceI
     //This method is from adapter
     @Override
     public void onPlaceClick(PlaceAdapter.ViewHolder viewHolder, String idPlace) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content), String.format("ID place: %s", idPlace), Snackbar.LENGTH_SHORT).show();
+        ///Snackbar.make(getActivity().findViewById(android.R.id.content), String.format("ID place: %s", idPlace), Snackbar.LENGTH_SHORT).show();
+        DetailPlaceActivity.createInstance(getActivity(), idPlace);
     }
 
     public void onButtonPressed(Uri uri) {

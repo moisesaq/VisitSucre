@@ -47,7 +47,7 @@ public class DetailPlaceFragment extends Fragment {
     }
 
     private void setup(){
-        CollapsingToolbarLayout collapser = (CollapsingToolbarLayout)view.findViewById(R.id.collapser);
+        CollapsingToolbarLayout collapser = (CollapsingToolbarLayout)getActivity().findViewById(R.id.collapser);
         collapser.setTitle("Test test"); // Cambiar título
     }
 

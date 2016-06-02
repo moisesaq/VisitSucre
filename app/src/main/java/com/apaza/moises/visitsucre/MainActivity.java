@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -76,10 +77,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         setupToolbar();
         setupNavigationView();
-        /*showFragment(PlaceListFragment.newInstance(""));*/
-        showFragment(DetailPlaceFragment.newInstance(""));
-
+        showFragment(PlaceListFragment.newInstance(""));
+        //showFragment(DetailPlaceFragment.newInstance(""));
         handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(getApplicationContext());
+
+        /*CollapsingToolbarLayout collapser = (CollapsingToolbarLayout) findViewById(R.id.collapser);
+        collapser.setTitle("Android");//place.getName()); // Cambiar título*/
     }
 
     private void setupNavigationView(){
