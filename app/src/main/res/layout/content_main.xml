@@ -41,9 +41,9 @@
         android:layout_gravity="bottom|end" android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_dialog_email" />-->
 
-    <!-- Collapse -->
-    //Set this for animation collapse
-    <!--<android.support.design.widget.CollapsingToolbarLayout
+    <!-- Collapse
+    Set this for animation collapse
+    <android.support.design.widget.CollapsingToolbarLayout
     android:id="@+id/collapser"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

@@ -27,6 +27,7 @@
 
             <!-- Card Perfil -->
             <android.support.v7.widget.CardView
+                android:id="@+id/detail1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/cardMargin">
@@ -157,7 +158,7 @@
 
     <!--<include layout="@layout/content_detail" />-->
 
-    <!--<android.support.design.widget.FloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -165,15 +166,15 @@
         android:src="@mipmap/ic_star_on"
         app:borderWidth="0dp"
         app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|right|end" />-->
+        app:layout_anchorGravity="bottom|right|end" />
 
     <com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fab"
+        android:id="@+id/fab2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:borderWidth="0dp"
-        app:layout_anchor="@id/app_bar"
+        app:layout_anchor="@id/detail1"
         app:layout_anchorGravity="bottom|right|end"
         fab:menu_animationDelayPerItem="55"
         fab:menu_backgroundColor="@android:color/transparent"
@@ -205,7 +206,7 @@
         fab:menu_shadowXOffset="1dp"
         fab:menu_shadowYOffset="0dp"
         fab:menu_showShadow="true"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <com.github.clans.fab.FloatingActionButton
             android:id="@+id/shareFace"
