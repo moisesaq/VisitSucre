@@ -3,6 +3,7 @@ package com.apaza.moises.visitsucre.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -18,7 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.andexert.library.RippleView;
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Utils;
 
@@ -37,7 +39,9 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
     private CircleIndicator circleIndicator;
     private Toolbar toolbar;
 
-    private ImageButton skip, next;
+    private ImageButton next;
+
+    private ImageView skip;
 
     public static OnBoardingFragment newInstance() {
         OnBoardingFragment fragment = new OnBoardingFragment();
@@ -70,7 +74,8 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
         circleIndicator = (CircleIndicator)view.findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
-        skip = (ImageButton)view.findViewById(R.id.skip);
+        skip = (ImageView) view.findViewById(R.id.skip);
+
         skip.setOnClickListener(this);
         next = (ImageButton)view.findViewById(R.id.next);
         next.setOnClickListener(this);
@@ -89,10 +94,13 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
             case R.id.skip:
                 break;
             case R.id.next:
-                if(viewPager.getCurrentItem() == imagePageAdapter.getCount()-1)
+                ColorGenerator generator = ColorGenerator.MATERIAL;
+                TextDrawable textDrawable = TextDrawable.builder().buildRect("Hola", generator.getRandomColor());
+                skip.setImageDrawable(textDrawable);
+                /*if(viewPager.getCurrentItem() == imagePageAdapter.getCount()-1)
                     Toast.makeText(getActivity(), "Last item", Toast.LENGTH_SHORT).show();
                 else
-                    viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
+                    viewPager.setCurrentItem(viewPager.getCurrentItem()+1);*/
                 break;
             case R.id.signUp:
                 mListener.onSignUpClick();

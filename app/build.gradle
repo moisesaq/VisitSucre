@@ -38,9 +38,6 @@ dependencies {
     //View with ripple effect
     compile 'com.github.traex.rippleeffect:library:1.3'
 
-    //Image View rounded
-    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
-
     //Load toast
     compile 'net.steamcrafted:load-toast:1.0.10'
 
@@ -55,4 +52,7 @@ dependencies {
 
     //Floating button with menu
     compile 'com.github.clans:fab:1.6.4'
+
+    //Text Drawable
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
 }

@@ -36,12 +36,16 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/paddingMaxGlobal">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/skip"
             android:layout_gravity="left"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
             android:src="@mipmap/ic_menu_back"
-            style="@style/ImageButtonTechno"
-            android:background="@drawable/circle_button"/>
+            />
+
+        <!--style="@style/ImageButtonTechno"
+        android:background="@drawable/background_transparent"-->
 
         <me.relex.circleindicator.CircleIndicator
             android:id="@+id/indicator"
