@@ -16,7 +16,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCS_fNa0Ea1GZEii0HUULcwnuF-2ThVnsQ"/>
-        
+
         <provider
             android:name=".provider.ProviderVisitSucre"
             android:authorities="com.apaza.moises.visitsucre"
