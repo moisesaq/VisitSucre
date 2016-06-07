@@ -36,4 +36,27 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="ImageButtonTechno">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">@dimen/paddingMediumGlobal</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <!--<item name="android:background">@drawable/background_transparent</item>-->
+
+    <style name="StyleDivideHorizontal">
+        <item name="android:layout_width">0.5dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
+
+    <style name="StyleDivideVertical">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@android:color/darker_gray</item>
+    </style>
+
+
 </resources>

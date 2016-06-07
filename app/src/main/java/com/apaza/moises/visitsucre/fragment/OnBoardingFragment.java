@@ -11,9 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andexert.library.RippleView;
 import com.apaza.moises.visitsucre.R;
@@ -25,11 +28,16 @@ import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class OnBoardingFragment extends Fragment implements View.OnClickListener, RippleView.OnRippleCompleteListener{
+public class OnBoardingFragment extends Fragment implements View.OnClickListener, ViewPager.OnPageChangeListener{
 
     private View view;
     private OnBoardingFragmentListener mListener;
+    private ViewPager viewPager;
+    private ImagePageAdapter imagePageAdapter;
+    private CircleIndicator circleIndicator;
     private Toolbar toolbar;
+
+    private ImageButton skip, next;
 
     public static OnBoardingFragment newInstance() {
         OnBoardingFragment fragment = new OnBoardingFragment();
@@ -54,18 +62,51 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
     }
 
     private void setup(){
-        ViewPager viewPager = (ViewPager)view.findViewById(R.id.viewPagerSignUp);
-        ImagePageAdapter imagePageAdapter = new ImagePageAdapter(getActivity().getApplicationContext(), getItemsOnBoarding());
+        imagePageAdapter = new ImagePageAdapter(getActivity().getApplicationContext(), getItemsOnBoarding());
+        viewPager = (ViewPager)view.findViewById(R.id.viewPagerSignUp);
         viewPager.setAdapter(imagePageAdapter);
+        viewPager.addOnPageChangeListener(this);
 
-        CircleIndicator circleIndicator = (CircleIndicator)view.findViewById(R.id.indicator);
+        circleIndicator = (CircleIndicator)view.findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
-        RippleView btnSignUp = (RippleView) view.findViewById(R.id.signUp);
-        btnSignUp.setOnRippleCompleteListener(this);
-        //btnSignUp.setOnClickListener(this);
-        RippleView accessView = (RippleView)view.findViewById(R.id.accessView);
-        accessView.setOnRippleCompleteListener(this);
-        //accessView.setOnClickListener(this);
+
+        skip = (ImageButton)view.findViewById(R.id.skip);
+        skip.setOnClickListener(this);
+        next = (ImageButton)view.findViewById(R.id.next);
+        next.setOnClickListener(this);
+
+        Button btnSignUp = (Button) view.findViewById(R.id.signUp);
+        btnSignUp.setOnClickListener(this);
+        TextView accessView = (TextView) view.findViewById(R.id.accessView);
+        accessView.setOnClickListener(this);
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.skip:
+                break;
+            case R.id.next:
+                if(viewPager.getCurrentItem() == imagePageAdapter.getCount()-1)
+                    Toast.makeText(getActivity(), "Last item", Toast.LENGTH_SHORT).show();
+                else
+                    viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
+                break;
+            case R.id.signUp:
+                mListener.onSignUpClick();
+                break;
+            case R.id.accessView:
+                mListener.onAccessClick();
+                break;
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        toolbar.setVisibility(View.GONE);
     }
 
     @Override
@@ -84,34 +125,24 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
         mListener = null;
     }
 
+    //Method on page listener
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.signUp:
-                mListener.onSignUpClick();
-                break;
-            case R.id.accessView:
-                mListener.onAccessClick();
-                break;
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if(position == imagePageAdapter.getCount()-1){
+            skip.setVisibility(View.GONE);
+        }else {
+            skip.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
-    public void onComplete(RippleView rippleView) {
-        switch (rippleView.getId()){
-            case R.id.signUp:
-                mListener.onSignUpClick();
-                break;
-            case R.id.accessView:
-                mListener.onAccessClick();
-                break;
-        }
-    }
+    public void onPageScrollStateChanged(int state) {
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        toolbar.setVisibility(View.GONE);
     }
 
     public interface OnBoardingFragmentListener {
