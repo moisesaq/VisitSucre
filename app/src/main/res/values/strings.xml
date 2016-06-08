@@ -34,4 +34,5 @@
     <string name="new_category">New Category</string>
     <string name="data_no_found">Data no found</string>
     <string name="all">All</string>
+    <string name="filter">Filter</string>
 </resources>

@@ -78,8 +78,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         setupToolbar();
         setupNavigationView();
-        showFragment(PlaceInMapFragment.newInstance("", ""));
-        //showFragment(PlaceListFragment.newInstance(""));
+        //showFragment(PlaceInMapFragment.newInstance("", ""));
+        showFragment(PlaceListFragment.newInstance(""));
         //showFragment(DetailPlaceFragment.newInstance(""));
         handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(getApplicationContext());
     }

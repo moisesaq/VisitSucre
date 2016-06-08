@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.apaza.moises.visitsucre.fragment.OnBoardingFragment"
     android:background="@color/colorPrimary">
@@ -36,16 +35,12 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/paddingMaxGlobal">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/skip"
             android:layout_gravity="left"
-            android:layout_height="40dp"
-            android:layout_width="40dp"
             android:src="@mipmap/ic_menu_back"
-            />
-
-        <!--style="@style/ImageButtonTechno"
-        android:background="@drawable/background_transparent"-->
+            style="@style/ImageButtonTechno"
+            android:background="@drawable/background_transparent"/>
 
         <me.relex.circleindicator.CircleIndicator
             android:id="@+id/indicator"

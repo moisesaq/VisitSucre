@@ -39,9 +39,7 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
     private CircleIndicator circleIndicator;
     private Toolbar toolbar;
 
-    private ImageButton next;
-
-    private ImageView skip;
+    private ImageButton next, skip;
 
     public static OnBoardingFragment newInstance() {
         OnBoardingFragment fragment = new OnBoardingFragment();
@@ -74,7 +72,7 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
         circleIndicator = (CircleIndicator)view.findViewById(R.id.indicator);
         circleIndicator.setViewPager(viewPager);
 
-        skip = (ImageView) view.findViewById(R.id.skip);
+        skip = (ImageButton)view.findViewById(R.id.skip);
 
         skip.setOnClickListener(this);
         next = (ImageButton)view.findViewById(R.id.next);
@@ -94,13 +92,13 @@ public class OnBoardingFragment extends Fragment implements View.OnClickListener
             case R.id.skip:
                 break;
             case R.id.next:
-                ColorGenerator generator = ColorGenerator.MATERIAL;
+                /*ColorGenerator generator = ColorGenerator.MATERIAL;
                 TextDrawable textDrawable = TextDrawable.builder().buildRect("Hola", generator.getRandomColor());
-                skip.setImageDrawable(textDrawable);
-                /*if(viewPager.getCurrentItem() == imagePageAdapter.getCount()-1)
+                skip.setImageDrawable(textDrawable);*/
+                if(viewPager.getCurrentItem() == imagePageAdapter.getCount()-1)
                     Toast.makeText(getActivity(), "Last item", Toast.LENGTH_SHORT).show();
                 else
-                    viewPager.setCurrentItem(viewPager.getCurrentItem()+1);*/
+                    viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
                 break;
             case R.id.signUp:
                 mListener.onSignUpClick();
