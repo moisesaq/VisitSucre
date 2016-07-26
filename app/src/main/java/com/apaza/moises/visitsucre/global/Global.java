@@ -1,55 +1,44 @@
 package com.apaza.moises.visitsucre.global;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.util.LruCache;
+import android.app.Activity;
+import android.support.design.widget.Snackbar;
+import android.view.View;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.Volley;
+import com.apaza.moises.visitsucre.provider.HandlerDBVisitSucre;
 
-public final class Global {
+public class Global {
+    public static String urlCategory = "http://192.168.1.42:3000/api/categories";
+    public static String urlPlace = "http://192.168.1.42:3000/api/places";
+    public static String urlImage = "http://vignette2.wikia.nocookie.net/ultradragonball/images/2/28/543px-MajinBuuFatNV.png/revision/latest?cb=20110330215918";
 
-    private static Global global;
-    private RequestQueue requestQueue;
-    private static Context context;
-    private ImageLoader imageLoader;
+    private static Activity context;
+    private static ApiRest apiRest;
 
-    private Global(Context context){
+    private static HandlerDBVisitSucre handlerDBVisitSucre;
+
+    public static void setContenxt(Activity context){
         Global.context = context;
-        requestQueue = getRequestQueue();
-        imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
-            private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
-            @Override
-            public Bitmap getBitmap(String url) {
-                return cache.get(url);
-            }
-
-            @Override
-            public void putBitmap(String url, Bitmap bitmap) {
-                cache.put(url, bitmap);
-            }
-        });
     }
 
-    public static synchronized Global getInstance(Context context){
-        if(global == null)
-            global = new Global(context);
-        return  global;
+    public static Activity getContext(){
+        return context;
     }
 
-    public RequestQueue getRequestQueue(){
-        if(requestQueue == null)
-            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
-        return requestQueue;
+    public static void showMessage(String message){
+        View view = getContext().findViewById(android.R.id.content);
+        if(view != null)
+            Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
     }
 
-    public void addToRequestQueue(Request  request){
-        getRequestQueue().add(request);
+    public static ApiRest getApiRest(){
+        if(apiRest == null)
+            apiRest = ApiRest.getInstance(context);
+        return apiRest;
     }
 
-    public ImageLoader getImageLoader(){
-        return imageLoader;
+    public static HandlerDBVisitSucre getHandlerDBVisitSucre(){
+        if(handlerDBVisitSucre == null)
+            handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(context);
+        return handlerDBVisitSucre;
     }
 }

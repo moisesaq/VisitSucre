@@ -10,8 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
 
-public class RegisterPlaceFragment extends Fragment {
+public class RegisterPlaceFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
 
     private String mParam1;

@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Utils;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.List;
 import me.relex.circleindicator.CircleIndicator;
 
 
-public class OnBoardingFragment extends Fragment implements View.OnClickListener, ViewPager.OnPageChangeListener{
+public class OnBoardingFragment extends BaseFragment implements View.OnClickListener, ViewPager.OnPageChangeListener{
 
     private View view;
     private OnBoardingFragmentListener mListener;

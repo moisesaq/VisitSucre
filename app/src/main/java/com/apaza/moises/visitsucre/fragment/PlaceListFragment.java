@@ -1,15 +1,13 @@
 package com.apaza.moises.visitsucre.fragment;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,10 +21,10 @@ import android.view.ViewGroup;
 import com.apaza.moises.visitsucre.DetailPlaceActivity;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.fragment.adapter.PlaceAdapter;
-import com.apaza.moises.visitsucre.global.Utils;
+import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
-public class PlaceListFragment extends Fragment implements PlaceAdapter.OnPlaceItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{
+public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPlaceItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{
     private static final String ARG_PARAM1 = "param1";
     private String mParam1;
 
@@ -123,22 +121,6 @@ public class PlaceListFragment extends Fragment implements PlaceAdapter.OnPlaceI
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), ContractVisitSucre.Place.CONTENT_URI, null, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            if(adapter != null)
-                adapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
@@ -155,8 +137,23 @@ public class PlaceListFragment extends Fragment implements PlaceAdapter.OnPlaceI
         mListener = null;
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), ContractVisitSucre.Place.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(adapter != null)
+            adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
-
 }

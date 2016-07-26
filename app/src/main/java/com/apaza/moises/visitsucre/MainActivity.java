@@ -1,8 +1,5 @@
 package com.apaza.moises.visitsucre;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -16,8 +13,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -33,26 +32,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.fragment.CategoryListFragment;
-import com.apaza.moises.visitsucre.fragment.DetailPlaceFragment;
-import com.apaza.moises.visitsucre.fragment.PlaceInMapFragment;
 import com.apaza.moises.visitsucre.fragment.PlaceListFragment;
 import com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment;
+import com.apaza.moises.visitsucre.fragment.TestFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.provider.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
-import com.apaza.moises.visitsucre.provider.HandlerDBVisitSucre;
 import com.apaza.moises.visitsucre.provider.Place;
 
 import net.steamcrafted.loadtoast.LoadToast;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,18 +61,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //For test
     private TextView text;
     private NetworkImageView imagePost;
-    private HandlerDBVisitSucre handlerDBVisitSucre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Global.setContenxt(this);
         setupToolbar();
         setupNavigationView();
-        //showFragment(PlaceInMapFragment.newInstance("", ""));
-        showFragment(PlaceListFragment.newInstance(""));
-        //showFragment(DetailPlaceFragment.newInstance(""));
-        handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(getApplicationContext());
+        //showFragment(PlaceListFragment.newInstance(""));
+        showFragment(TestFragment.newInstance());
     }
 
     private void setupNavigationView(){
@@ -121,14 +110,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void showFragment(Fragment fragment){
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
         ft.replace(R.id.containerMain, fragment);
         ft.commit();
     }
-
-
 
     private void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -243,46 +230,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseUtils.dumpCursor(getContentResolver().query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
     }
 
-    private void testVolley(){
-        try{
-            //RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String url = "http://192.168.1.42:3000/api/places";
-            String urlImage = "http://vignette2.wikia.nocookie.net/ultradragonball/images/2/28/543px-MajinBuuFatNV.png/revision/latest?cb=20110330215918";
-            /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            text.setText(response.toString());
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            text.setText("Error: " + error.toString());
-                        }
-                    });*/
-            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url,
-                    new Response.Listener<JSONArray>() {
-                        @Override
-                        public void onResponse(JSONArray response) {
-                            text.setText("Result: " + response.toString());
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    text.setText("Error: " + error.toString());
-                }
-            });
-            //requestQueue.add(jsonArrayRequest);
-            Global.getInstance(getApplicationContext()).addToRequestQueue(jsonArrayRequest);
-            ImageLoader imageLoader = Global.getInstance(getApplicationContext()).getImageLoader();
-            imageLoader.get(urlImage, ImageLoader.getImageListener(imagePost, R.mipmap.ic_communication, R.mipmap.default_profile));
-            imagePost.setImageUrl(urlImage, imageLoader);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public class TestDB extends AsyncTask<Void, Void, Boolean> {
         LoadToast loadToast;
         @Override
@@ -299,42 +246,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         protected Boolean doInBackground(Void... params) {
             Date currentDate = Calendar.getInstance().getTime();
             try{
-                handlerDBVisitSucre.getDB().beginTransaction();
+                Global.getHandlerDBVisitSucre().getDB().beginTransaction();
 
                 //Insert data
                 Category category1 = new Category(null, "code-111", "logo111", "Cathedral", "bla bla bla bla bla bla bla bla 1111111", currentDate);
                 Category category2 = new Category(null, "code-222", "logo222", "Museums", "bla bla bla bla bla bla bla bla 2222222", currentDate);
                 Category category3 = new Category(null, "code-333", "logo333", "Tourism", "bla bla bla bla bla bla bla bla 33333333", currentDate);
 
-                String idCategory1 = handlerDBVisitSucre.insertCategory(category1);
-                String idCategory2 = handlerDBVisitSucre.insertCategory(category2);
-                String idCategory3 = handlerDBVisitSucre.insertCategory(category3);
+                String idCategory1 = Global.getHandlerDBVisitSucre().insertCategory(category1);
+                String idCategory2 = Global.getHandlerDBVisitSucre().insertCategory(category2);
+                String idCategory3 = Global.getHandlerDBVisitSucre().insertCategory(category3);
 
                 Place place1 = new Place(null, "code-1", "Casa de la libertad", "adress xxxx", -34.3452341, -58.123123, "Description 1111", "Image3 111",currentDate, idCategory1);
                 Place place2 = new Place(null, "code-2", "Muse xxxx", "adress xxxx", -34.3452341, -58.123123, "Description 2222", "Image 222", currentDate, idCategory2);
                 Place place3 = new Place(null, "code-3", "Tourism xxx tarabuco", "adress xxxx", -34.3452341, -58.123123, "Description 2222", "Image 333", currentDate, idCategory3);
 
-                String idPlace1 = handlerDBVisitSucre.insertPlace(place1);
-                String idPlace2 = handlerDBVisitSucre.insertPlace(place2);
-                String idPlace3 = handlerDBVisitSucre.insertPlace(place3);
+                String idPlace1 = Global.getHandlerDBVisitSucre().insertPlace(place1);
+                String idPlace2 = Global.getHandlerDBVisitSucre().insertPlace(place2);
+                String idPlace3 = Global.getHandlerDBVisitSucre().insertPlace(place3);
 
                 //Delete data
-                handlerDBVisitSucre.deletePlace(idPlace2);
+                Global.getHandlerDBVisitSucre().deletePlace(idPlace2);
 
                 //Modified data
-                handlerDBVisitSucre.updatePlace(place3.setIdPlace(idPlace3).setName("CARABUCO"));
+                Global.getHandlerDBVisitSucre().updatePlace(place3.setIdPlace(idPlace3).setName("CARABUCO"));
 
                 Log.d("CATEGORIES", ">>>>>>>>>>>>>>>>>> CATEGORIES");
-                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getCategories());
+                DatabaseUtils.dumpCursor(Global.getHandlerDBVisitSucre().getCategories());
                 Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES");
-                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getPlaces());
+                DatabaseUtils.dumpCursor(Global.getHandlerDBVisitSucre().getPlaces());
 
-                handlerDBVisitSucre.getDB().setTransactionSuccessful();
+                Global.getHandlerDBVisitSucre().getDB().setTransactionSuccessful();
             }catch (Exception e){
                 e.printStackTrace();
                 return false;
             } finally {
-                handlerDBVisitSucre.getDB().endTransaction();
+                Global.getHandlerDBVisitSucre().getDB().endTransaction();
                 return true;
             }
         }
@@ -364,27 +311,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected Boolean doInBackground(Void... params) {
             try{
-                handlerDBVisitSucre.getDB().beginTransaction();
+                Global.getHandlerDBVisitSucre().getDB().beginTransaction();
 
                 //Delete data
-                Cursor cursor = handlerDBVisitSucre.getCategories();
+                Cursor cursor = Global.getHandlerDBVisitSucre().getCategories();
                 if(cursor != null){
                     for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
-                        handlerDBVisitSucre.deleteCategory(cursor.getString(1));
+                        Global.getHandlerDBVisitSucre().deleteCategory(cursor.getString(1));
                     }
                 }
 
                 Log.d("CATEGORIES", "CATEGORIES");
-                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getCategories());
+                DatabaseUtils.dumpCursor(Global.getHandlerDBVisitSucre().getCategories());
                 Log.d("PLACES", "PLACES");
-                DatabaseUtils.dumpCursor(handlerDBVisitSucre.getPlaces());
+                DatabaseUtils.dumpCursor(Global.getHandlerDBVisitSucre().getPlaces());
 
-                handlerDBVisitSucre.getDB().setTransactionSuccessful();
+                Global.getHandlerDBVisitSucre().getDB().setTransactionSuccessful();
             }catch (Exception e){
                 e.printStackTrace();
                 return false;
             } finally {
-                handlerDBVisitSucre.getDB().endTransaction();
+                Global.getHandlerDBVisitSucre().getDB().endTransaction();
                 return true;
             }
         }

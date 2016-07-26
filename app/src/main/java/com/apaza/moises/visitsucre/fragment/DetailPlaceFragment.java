@@ -10,8 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
 
-public class DetailPlaceFragment extends Fragment {
+public class DetailPlaceFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";
 
     // TODO: Rename and change types of parameters

@@ -15,9 +15,10 @@ import android.widget.Toast;
 
 import com.andexert.library.RippleView;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Utils;
 
-public class SignUpFragment extends Fragment implements RippleView.OnRippleCompleteListener, View.OnClickListener{
+public class SignUpFragment extends BaseFragment implements RippleView.OnRippleCompleteListener, View.OnClickListener{
 
 
     private static final String PARAM_EMAIL = "email";

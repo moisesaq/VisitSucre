@@ -1,9 +1,9 @@
 package com.apaza.moises.visitsucre;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,10 +28,10 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
     }
 
     public void showFragment(Fragment fragment){
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.replace(R.id.containerSignUp, fragment);
+        ft.replace(R.id.containerMain, fragment);
         ft.commit();
     }
 
@@ -78,8 +78,8 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
 
     @Override
     public void onBackPressed() {
-        if(getFragmentManager().getBackStackEntryCount() > 1)
-            getFragmentManager().popBackStack();
+        if(getSupportFragmentManager().getBackStackEntryCount() > 1)
+            getSupportFragmentManager().popBackStack();
         else
             finish();
     }

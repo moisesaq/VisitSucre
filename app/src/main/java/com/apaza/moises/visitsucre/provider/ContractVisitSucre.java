@@ -60,7 +60,7 @@ public class ContractVisitSucre {
         public static final Uri CONTENT_URI = URI_BASE.buildUpon().appendPath(ROUTE_CATEGORY).build();
 
         public static Uri createUriCategory(String id){
-            return CONTENT_URI.buildUpon().appendPath(id).build();
+                return CONTENT_URI.buildUpon().appendPath(id).build();
         }
 
         public static String generateIdCategory(){

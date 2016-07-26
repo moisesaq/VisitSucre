@@ -15,9 +15,10 @@ import android.widget.Toast;
 import com.andexert.library.RippleView;
 import com.apaza.moises.visitsucre.MainActivity;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
 
 
-public class LoginFragment extends Fragment implements View.OnClickListener, RippleView.OnRippleCompleteListener{
+public class LoginFragment extends BaseFragment implements View.OnClickListener, RippleView.OnRippleCompleteListener{
 
 
     private OnLoginFragmentListener mListener;

@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.provider;
+package com.apaza.moises.visitsucre.provider.last;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
