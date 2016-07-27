@@ -7,13 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
@@ -21,6 +24,10 @@ import com.apaza.moises.visitsucre.global.ApiRest;
 import com.apaza.moises.visitsucre.global.Global;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestFragment extends BaseFragment implements View.OnClickListener{
 
@@ -29,6 +36,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     private View view;
     private CheckBox checkBox;
     private ImageView imageTest;
+    private EditText textSearch;
     private NetworkImageView imagePost;
     private TextView resultTest;
 
@@ -50,6 +58,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         loadImage.setOnClickListener(this);
         Button test2 = (Button)view.findViewById(R.id.test2);
         test2.setOnClickListener(this);
+        textSearch = (EditText)view.findViewById(R.id.textSearch);
+        Button search = (Button)view.findViewById(R.id.search);
+        search.setOnClickListener(this);
         imageTest = (ImageView)view.findViewById(R.id.imageTest);
         imagePost = (NetworkImageView)view.findViewById(R.id.imagePost);
         resultTest = (TextView)view.findViewById(R.id.resultTest);
@@ -66,6 +77,11 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 break;
             case R.id.loadImage:
                 testImageLoader();
+                break;
+            case R.id.search:
+                    if(textSearch.getText().length() > 0){
+                        testJsonObjectRequest(Global.urlPlaceFind, textSearch.getText().toString());
+                    }
                 break;
         }
     }
@@ -88,28 +104,37 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                         resultTest.setText("Result: " + response.toString());
                     }
                 }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                resultTest.setText("Error: " + error.toString());
-            }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        resultTest.setText("Error: " + error.toString());
+                    }
         });
         ApiRest.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
-        /*JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, urlPlace, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            text.setText(response.toString());
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            text.setText("Error: " + error.toString());
-                        }
-                    });*/
     }
 
-    private void testJsonObjectRequest(String url){
+    private void testJsonObjectRequest(String url, final String text){
+        HashMap<String, String> params = new HashMap<>();
+        params.put("name", text);
 
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, null,
+                new Response.Listener<JSONArray>(){
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        resultTest.setText("Result: " +response.toString());
+                    }
+                }, new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        resultTest.setText("Error: " + error.toString());
+                    }
+                }){
+                    @Override
+                    public HashMap<String, String> getHeaders(){
+                        HashMap<String, String> headers = new HashMap<>();
+                        headers.put("name", text);
+                        return headers;
+                    }
+        };
+        Global.getApiRest().addToRequestQueue(request);
     }
 }

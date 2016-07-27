@@ -36,21 +36,48 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/imageTest"
-            android:layout_width="200dp"
-            android:layout_height="130dp"
-            android:src="@mipmap/default_profile"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"/>
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/imagePost"
-            android:layout_width="200dp"
-            android:layout_height="130dp"
-            android:src="@mipmap/default_profile"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/paddingMinGlobal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/textSearch"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences"/>
+
+                <Button
+                    android:id="@+id/search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Search"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageTest"
+                android:layout_width="200dp"
+                android:layout_height="130dp"
+                android:src="@mipmap/default_profile"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone"/>
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/imagePost"
+                android:layout_width="200dp"
+                android:layout_height="130dp"
+                android:src="@mipmap/default_profile"
+                android:scaleType="centerCrop" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/resultTest"
