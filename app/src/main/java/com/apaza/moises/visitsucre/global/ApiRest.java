@@ -49,6 +49,11 @@ public final class ApiRest {
         getRequestQueue().add(request);
     }
 
+    public void cancelPendingRequest(String tag){
+        if(requestQueue != null)
+            requestQueue.cancelAll(tag);
+    }
+
     public ImageLoader getImageLoader(){
         return imageLoader;
     }

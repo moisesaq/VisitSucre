@@ -2,6 +2,7 @@ package com.apaza.moises.visitsucre.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,9 +80,16 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 testImageLoader();
                 break;
             case R.id.search:
-                    if(textSearch.getText().length() > 0){
-                        testJsonObjectRequest(Global.urlPlaceFind, textSearch.getText().toString());
-                    }
+                Log.d(TAG, ">>>>>>>>>>>>>>>>>> Test Test Test");
+                String text = textSearch.getText().toString();
+                if(text.isEmpty())
+                    return;
+
+                if(checkBox.isChecked()){
+                    testJsonObjectRequest2(Global.urlPlaceFind, text);
+                }else {
+                    testJsonArrayRequest(Global.urlCategoryFind, text);
+                }
                 break;
         }
     }
@@ -112,29 +120,61 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         ApiRest.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
     }
 
-    private void testJsonObjectRequest(String url, final String text){
-        HashMap<String, String> params = new HashMap<>();
-        params.put("name", text);
-
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.POST, url, null,
+    private void testJsonArrayRequest(String url, final String text){
+        JsonArrayRequest request = new JsonArrayRequest(
+                Request.Method.POST,
+                url,
+                null,
                 new Response.Listener<JSONArray>(){
                     @Override
                     public void onResponse(JSONArray response) {
+                        Log.d(TAG, response.toString() + " " +text);
                         resultTest.setText("Result: " +response.toString());
                     }
-                }, new Response.ErrorListener(){
+                },
+                new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, error.toString());
                         resultTest.setText("Error: " + error.toString());
                     }
                 }){
                     @Override
-                    public HashMap<String, String> getHeaders(){
+                    public Map<String, String> getHeaders() {
+                        // Mapping of key-value
                         HashMap<String, String> headers = new HashMap<>();
                         headers.put("name", text);
+
                         return headers;
                     }
         };
+        //ApiRest.getInstance(Global.getContext()).addToRequestQueue(request);
+        Global.getApiRest().addToRequestQueue(request);
+    }
+
+    private void testJsonObjectRequest2(String url, final String text){
+        HashMap<String, String> params = new HashMap<>();
+        params.put("name", text);
+
+        JsonObjectRequest request = new JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                new JSONObject(params),
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d(TAG, response.toString() + " " +text);
+                        resultTest.setText("Result: " +response.toString());
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, error.toString());
+                        resultTest.setText("Error: " + error.toString());
+                    }
+                });
+        //ApiRest.getInstance(Global.getContext()).addToRequestQueue(request);
         Global.getApiRest().addToRequestQueue(request);
     }
 }

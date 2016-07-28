@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void startSplash(){
-        new CountDownTimer(5000, 1000) {
+        new CountDownTimer(2000, 1000) {
             public void onTick(long millisUntilFinished) {
                 counter.setText("" + millisUntilFinished / 1000);
             }

@@ -10,6 +10,7 @@ public class Global {
     public static String urlCategory = "http://192.168.1.42:3000/api/categories";
     public static String urlPlace = "http://192.168.1.42:3000/api/places";
     public static String urlPlaceFind = "http://192.168.1.42:3000/api/place/find";
+    public static String urlCategoryFind = "http://192.168.1.42:3000/api/category/find";
     public static String urlImage = "http://vignette2.wikia.nocookie.net/ultradragonball/images/2/28/543px-MajinBuuFatNV.png/revision/latest?cb=20110330215918";
 
     private static Activity context;
@@ -17,7 +18,7 @@ public class Global {
 
     private static HandlerDBVisitSucre handlerDBVisitSucre;
 
-    public static void setContenxt(Activity context){
+    public static void setContext(Activity context){
         Global.context = context;
     }
 

@@ -53,7 +53,8 @@
                     android:id="@+id/textSearch"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapSentences"/>
+                    android:inputType="textCapSentences"
+                    android:text="Tarabuco"/>
 
                 <Button
                     android:id="@+id/search"
