@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.fragment.CategoryListFragment;
+import com.apaza.moises.visitsucre.fragment.PlaceInMapFragment;
 import com.apaza.moises.visitsucre.fragment.PlaceListFragment;
 import com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment;
 import com.apaza.moises.visitsucre.fragment.TestFragment;
@@ -52,7 +53,8 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
         CategoryListFragment.OnCategoryListFragmentListener,
-        PlaceListFragment.OnFragmentInteractionListener{
+        PlaceListFragment.OnFragmentInteractionListener,
+        PlaceInMapFragment.OnPlaceInMapFragmentListener{
 
     private DrawerLayout drawerLayout;
     private String drawerTitle;
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setupToolbar();
         setupNavigationView();
         //showFragment(PlaceListFragment.newInstance(""));
-        showFragment(TestFragment.newInstance());
+        showFragment(PlaceInMapFragment.newInstance(""));
     }
 
     private void setupNavigationView(){
@@ -228,6 +230,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseUtils.dumpCursor(getContentResolver().query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
         Log.d("PLACES", "---------------------------PLACES------------------");
         DatabaseUtils.dumpCursor(getContentResolver().query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
+    }
+
+    /*PLACE IN MAP FRAGMENT LISTENER*/
+    @Override
+    public void onPlaceLocaled(Uri uri) {
+
     }
 
     public class TestDB extends AsyncTask<Void, Void, Boolean> {
