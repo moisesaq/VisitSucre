@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.fragment;
+package com.apaza.moises.visitsucre.ui.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.fragment.adapter.CategoryAdapter;
+import com.apaza.moises.visitsucre.ui.fragment.adapter.CategoryAdapter;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class CategoryListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{

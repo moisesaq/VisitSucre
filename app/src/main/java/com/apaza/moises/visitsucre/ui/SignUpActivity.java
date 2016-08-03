@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre;
+package com.apaza.moises.visitsucre.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,9 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.apaza.moises.visitsucre.fragment.LoginFragment;
-import com.apaza.moises.visitsucre.fragment.OnBoardingFragment;
-import com.apaza.moises.visitsucre.fragment.SignUpFragment;
+import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.ui.fragment.LoginFragment;
+import com.apaza.moises.visitsucre.ui.fragment.OnBoardingFragment;
+import com.apaza.moises.visitsucre.ui.fragment.SignUpFragment;
 
 public class SignUpActivity extends AppCompatActivity implements OnBoardingFragment.OnBoardingFragmentListener,
                                                                     LoginFragment.OnLoginFragmentListener,

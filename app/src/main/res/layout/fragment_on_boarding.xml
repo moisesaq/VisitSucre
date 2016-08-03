@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.apaza.moises.visitsucre.fragment.OnBoardingFragment"
+    tools:context=".ui.fragment.OnBoardingFragment"
     android:background="@color/colorPrimary">
 
     <FrameLayout

@@ -17,9 +17,20 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
         String PLACE = "place";
     }
 
+    private static final String tableCategory = "CREATE TABLE " + Table.CATEGORY + " (" +
+            BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            ContractVisitSucre.Category.ID + " TEXT UNIQUE NOT NULL, " +
+            ContractVisitSucre.Category.CODE + " TEXT NOT NULL, " +
+            ContractVisitSucre.Category.LOGO + " TEXT, " +
+            ContractVisitSucre.Category.NAME + " TEXT NOT NULL, " +
+            ContractVisitSucre.Category.DATE + " DATETIME NO NULL, " +
+            ContractVisitSucre.Category.DESCRIPTION +" TEXT, " +
+            ContractVisitSucre.Category.STATUS +" INTEGER NOT NULL DEFAULT " + ContractVisitSucre.STATUS_OK + ", "+
+            ContractVisitSucre.Category.ID_REMOTE + " TEXT UNIQUE, " +
+            ContractVisitSucre.Category.PENDING_INSERTION + " INTEGER NOT NULL DEFAULT 0)";
+
     interface References{
-        String ID_CATEGORY = String.format("REFERENCES %s(%s) ON DELETE CASCADE",
-                Table.CATEGORY, ContractVisitSucre.Category.ID);
+        String ID_CATEGORY = String.format("REFERENCES %s(%s) ON DELETE CASCADE", Table.CATEGORY, ContractVisitSucre.Category.ID);
     }
 
     public DBVisitSucreHelper(Context context){
@@ -41,10 +52,12 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db){
-        db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        /*db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
         "%s TEXT UNIQUE NOT NULL, %s TEXT NOT NULL, %s TEXT, %s TEXT NOT NULL, %s DATETIME NO NULL, %s TEXT)",
                 Table.CATEGORY, BaseColumns._ID, ContractVisitSucre.Category.ID, ContractVisitSucre.Category.CODE,
-                ContractVisitSucre.Category.LOGO, ContractVisitSucre.Category.NAME, ContractVisitSucre.Category.DATE, ContractVisitSucre.Category.DESCRIPTION));
+                ContractVisitSucre.Category.LOGO, ContractVisitSucre.Category.NAME, ContractVisitSucre.Category.DATE, ContractVisitSucre.Category.DESCRIPTION));*/
+
+        db.execSQL(tableCategory);
 
         db.execSQL(String.format("CREATE TABLE %s (%s INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         "%s TEXT UNIQUE NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, %s TEXT NOT NULL, " +

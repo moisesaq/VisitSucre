@@ -6,7 +6,7 @@
     android:fillViewport="true"
     android:scrollbars="none"
     android:padding="@dimen/paddingMaxGlobal"
-    tools:context="com.apaza.moises.visitsucre.fragment.SignUpFragment">
+    tools:context=".ui.fragment.SignUpFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

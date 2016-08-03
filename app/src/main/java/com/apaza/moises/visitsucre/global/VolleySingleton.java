@@ -9,15 +9,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
-public final class ApiRest {
+public final class VolleySingleton {
 
-    private static ApiRest apiRest;
+    private static VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
     private static Context context;
     private ImageLoader imageLoader;
 
-    private ApiRest(Context context){
-        ApiRest.context = context;
+    private VolleySingleton(Context context){
+        VolleySingleton.context = context;
         requestQueue = getRequestQueue();
         imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
             private final LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(20);
@@ -33,10 +33,10 @@ public final class ApiRest {
         });
     }
 
-    public static synchronized ApiRest getInstance(Context context){
-        if(apiRest == null)
-            apiRest = new ApiRest(context);
-        return apiRest;
+    public static synchronized VolleySingleton getInstance(Context context){
+        if(volleySingleton == null)
+            volleySingleton = new VolleySingleton(context);
+        return volleySingleton;
     }
 
     public RequestQueue getRequestQueue(){

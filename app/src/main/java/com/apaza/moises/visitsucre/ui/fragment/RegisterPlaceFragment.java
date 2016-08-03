@@ -1,7 +1,5 @@
-package com.apaza.moises.visitsucre.fragment;
+package com.apaza.moises.visitsucre.ui.fragment;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 
 public class RegisterPlaceFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";

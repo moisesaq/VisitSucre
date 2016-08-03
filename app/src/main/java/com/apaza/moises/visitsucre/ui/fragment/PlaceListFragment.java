@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.fragment;
+package com.apaza.moises.visitsucre.ui.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,10 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.apaza.moises.visitsucre.DetailPlaceActivity;
+import com.apaza.moises.visitsucre.ui.DetailPlaceActivity;
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.fragment.adapter.PlaceAdapter;
-import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.fragment.adapter.PlaceAdapter;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPlaceItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{

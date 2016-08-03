@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.provider.last;
+package com.apaza.moises.visitsucre.provider.deprecated;
 
 import android.content.UriMatcher;
 import android.net.Uri;

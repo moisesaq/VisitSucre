@@ -1,11 +1,9 @@
-package com.apaza.moises.visitsucre.fragment;
+package com.apaza.moises.visitsucre.ui.fragment;
 
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Utils;
 
 import java.util.ArrayList;

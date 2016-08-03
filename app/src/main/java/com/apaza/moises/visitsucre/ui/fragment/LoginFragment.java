@@ -1,10 +1,9 @@
-package com.apaza.moises.visitsucre.fragment;
+package com.apaza.moises.visitsucre.ui.fragment;
 
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -13,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.andexert.library.RippleView;
-import com.apaza.moises.visitsucre.MainActivity;
+import com.apaza.moises.visitsucre.ui.MainActivity;
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 
 
 public class LoginFragment extends BaseFragment implements View.OnClickListener, RippleView.OnRippleCompleteListener{

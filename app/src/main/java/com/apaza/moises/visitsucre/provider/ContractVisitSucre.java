@@ -6,6 +6,9 @@ import java.util.UUID;
 
 public class ContractVisitSucre {
 
+    public static final int STATUS_OK = 0;
+    public static final int STATUS_SYNC = 1;
+
     interface ColumnsCategory{
         String ID = "id";
         String CODE = "code";
@@ -13,6 +16,10 @@ public class ContractVisitSucre {
         String NAME = "name";
         String DATE = "date";
         String DESCRIPTION = "description";
+
+        String STATUS = "status";
+        String ID_REMOTE = "idRemote";
+        String PENDING_INSERTION = "pendingInsertion";
     }
 
     interface ColumnsPlace{

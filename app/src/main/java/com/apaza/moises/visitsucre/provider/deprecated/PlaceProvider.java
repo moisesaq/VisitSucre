@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.provider.last;
+package com.apaza.moises.visitsucre.provider.deprecated;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -36,18 +36,14 @@ public class PlaceProvider extends ContentProvider {
                 cursor = db.query(PlaceContract.PLACE, projection,
                         selection, selectionArgs,
                         null, null, sortOrder);
-                cursor.setNotificationUri(
-                        getContext().getContentResolver(),
-                        PlaceContract.CONTENT_URI);
+                cursor.setNotificationUri(getContext().getContentResolver(), PlaceContract.CONTENT_URI);
                 break;
             case PlaceContract.SINGLE_ROWS:
                 long idPlace = ContentUris.parseId(uri);
                 cursor = db.query(PlaceContract.PLACE, projection,
                         PlaceContract.Columns._ID + " = " + idPlace,
                         selectionArgs, null, null, sortOrder);
-                cursor.setNotificationUri(
-                        getContext().getContentResolver(),
-                        PlaceContract.CONTENT_URI);
+                cursor.setNotificationUri(getContext().getContentResolver(), PlaceContract.CONTENT_URI);
                 break;
             default:
                 throw new IllegalArgumentException("Uri no support" + uri);

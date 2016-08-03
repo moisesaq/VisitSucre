@@ -65,7 +65,8 @@ public class ProviderVisitSucre extends ContentProvider{
     @Override
     public boolean onCreate(){
         helper = new DBVisitSucreHelper(getContext());
-        resolver = getContext().getContentResolver();
+        if(getContext() != null)
+            resolver = getContext().getContentResolver();
         return true;
     }
 
@@ -198,6 +199,7 @@ public class ProviderVisitSucre extends ContentProvider{
             default:
                 throw new UnsupportedOperationException(NO_SUPPORTED_URI);
         }
+        resolver.notifyChange(uri, null, false);
         return affects;
     }
 

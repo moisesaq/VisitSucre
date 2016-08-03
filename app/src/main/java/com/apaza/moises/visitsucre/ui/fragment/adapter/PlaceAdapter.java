@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.fragment.adapter;
+package com.apaza.moises.visitsucre.ui.fragment.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
-import com.bumptech.glide.Glide;
 
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
 

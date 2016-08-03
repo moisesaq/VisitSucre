@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.fragment;
+package com.apaza.moises.visitsucre.ui.fragment;
 
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,8 +31,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
-import com.apaza.moises.visitsucre.global.ApiRest;
+import com.apaza.moises.visitsucre.global.VolleySingleton;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.provider.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
@@ -65,6 +64,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         return new TestFragment();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,14 +95,14 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_test, menu);
+        //inflater.inflate(R.menu.menu_main, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        switch (id){
+        switch (item.getItemId()){
             case R.id.action_test_database:
+                Global.showMessage("test db");
                 new TestProvider().execute();
                 return true;
             case R.id.action_show_collections_db:
@@ -124,7 +129,6 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 testImageLoader();
                 break;
             case R.id.search:
-                Log.d(TAG, ">>>>>>>>>>>>>>>>>> Test Test Test");
                 String text = textSearch.getText().toString();
                 if(text.isEmpty())
                     return;
@@ -141,7 +145,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     /*TEST VOLLEY WITH DB LOCAL*/
     private void testImageLoader(){
         try{
-            ImageLoader imageLoader = Global.getApiRest().getImageLoader();
+            ImageLoader imageLoader = Global.getVolleySingleton().getImageLoader();
             imageLoader.get(Global.urlImage, ImageLoader.getImageListener(imageTest, R.mipmap.ic_communication, R.mipmap.default_profile));
             imagePost.setImageUrl(Global.urlImage, imageLoader);
         }catch (Exception e){
@@ -162,7 +166,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                         resultTest.setText("Error: " + error.toString());
                     }
         });
-        ApiRest.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
+        VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
     }
 
     private void testJsonArrayRequest(String url, final String text){
@@ -193,8 +197,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                         return headers;
                     }
         };
-        //ApiRest.getInstance(Global.getContext()).addToRequestQueue(request);
-        Global.getApiRest().addToRequestQueue(request);
+        //VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(request);
+        Global.getVolleySingleton().addToRequestQueue(request);
     }
 
     private void testJsonObjectRequest2(String url, final String text){
@@ -219,8 +223,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                         resultTest.setText("Error: " + error.toString());
                     }
                 });
-        //ApiRest.getInstance(Global.getContext()).addToRequestQueue(request);
-        Global.getApiRest().addToRequestQueue(request);
+        //VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(request);
+        Global.getVolleySingleton().addToRequestQueue(request);
     }
 
     /*TEST DB NORMAL*/
@@ -354,7 +358,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loadToast = new LoadToast(getActivity());
+            loadToast = new LoadToast(getContext());
             loadToast.setText("Testing...");
             loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE).setProgressColor(Color.BLUE);
             loadToast.setTranslationY(120);

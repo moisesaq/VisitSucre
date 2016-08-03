@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.fragment;
+package com.apaza.moises.visitsucre.ui.fragment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -23,11 +23,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;

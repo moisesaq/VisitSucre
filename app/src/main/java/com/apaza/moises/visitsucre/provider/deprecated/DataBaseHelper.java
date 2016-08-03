@@ -1,10 +1,8 @@
-package com.apaza.moises.visitsucre.provider.last;
+package com.apaza.moises.visitsucre.provider.deprecated;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.apaza.moises.visitsucre.provider.last.PlaceContract;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     public DataBaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version){

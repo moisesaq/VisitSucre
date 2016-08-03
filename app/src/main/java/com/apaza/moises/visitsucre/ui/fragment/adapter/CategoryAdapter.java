@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.fragment.adapter;
+package com.apaza.moises.visitsucre.ui.fragment.adapter;
 
 import android.content.Context;
 import android.database.Cursor;

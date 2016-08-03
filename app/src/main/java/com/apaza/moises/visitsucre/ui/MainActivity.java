@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre;
+package com.apaza.moises.visitsucre.ui;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -24,11 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.apaza.moises.visitsucre.fragment.CategoryListFragment;
-import com.apaza.moises.visitsucre.fragment.PlaceInMapFragment;
-import com.apaza.moises.visitsucre.fragment.PlaceListFragment;
-import com.apaza.moises.visitsucre.fragment.RegisterPlaceFragment;
-import com.apaza.moises.visitsucre.fragment.TestFragment;
+import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.ui.fragment.CategoryListFragment;
+import com.apaza.moises.visitsucre.ui.fragment.PlaceInMapFragment;
+import com.apaza.moises.visitsucre.ui.fragment.PlaceListFragment;
+import com.apaza.moises.visitsucre.ui.fragment.RegisterPlaceFragment;
+import com.apaza.moises.visitsucre.ui.fragment.TestFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
