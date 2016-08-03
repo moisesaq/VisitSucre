@@ -7,10 +7,11 @@ import android.view.View;
 import com.apaza.moises.visitsucre.provider.HandlerDBVisitSucre;
 
 public class Global {
-    public static String urlCategory = "http://192.168.1.42:3000/api/categories";
-    public static String urlPlace = "http://192.168.1.42:3000/api/places";
-    public static String urlPlaceFind = "http://192.168.1.42:3000/api/place/find";
-    public static String urlCategoryFind = "http://192.168.1.42:3000/api/category/find";
+    public static final String url = "http://192.168.1.43:3000/";
+    public static String urlCategory = url + "api/categories";
+    public static String urlPlace = url + "api/places";
+    public static String urlPlaceFind = url + "api/place/find";
+    public static String urlCategoryFind = url + "api/category/find";
     public static String urlImage = "http://vignette2.wikia.nocookie.net/ultradragonball/images/2/28/543px-MajinBuuFatNV.png/revision/latest?cb=20110330215918";
 
     private static Activity context;
