@@ -7,15 +7,6 @@ import android.view.View;
 import com.apaza.moises.visitsucre.provider.HandlerDBVisitSucre;
 
 public class Global {
-    public static final String ACCOUNT_TYPE = "com.apaza.moises.visitsucre.account";
-
-    public static final String url = "http://192.168.1.43:3000/";
-    public static String urlCategory = url + "api/categories";
-    public static String urlPlace = url + "api/places";
-    public static String urlPlaceFind = url + "api/place/find";
-    public static String urlCategoryFind = url + "api/category/find";
-    public static String urlImage = "http://vignette2.wikia.nocookie.net/ultradragonball/images/2/28/543px-MajinBuuFatNV.png/revision/latest?cb=20110330215918";
-
     private static Activity context;
     private static VolleySingleton volleySingleton;
 

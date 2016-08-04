@@ -31,6 +31,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
@@ -121,9 +122,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.test2:
                 if(checkBox.isChecked())
-                    testRequestJsonArray(Global.urlPlace);
+                    testRequestJsonArray(Constants.URL_PLACES);
                 else
-                    testRequestJsonArray(Global.urlCategory);
+                    testRequestJsonArray(Constants.URL_CATEGORIES);
                 break;
             case R.id.loadImage:
                 testImageLoader();
@@ -134,9 +135,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     return;
 
                 if(checkBox.isChecked()){
-                    testJsonObjectRequest2(Global.urlPlaceFind, text);
+                    testJsonObjectRequest2(Constants.URL_FIND_PLACE, text);
                 }else {
-                    testJsonArrayRequest(Global.urlCategoryFind, text);
+                    testJsonArrayRequest(Constants.URL_FIND_CATEGORY, text);
                 }
                 break;
         }
@@ -146,8 +147,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     private void testImageLoader(){
         try{
             ImageLoader imageLoader = Global.getVolleySingleton().getImageLoader();
-            imageLoader.get(Global.urlImage, ImageLoader.getImageListener(imageTest, R.mipmap.ic_communication, R.mipmap.default_profile));
-            imagePost.setImageUrl(Global.urlImage, imageLoader);
+            imageLoader.get(Constants.URL_IMAGE, ImageLoader.getImageListener(imageTest, R.mipmap.ic_communication, R.mipmap.default_profile));
+            imagePost.setImageUrl(Constants.URL_IMAGE, imageLoader);
         }catch (Exception e){
             e.printStackTrace();
         }
