@@ -82,6 +82,7 @@ public class ContractVisitSucre {
 
     public static class Place implements ColumnsPlace{
         public static final Uri CONTENT_URI = URI_BASE.buildUpon().appendPath(ROUTE_PLACE).build();
+        public static final Uri CONTENT_URI_DETAILED = CONTENT_URI.buildUpon().appendPath("detailed").build();
         public static final String PARAMS_FILTER = "filter";
 
         public static Uri createUriPlace(String id){
@@ -89,7 +90,11 @@ public class ContractVisitSucre {
         }
 
         public static String getIdPlace(Uri uri){
-            return uri.getPathSegments().get(0);
+            return uri.getLastPathSegment();
+        }
+
+        public static String getIdPlaceForDetail(Uri uri){
+            return uri.getPathSegments().get(1);
         }
 
         public static Uri createUriForDetail(String id){

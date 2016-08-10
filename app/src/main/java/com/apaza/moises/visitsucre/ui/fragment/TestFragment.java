@@ -352,6 +352,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
         Log.d("PLACES", "---------------------------PLACES------------------");
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
+        Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>DETAILED PLACE ALL ");
+        DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Place.CONTENT_URI_DETAILED, null, null, null, null));
     }
 
     public class TestProvider extends AsyncTask<Void, Void, Boolean>{
@@ -390,19 +392,13 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
                     .withValue(ContractVisitSucre.Category.ID, idCategory2)
                     .withValue(ContractVisitSucre.Category.CODE, "code-222")
-                    .withValue(ContractVisitSucre.Category.LOGO, "logo222")
                     .withValue(ContractVisitSucre.Category.NAME, "Museums")
-                    .withValue(ContractVisitSucre.Category.DESCRIPTION, "bla bla bla bla bla 22222")
-                    .withValue(ContractVisitSucre.Category.DATE, currentDate.toString())
                     .build());
 
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
                     .withValue(ContractVisitSucre.Category.ID, idCategory3)
                     .withValue(ContractVisitSucre.Category.CODE, "code-333")
-                    .withValue(ContractVisitSucre.Category.LOGO, "logo333")
                     .withValue(ContractVisitSucre.Category.NAME, "Tourism")
-                    .withValue(ContractVisitSucre.Category.DESCRIPTION, "bla bla bla bla bla 33333")
-                    .withValue(ContractVisitSucre.Category.DATE, currentDate.toString())
                     .build());
 
             String idPlace1 = ContractVisitSucre.Place.generateIdPlace();
@@ -413,12 +409,6 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     .withValue(ContractVisitSucre.Place.ID, idPlace1)
                     .withValue(ContractVisitSucre.Place.CODE, "code-1")
                     .withValue(ContractVisitSucre.Place.NAME, "Casa de la libertad")
-                    .withValue(ContractVisitSucre.Place.ADDRESS, "address 123")
-                    .withValue(ContractVisitSucre.Place.LATITUDE, -34.3452341)
-                    .withValue(ContractVisitSucre.Place.LONGITUDE, -58.123123)
-                    .withValue(ContractVisitSucre.Place.DESCRIPTION, "Description 1111")
-                    .withValue(ContractVisitSucre.Place.PATH_IMAGE, "Image 111")
-                    .withValue(ContractVisitSucre.Place.DATE, currentDate.toString())
                     .withValue(ContractVisitSucre.Place.ID_CATEGORY, idCategory1)
                     .build());
 
@@ -439,12 +429,6 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     .withValue(ContractVisitSucre.Place.ID, idPlace3)
                     .withValue(ContractVisitSucre.Place.CODE, "code-3")
                     .withValue(ContractVisitSucre.Place.NAME, "Tourism Tarabuco")
-                    .withValue(ContractVisitSucre.Place.ADDRESS, "address 123")
-                    .withValue(ContractVisitSucre.Place.LATITUDE, -34.3452341)
-                    .withValue(ContractVisitSucre.Place.LONGITUDE, -58.123123)
-                    .withValue(ContractVisitSucre.Place.DESCRIPTION, "Description 333")
-                    .withValue(ContractVisitSucre.Place.PATH_IMAGE, "Image 333")
-                    .withValue(ContractVisitSucre.Place.DATE, currentDate.toString())
                     .withValue(ContractVisitSucre.Place.ID_CATEGORY, idCategory1)
                     .build());
 
@@ -469,6 +453,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
             Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES WITH PROVIDER");
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
+            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>DETAILED PLACE #1 ");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.createUriForDetail(idPlace1), null, null, null, null));
             return status;
         }
 

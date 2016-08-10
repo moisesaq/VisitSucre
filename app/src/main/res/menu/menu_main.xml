@@ -18,13 +18,13 @@
 
     <item
         android:id="@+id/action_test_database"
-        android:title="Test DB"
+        android:title="Insert DB"
         android:orderInCategory="97"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_show_collections_db"
-        android:title="Show DB collections"
+        android:title="Show collection"
         android:orderInCategory="98"
         app:showAsAction="never"/>
 
