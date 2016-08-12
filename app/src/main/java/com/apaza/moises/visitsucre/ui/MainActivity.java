@@ -91,7 +91,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(CategoryListFragment.newInstance(""));
                 break;
             case R.id.test_db:
-                showFragment(TestFragment.newInstance());
+                TestFragment testFragment = (TestFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_test);
+                if(testFragment == null)
+                    testFragment = TestFragment.newInstance();
+                showFragment(testFragment);
                 break;
         }
         drawerLayout.closeDrawers();
@@ -101,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.replace(R.id.containerMain, fragment);
+        ft.add(R.id.containerMain, fragment);
         ft.commit();
     }
 
