@@ -103,15 +103,15 @@ public class ProviderVisitSucre extends ContentProvider{
             case PLACE_ID_DETAIL:
                 id = ContractVisitSucre.Place.getIdPlaceForDetail(uri);
                 builder.setTables(PLACE_JOIN_CATEGORY);
-                Log.d("TEST ONE DETAIL", id + " >>>>> " + DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : ""));
                 cursor = builder.query(db, projectionPlace,
                         DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : "") ,
                         selectionArgs, null, null, sortOrder);
                 break;
 
             case DETAILED_PLACES:
+                String filter = ContractVisitSucre.Place.hasFilter(uri) ? createFilter(uri.getQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER)) : null;
                 builder.setTables(PLACE_JOIN_CATEGORY);
-                cursor = builder.query(db, projectionPlace, selection, selectionArgs, null, null, sortOrder);
+                cursor = builder.query(db, projectionPlace, selection, selectionArgs, null, null, filter);//sortOrder);
                 break;
 
             default:
@@ -119,6 +119,19 @@ public class ProviderVisitSucre extends ContentProvider{
         }
         cursor.setNotificationUri(resolver, uri);
         return cursor;
+    }
+
+    private String createFilter(String filter){
+        String sequence = null;
+        switch (filter){
+            case ContractVisitSucre.Place.FILTER_PLACE_DATE:
+                sequence = DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.ColumnsPlace.DATE;
+                break;
+            case ContractVisitSucre.Place.FILTER_CATEGORY:
+                sequence = DBVisitSucreHelper.Table.CATEGORY + "." + ContractVisitSucre.ColumnsCategory.NAME;
+                break;
+        }
+        return sequence;
     }
 
     @Nullable

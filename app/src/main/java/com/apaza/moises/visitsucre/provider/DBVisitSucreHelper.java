@@ -17,6 +17,10 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
         String PLACE = "place";
     }
 
+    interface References{
+        String ID_CATEGORY = String.format("REFERENCES %s(%s) ON DELETE CASCADE", Table.CATEGORY, ContractVisitSucre.Category.ID);
+    }
+
     private static final String tableCategory = "CREATE TABLE " + Table.CATEGORY + " (" +
             BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ContractVisitSucre.Category.ID + " TEXT UNIQUE NOT NULL, " +
@@ -41,10 +45,6 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
             ContractVisitSucre.Place.PATH_IMAGE + " TEXT DEFAULT 'NO IMAGE', " +
             ContractVisitSucre.Place.DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP, " +
             ContractVisitSucre.Place.ID_CATEGORY + " TEXT NOT NULL " + References.ID_CATEGORY + ")";
-
-    interface References{
-        String ID_CATEGORY = String.format("REFERENCES %s(%s) ON DELETE CASCADE", Table.CATEGORY, ContractVisitSucre.Category.ID);
-    }
 
     public DBVisitSucreHelper(Context context){
         super(context, NAME_DATA_BASE, null, CURRENT_VERSION);

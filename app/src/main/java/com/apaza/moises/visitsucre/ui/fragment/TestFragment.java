@@ -102,11 +102,11 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
-            case R.id.action_test_database:
+            case R.id.action_insert_db:
                 Global.showMessage("test db");
                 new TestProvider().execute();
                 return true;
-            case R.id.action_show_collections_db:
+            case R.id.action_show_db:
                 showDataBaseCollections();
                 return true;
             case R.id.action_delete_collections_db:
@@ -354,6 +354,11 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
         Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>DETAILED PLACE ALL ");
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Place.CONTENT_URI_DETAILED, null, null, null, null));
+
+        Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>DETAILED PLACE ALL WITH FILTER ");
+        DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Place
+                .CONTENT_URI_DETAILED.buildUpon().appendQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER, ContractVisitSucre.Place.FILTER_CATEGORY).build(),
+                null, null, null, null));
     }
 
     public class TestProvider extends AsyncTask<Void, Void, Boolean>{

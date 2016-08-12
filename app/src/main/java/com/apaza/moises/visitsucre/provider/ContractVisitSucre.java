@@ -83,7 +83,10 @@ public class ContractVisitSucre {
     public static class Place implements ColumnsPlace{
         public static final Uri CONTENT_URI = URI_BASE.buildUpon().appendPath(ROUTE_PLACE).build();
         public static final Uri CONTENT_URI_DETAILED = CONTENT_URI.buildUpon().appendPath("detailed").build();
+
         public static final String PARAMS_FILTER = "filter";
+        public static final String FILTER_PLACE_DATE = "date";
+        public static final String FILTER_CATEGORY = "category";
 
         public static Uri createUriPlace(String id){
             return CONTENT_URI.buildUpon().appendPath(id).build();
@@ -103,6 +106,10 @@ public class ContractVisitSucre {
 
         public static String generateIdPlace(){
             return "PLA-" + UUID.randomUUID().toString();
+        }
+
+        public static boolean hasFilter(Uri uri){
+            return uri != null && uri.getQueryParameter(PARAMS_FILTER) != null;
         }
     }
 }

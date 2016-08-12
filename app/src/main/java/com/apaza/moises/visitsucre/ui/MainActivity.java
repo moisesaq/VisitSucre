@@ -55,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Global.setContext(this);
         setupToolbar();
         setupNavigationView();
-        //showFragment(PlaceListFragment.newInstance(""));
-        showFragment(TestFragment.newInstance());
+        showFragment(PlaceListFragment.newInstance(""));
     }
 
     private void setupNavigationView(){
@@ -90,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_all:
                 showFragment(CategoryListFragment.newInstance(""));
+                break;
+            case R.id.test_db:
+                showFragment(TestFragment.newInstance());
                 break;
         }
         drawerLayout.closeDrawers();

@@ -17,13 +17,13 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_test_database"
+        android:id="@+id/action_insert_db"
         android:title="Insert DB"
         android:orderInCategory="97"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_show_collections_db"
+        android:id="@+id/action_show_db"
         android:title="Show collection"
         android:orderInCategory="98"
         app:showAsAction="never"/>
@@ -35,9 +35,16 @@
         app:showAsAction="never"/>
 
     <item
+        android:id="@+id/action_update_db"
+        android:title="Update DB"
+        android:orderInCategory="99"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        android:visible="false"/>
 
 </menu>

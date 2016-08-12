@@ -24,6 +24,11 @@
             android:icon="@mipmap/ic_fav_off"
             android:title="@string/all"/>
 
+        <item
+            android:id="@+id/test_db"
+            android:icon="@mipmap/ic_error"
+            android:title="Test DB"/>
+
         <!-- Section setting -->
         <item
             android:id="@+id/configuration_section"
