@@ -251,6 +251,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         }
     }
 
+    public static void sincronizeNow(Context context, boolean onlyUpload){
+        Log.d(TAG, "REQUEST OF SYNCHRONIZE MANUAL.");
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        if(onlyUpload)
+            bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, true);
+        ContentResolver.requestSync(getAccountToSync(context), context.getString(R.string.provider_authority), bundle);
+    }
+
     public static Account getAccountToSync(Context context){
         AccountManager accountManager = (AccountManager)context.getSystemService(Context.ACCOUNT_SERVICE);
         Account newAccount = new Account(context.getString(R.string.app_name), Constants.ACCOUNT_TYPE);
