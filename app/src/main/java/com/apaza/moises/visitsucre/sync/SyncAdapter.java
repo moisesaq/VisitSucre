@@ -6,6 +6,7 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter{
     private static final String TAG = SyncAdapter.class.getSimpleName();
@@ -78,8 +80,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority,
-                              ContentProviderClient provider, SyncResult syncResult) {
+    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "onPerformSync()...");
 
         boolean onlyLoad = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, false);
@@ -87,8 +88,106 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         if(!onlyLoad){
             performSyncLocal(syncResult);
         }else {
-            //performSyncRemote();
+            performSyncRemote();
         }
+    }
+
+    private void performSyncRemote() {
+        Log.d(TAG, "UPDATING SERVER....");
+        startUpdate();
+        Cursor cursor = getDirtyRegister();
+
+        Log.i(TAG, "FOUND " + cursor.getCount() + " DIRTY REGISTER");
+        if(cursor.getCount() > 0){
+            while (cursor.moveToNext()){
+                final int idLocal = cursor.getInt(COLOMN_ID);
+                VolleySingleton.getInstance(getContext()).addToRequestQueue(
+                        new JsonObjectRequest(
+                                Request.Method.POST,
+                                "URL", //TODO Fix here
+                                null,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        processResponseInsert(response, idLocal);
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d(TAG, "ERROR VOLLEY: " + error.getMessage());
+                                    }
+                                }
+                        ){
+                            @Override
+                            public Map<String, String> getHeaders(){
+                                Map<String, String> headers = new HashMap<String, String>();
+                                headers.put("Content-Type", "application/json; charset=utf-8");
+                                headers.put("Accept", "application/json");
+                                return headers;
+                            }
+
+                            @Override
+                            public String getBodyContentType(){
+                                return "application/json; charset=utf-8" + getParamsEncoding();
+                            }
+                        }
+                );
+            }
+        }else{
+            Log.i(TAG, "NO REQUIRED SYNC");
+        }
+        cursor.close();
+    }
+
+    private void processResponseInsert(JSONObject response, int idLocal){
+        try{
+            String status = response.getString(Constants.STATUS);
+            String message = response.getString(Constants.MESSAGE);
+            String idRemote = response.getString(Constants.ID_CATEGORY_REMOTE);
+
+            switch (status){
+                case Constants.SUCCESS:
+                    finishUpdate(idRemote, idLocal);
+                    break;
+                case Constants.FAILED:
+                    Log.i(TAG, message);
+                    break;
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void finishUpdate(String idRemote, int idLocal){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(idLocal)};
+
+        ContentValues values = new ContentValues();
+        values.put(ContractVisitSucre.Category.PENDING_INSERTION, "0");
+        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_OK);
+        values.put(ContractVisitSucre.Category.ID_REMOTE, idRemote);
+        resolver.update(uri, values, selection, selectionArgs);
+    }
+
+    private Cursor getDirtyRegister(){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
+                ContractVisitSucre.Category.STATUS + "=?";
+        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_SYNC + ""};
+        return resolver.query(uri, PROJECTION, selection, selectionArgs, null);
+    }
+
+    private void startUpdate(){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
+                ContractVisitSucre.Category.STATUS + " =? ";
+        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_OK + ""};
+        ContentValues values = new ContentValues();
+        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_SYNC);
+        int results = resolver.update(uri, values, selection, selectionArgs);
+        Log.d(TAG, "REGISTER IN INSERTION QUEUE: " + results);
     }
 
     private void performSyncLocal(final SyncResult syncResult){
@@ -119,7 +218,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         try{
             String status = response.getString(Constants.STATUS);
             switch (status){
-                case Constants.SUCESS:
+                case Constants.SUCCESS:
                     updateDataLocal(response, syncResult);
                     break;
                 case Constants.FAILED:

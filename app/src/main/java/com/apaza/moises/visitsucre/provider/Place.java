@@ -13,7 +13,7 @@ public class Place {
     String DESCRIPTION = "description";
     String PATH_IMAGE = "pathImage";
     String DATE = "date";
-    String ID_CATEGORY = "idCategory";*/
+    String ID_CATEGORY_REMOTE = "idCategory";*/
 
     String idPlace, code, name, address, description, pathImage, idCategory;
     double latitude, longitude;

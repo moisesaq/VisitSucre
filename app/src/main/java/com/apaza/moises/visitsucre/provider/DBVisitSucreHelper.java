@@ -80,7 +80,7 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
                 ContractVisitSucre.Place.ADDRESS, ContractVisitSucre.Place.LATITUDE,
                 ContractVisitSucre.Place.LONGITUDE, ContractVisitSucre.Place.DESCRIPTION,
                 ContractVisitSucre.Place.PATH_IMAGE, ContractVisitSucre.Place.DATE,
-                ContractVisitSucre.Place.ID_CATEGORY, References.ID_CATEGORY));*/
+                ContractVisitSucre.Place.ID_CATEGORY_REMOTE, References.ID_CATEGORY_REMOTE));*/
     }
 
     @Override
