@@ -38,6 +38,7 @@ public class ProviderVisitSucre extends ContentProvider{
     public static final int PLACES = 200;
     public static final int PLACE_ID = 201;
     public static final int PLACE_ID_DETAIL = 202;
+    public static final int DETAILED_PLACES = 203;
 
     public static final String AUTHORITY = "com.apaza.moises.visitsucre";
 
@@ -48,18 +49,19 @@ public class ProviderVisitSucre extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_CATEGORY+"/*", CATEGORY_ID);
 
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE, PLACES);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/detailed", DETAILED_PLACES);
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/*", PLACE_ID);
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/*/detail", PLACE_ID_DETAIL);
     }
 
-    private static final String PLACE_JOIN_CATEGORY = "place INNER JOIN category " +
+    private static final String PLACE_JOIN_CATEGORY = "place as place INNER JOIN category as category " +
             "ON place.idCategory = category.id";
 
     private final String[] projectionPlace = new String[]{
             DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.ID,
-            ContractVisitSucre.Place.NAME,
-            ContractVisitSucre.Place.DESCRIPTION,
-            ContractVisitSucre.Category.NAME
+            DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.NAME,
+            DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.DESCRIPTION,
+            DBVisitSucreHelper.Table.CATEGORY + "." + ContractVisitSucre.Category.NAME
     };
 
     @Override
@@ -99,9 +101,17 @@ public class ProviderVisitSucre extends ContentProvider{
                 break;
 
             case PLACE_ID_DETAIL:
-                //id = ContractVisitSucre.Place.getIdPlace(uri);
+                id = ContractVisitSucre.Place.getIdPlaceForDetail(uri);
                 builder.setTables(PLACE_JOIN_CATEGORY);
-                cursor = builder.query(db, projectionPlace, selection, selectionArgs, null, null, sortOrder);
+                cursor = builder.query(db, projectionPlace,
+                        DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : "") ,
+                        selectionArgs, null, null, sortOrder);
+                break;
+
+            case DETAILED_PLACES:
+                String filter = ContractVisitSucre.Place.hasFilter(uri) ? createFilter(uri.getQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER)) : null;
+                builder.setTables(PLACE_JOIN_CATEGORY);
+                cursor = builder.query(db, projectionPlace, selection, selectionArgs, null, null, filter);//sortOrder);
                 break;
 
             default:
@@ -109,6 +119,19 @@ public class ProviderVisitSucre extends ContentProvider{
         }
         cursor.setNotificationUri(resolver, uri);
         return cursor;
+    }
+
+    private String createFilter(String filter){
+        String sequence = null;
+        switch (filter){
+            case ContractVisitSucre.Place.FILTER_PLACE_DATE:
+                sequence = DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.ColumnsPlace.DATE;
+                break;
+            case ContractVisitSucre.Place.FILTER_CATEGORY:
+                sequence = DBVisitSucreHelper.Table.CATEGORY + "." + ContractVisitSucre.ColumnsCategory.NAME;
+                break;
+        }
+        return sequence;
     }
 
     @Nullable

@@ -1,5 +1,6 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
@@ -90,6 +91,11 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
             case R.id.action_filter:
                 createShowDialogFilter(selectedPosition);
                 return true;
+            case R.id.action_update_db:
+                ContentValues values = new ContentValues();
+                values.put(ContractVisitSucre.Place.NAME, "CASA DE LA LIBERTAD SUCRE :)");
+                getActivity().getContentResolver().update(ContractVisitSucre.Place.CONTENT_URI, values, null, null);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -111,7 +117,10 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
     @Override
     public void onPlaceClick(PlaceAdapter.ViewHolder viewHolder, String idPlace) {
         ///Snackbar.make(getActivity().findViewById(android.R.id.content), String.format("ID place: %s", idPlace), Snackbar.LENGTH_SHORT).show();
-        DetailPlaceActivity.createInstance(getActivity(), idPlace);
+        ContentValues values = new ContentValues();
+        values.put(ContractVisitSucre.Place.NAME, "CASA DE LA LIBERTAD SUCRE :)");
+        getActivity().getContentResolver().update(ContractVisitSucre.Place.createUriPlace(idPlace), values, null, null);
+        //DetailPlaceActivity.createInstance(getActivity(), idPlace);
     }
 
     public void onButtonPressed(Uri uri) {

@@ -11,7 +11,6 @@ public class ContractVisitSucre {
 
     interface ColumnsCategory{
         String ID = "id";
-        String CODE = "code";
         String LOGO = "logo";
         String NAME = "name";
         String DATE = "date";
@@ -24,7 +23,6 @@ public class ContractVisitSucre {
 
     interface ColumnsPlace{
         String ID = "id";
-        String CODE = "code";
         String NAME = "name";
         String ADDRESS = "address";
         String LATITUDE = "latitude";
@@ -82,14 +80,22 @@ public class ContractVisitSucre {
 
     public static class Place implements ColumnsPlace{
         public static final Uri CONTENT_URI = URI_BASE.buildUpon().appendPath(ROUTE_PLACE).build();
+        public static final Uri CONTENT_URI_DETAILED = CONTENT_URI.buildUpon().appendPath("detailed").build();
+
         public static final String PARAMS_FILTER = "filter";
+        public static final String FILTER_PLACE_DATE = "date";
+        public static final String FILTER_CATEGORY = "category";
 
         public static Uri createUriPlace(String id){
             return CONTENT_URI.buildUpon().appendPath(id).build();
         }
 
         public static String getIdPlace(Uri uri){
-            return uri.getPathSegments().get(0);
+            return uri.getLastPathSegment();
+        }
+
+        public static String getIdPlaceForDetail(Uri uri){
+            return uri.getPathSegments().get(1);
         }
 
         public static Uri createUriForDetail(String id){
@@ -98,6 +104,10 @@ public class ContractVisitSucre {
 
         public static String generateIdPlace(){
             return "PLA-" + UUID.randomUUID().toString();
+        }
+
+        public static boolean hasFilter(Uri uri){
+            return uri != null && uri.getQueryParameter(PARAMS_FILTER) != null;
         }
     }
 }

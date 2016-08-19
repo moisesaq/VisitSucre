@@ -6,6 +6,7 @@ import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter{
     private static final String TAG = SyncAdapter.class.getSimpleName();
@@ -46,7 +48,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     private static final String[] PROJECTION = new String[]{
             BaseColumns._ID,
             ContractVisitSucre.Category.ID_REMOTE,
-            ContractVisitSucre.Category.CODE,
             ContractVisitSucre.Category.LOGO,
             ContractVisitSucre.Category.NAME,
             ContractVisitSucre.Category.DATE,
@@ -54,13 +55,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     };
 
     /*INDEX FOR COLUMNS PROJECTION*/
-    public static final int COLOMN_ID = 0;
+    public static final int COLUMN_ID = 0;
     public static final int COLUMN_ID_REMOTE = 1;
-    public static final int COLUMN_CODE = 2;
-    public static final int COLUMN_LOGO = 3;
-    public static final int COLUMN_NAME = 4;
-    public static final int COLUMN_DATE = 5;
-    public static final int COLUMN_DESCRIPTION = 6;
+    public static final int COLUMN_LOGO = 2;
+    public static final int COLUMN_NAME = 3;
+    public static final int COLUMN_DATE = 4;
+    public static final int COLUMN_DESCRIPTION = 5;
 
     public SyncAdapter(Context context, boolean autoInitialize){
         super(context, autoInitialize);
@@ -78,8 +78,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority,
-                              ContentProviderClient provider, SyncResult syncResult) {
+    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
         Log.i(TAG, "onPerformSync()...");
 
         boolean onlyLoad = extras.getBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, false);
@@ -87,8 +86,106 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         if(!onlyLoad){
             performSyncLocal(syncResult);
         }else {
-            //performSyncRemote();
+            performSyncRemote();
         }
+    }
+
+    private void performSyncRemote() {
+        Log.d(TAG, "UPDATING SERVER....");
+        startUpdate();
+        Cursor cursor = getDirtyRegister();
+
+        Log.i(TAG, "FOUND " + cursor.getCount() + " DIRTY REGISTER");
+        if(cursor.getCount() > 0){
+            while (cursor.moveToNext()){
+                final int idLocal = cursor.getInt(COLUMN_ID);
+                VolleySingleton.getInstance(getContext()).addToRequestQueue(
+                        new JsonObjectRequest(
+                                Request.Method.POST,
+                                "URL", //TODO Fix here
+                                null,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        processResponseInsert(response, idLocal);
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d(TAG, "ERROR VOLLEY: " + error.getMessage());
+                                    }
+                                }
+                        ){
+                            @Override
+                            public Map<String, String> getHeaders(){
+                                Map<String, String> headers = new HashMap<String, String>();
+                                headers.put("Content-Type", "application/json; charset=utf-8");
+                                headers.put("Accept", "application/json");
+                                return headers;
+                            }
+
+                            @Override
+                            public String getBodyContentType(){
+                                return "application/json; charset=utf-8" + getParamsEncoding();
+                            }
+                        }
+                );
+            }
+        }else{
+            Log.i(TAG, "NO REQUIRED SYNC");
+        }
+        cursor.close();
+    }
+
+    private void processResponseInsert(JSONObject response, int idLocal){
+        try{
+            String status = response.getString(Constants.STATUS);
+            String message = response.getString(Constants.MESSAGE);
+            String idRemote = response.getString(Constants.ID_CATEGORY_REMOTE);
+
+            switch (status){
+                case Constants.SUCCESS:
+                    finishUpdate(idRemote, idLocal);
+                    break;
+                case Constants.FAILED:
+                    Log.i(TAG, message);
+                    break;
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void finishUpdate(String idRemote, int idLocal){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(idLocal)};
+
+        ContentValues values = new ContentValues();
+        values.put(ContractVisitSucre.Category.PENDING_INSERTION, "0");
+        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_OK);
+        values.put(ContractVisitSucre.Category.ID_REMOTE, idRemote);
+        resolver.update(uri, values, selection, selectionArgs);
+    }
+
+    private Cursor getDirtyRegister(){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
+                ContractVisitSucre.Category.STATUS + "=?";
+        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_SYNC + ""};
+        return resolver.query(uri, PROJECTION, selection, selectionArgs, null);
+    }
+
+    private void startUpdate(){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
+                ContractVisitSucre.Category.STATUS + " =? ";
+        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_OK + ""};
+        ContentValues values = new ContentValues();
+        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_SYNC);
+        int results = resolver.update(uri, values, selection, selectionArgs);
+        Log.d(TAG, "REGISTER IN INSERTION QUEUE: " + results);
     }
 
     private void performSyncLocal(final SyncResult syncResult){
@@ -119,7 +216,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         try{
             String status = response.getString(Constants.STATUS);
             switch (status){
-                case Constants.SUCESS:
+                case Constants.SUCCESS:
                     updateDataLocal(response, syncResult);
                     break;
                 case Constants.FAILED:
@@ -175,33 +272,30 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
             syncResult.stats.numEntries++;
 
             idRemote = c.getString(COLUMN_ID_REMOTE);
-            code = c.getString(COLUMN_CODE);
             logo = c.getString(COLUMN_LOGO);
-            name = c.getString(COLUMN_CODE);
+            name = c.getString(COLUMN_NAME);
             date = c.getString(COLUMN_DATE);
             description = c.getString(COLUMN_DESCRIPTION);
 
-            Category match = categoryMap.get(idRemote);
-            if(match != null){
+            Category cate = categoryMap.get(idRemote);
+            if(cate != null){
                 categoryMap.remove(idRemote);
 
                 Uri existingUri = ContractVisitSucre.Category.CONTENT_URI.buildUpon().appendPath(idRemote).build();
 
                 /*VERIFY UPDATE CATEGORY*/
-                boolean b = match.getCode() != null && !match.getCode().equals(code);
-                boolean b1 = match.getLogo() != null && !match.getLogo().equals(logo);
-                boolean b2 = match.getName() != null && !match.getName().equals(name);
-                boolean b3 = match.getDate() != null && !match.getDate().equals(date);
-                boolean b4 = match.getDescription() != null && !match.getDescription().equals(description);
+                boolean b1 = cate.getLogo() != null && !cate.getLogo().equals(logo);
+                boolean b2 = cate.getName() != null && !cate.getName().equals(name);
+                boolean b3 = cate.getDate() != null && !cate.getDate().equals(date);
+                boolean b4 = cate.getDescription() != null && !cate.getDescription().equals(description);
 
-                if(b || b1 || b2 || b3 || b4){
+                if(b1 || b2 || b3 || b4){
                     Log.i(TAG, "Programming update of: " + existingUri);
                     ops.add(ContentProviderOperation.newUpdate(existingUri)
-                            .withValue(ContractVisitSucre.Category.CODE, match.getCode())
-                            .withValue(ContractVisitSucre.Category.LOGO, match.getLogo())
-                            .withValue(ContractVisitSucre.Category.NAME, match.getName())
-                            .withValue(ContractVisitSucre.Category.DATE, match.getDate())
-                            .withValue(ContractVisitSucre.Category.DESCRIPTION, match.getDescription())
+                            .withValue(ContractVisitSucre.Category.LOGO, cate.getLogo())
+                            .withValue(ContractVisitSucre.Category.NAME, cate.getName())
+                            .withValue(ContractVisitSucre.Category.DATE, cate.getDate())
+                            .withValue(ContractVisitSucre.Category.DESCRIPTION, cate.getDescription())
                             .build());
                     syncResult.stats.numUpdates++;
                 }else {
@@ -221,7 +315,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
             Log.i(TAG, "Programming inserting of: " + ca.getIdCategory());
             ops.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
                     .withValue(ContractVisitSucre.Category.ID_REMOTE, ca.getIdCategory()) //TODO SEE HERE
-                    .withValue(ContractVisitSucre.Category.CODE, ca.getCode())
                     .withValue(ContractVisitSucre.Category.LOGO, ca.getLogo())
                     .withValue(ContractVisitSucre.Category.NAME, ca.getName())
                     .withValue(ContractVisitSucre.Category.DATE, ca.getDate())
@@ -249,6 +342,16 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         }else{
             Log.i(TAG, "It is not require sync");
         }
+    }
+
+    public static void sincronizeNow(Context context, boolean onlyUpload){
+        Log.d(TAG, "REQUEST OF SYNCHRONIZE MANUAL.");
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        if(onlyUpload)
+            bundle.putBoolean(ContentResolver.SYNC_EXTRAS_UPLOAD, true);
+        ContentResolver.requestSync(getAccountToSync(context), context.getString(R.string.provider_authority), bundle);
     }
 
     public static Account getAccountToSync(Context context){

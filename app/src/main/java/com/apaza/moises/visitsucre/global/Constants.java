@@ -12,13 +12,13 @@ public class Constants {
     public static String URL_IMAGE = "http://vignette2.wikia.nocookie.net/ultradragonball/images/2/28/543px-MajinBuuFatNV.png/revision/latest?cb=20110330215918";
 
     /*FIELDS THE RESPONSE JSON*/
-    public static final String ID_CATEGORY = "id";
+    public static final String ID_CATEGORY_REMOTE = "id";
     public static final String STATUS = "status";
     public static final String CATEGORIES = "categories";
     public static final String MESSAGE = "message";
 
     /*CODE STATUS*/
-    public static final String SUCESS = "1";
+    public static final String SUCCESS = "1";
     public static final String FAILED = "2";
 
     /*TYPE ACCOUNT FOR SYNC*/
