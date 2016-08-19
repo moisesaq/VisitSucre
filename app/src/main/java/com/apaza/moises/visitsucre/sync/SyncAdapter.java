@@ -56,7 +56,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     };
 
     /*INDEX FOR COLUMNS PROJECTION*/
-    public static final int COLOMN_ID = 0;
+    public static final int COLUMN_ID = 0;
     public static final int COLUMN_ID_REMOTE = 1;
     public static final int COLUMN_CODE = 2;
     public static final int COLUMN_LOGO = 3;
@@ -100,7 +100,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         Log.i(TAG, "FOUND " + cursor.getCount() + " DIRTY REGISTER");
         if(cursor.getCount() > 0){
             while (cursor.moveToNext()){
-                final int idLocal = cursor.getInt(COLOMN_ID);
+                final int idLocal = cursor.getInt(COLUMN_ID);
                 VolleySingleton.getInstance(getContext()).addToRequestQueue(
                         new JsonObjectRequest(
                                 Request.Method.POST,
@@ -276,7 +276,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
             idRemote = c.getString(COLUMN_ID_REMOTE);
             code = c.getString(COLUMN_CODE);
             logo = c.getString(COLUMN_LOGO);
-            name = c.getString(COLUMN_CODE);
+            name = c.getString(COLUMN_NAME);
             date = c.getString(COLUMN_DATE);
             description = c.getString(COLUMN_DESCRIPTION);
 

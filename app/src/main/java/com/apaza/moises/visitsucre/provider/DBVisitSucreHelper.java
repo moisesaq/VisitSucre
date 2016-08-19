@@ -29,6 +29,7 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
             ContractVisitSucre.Category.NAME + " TEXT NOT NULL, " +
             ContractVisitSucre.Category.DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP, " +
             ContractVisitSucre.Category.DESCRIPTION +" TEXT DEFAULT 'DESCRIPTION CATEGORY', " +
+
             ContractVisitSucre.Category.STATUS +" INTEGER NOT NULL DEFAULT " + ContractVisitSucre.STATUS_OK + ", "+
             ContractVisitSucre.Category.ID_REMOTE + " TEXT UNIQUE, " +
             ContractVisitSucre.Category.PENDING_INSERTION + " INTEGER NOT NULL DEFAULT 0)";
