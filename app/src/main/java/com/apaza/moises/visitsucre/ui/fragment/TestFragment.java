@@ -388,7 +388,6 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
 
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
                     .withValue(ContractVisitSucre.Category.ID, idCategory1)
-                    .withValue(ContractVisitSucre.Category.CODE, "code-111")
                     .withValue(ContractVisitSucre.Category.LOGO, "logo111")
                     .withValue(ContractVisitSucre.Category.NAME, "Cathedral")
                     .withValue(ContractVisitSucre.Category.DESCRIPTION, "bla bla bla bla bla 11111")
@@ -396,13 +395,11 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     .build());
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
                     .withValue(ContractVisitSucre.Category.ID, idCategory2)
-                    .withValue(ContractVisitSucre.Category.CODE, "code-222")
                     .withValue(ContractVisitSucre.Category.NAME, "Museums")
                     .build());
 
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
                     .withValue(ContractVisitSucre.Category.ID, idCategory3)
-                    .withValue(ContractVisitSucre.Category.CODE, "code-333")
                     .withValue(ContractVisitSucre.Category.NAME, "Tourism")
                     .build());
 
@@ -412,14 +409,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
 
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Place.CONTENT_URI)
                     .withValue(ContractVisitSucre.Place.ID, idPlace1)
-                    .withValue(ContractVisitSucre.Place.CODE, "code-1")
                     .withValue(ContractVisitSucre.Place.NAME, "Casa de la libertad")
                     .withValue(ContractVisitSucre.Place.ID_CATEGORY, idCategory1)
                     .build());
 
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Place.CONTENT_URI)
                     .withValue(ContractVisitSucre.Place.ID, idPlace2)
-                    .withValue(ContractVisitSucre.Place.CODE, "code-2")
                     .withValue(ContractVisitSucre.Place.NAME, "Museo 555")
                     .withValue(ContractVisitSucre.Place.ADDRESS, "address 123")
                     .withValue(ContractVisitSucre.Place.LATITUDE, -34.3452341)
@@ -432,7 +427,6 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
 
             listOperations.add(ContentProviderOperation.newInsert(ContractVisitSucre.Place.CONTENT_URI)
                     .withValue(ContractVisitSucre.Place.ID, idPlace3)
-                    .withValue(ContractVisitSucre.Place.CODE, "code-3")
                     .withValue(ContractVisitSucre.Place.NAME, "Tourism Tarabuco")
                     .withValue(ContractVisitSucre.Place.ID_CATEGORY, idCategory1)
                     .build());

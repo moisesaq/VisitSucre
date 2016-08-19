@@ -58,6 +58,12 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        getLoaderManager().restartLoader(0, null, this);
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id){
 
     }

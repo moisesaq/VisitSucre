@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,11 +39,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
         CategoryListFragment.OnCategoryListFragmentListener,
         PlaceListFragment.OnFragmentInteractionListener,
-        PlaceInMapFragment.OnPlaceInMapFragmentListener{
+        PlaceInMapFragment.OnPlaceInMapFragmentListener, FragmentManager.OnBackStackChangedListener{
 
+    public static String TAG = "MAIN ACTIVITY";
     private DrawerLayout drawerLayout;
     private String drawerTitle;
     private ActionBar actionBar;
+    private FragmentManager fragmentManager;
 
     //For test
     private TextView text;
@@ -53,9 +56,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Global.setContext(this);
+        fragmentManager = getSupportFragmentManager();
+        fragmentManager.addOnBackStackChangedListener(this);
+
         setupToolbar();
         setupNavigationView();
-        showFragment(PlaceListFragment.newInstance(""));
+        showFragment(CategoryListFragment.newInstance(""));
     }
 
     private void setupNavigationView(){
@@ -85,7 +91,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void selectItem(MenuItem item, String title){
         switch (item.getItemId()){
             case R.id.nav_register_place:
-                showFragment(RegisterPlaceFragment.newInstance(""));
+                Fragment frag = fragmentManager.findFragmentByTag(RegisterPlaceFragment.class.getSimpleName());
+                if(frag != null){
+                    Log.d(TAG, "Fragment not null " + RegisterPlaceFragment.class.getSimpleName());
+                    fragmentManager.popBackStack(RegisterPlaceFragment.class.getSimpleName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                }else{
+                    Log.d(TAG, "Fragment null " + RegisterPlaceFragment.class.getSimpleName());
+                    showFragment(RegisterPlaceFragment.newInstance(""));
+                }
                 break;
             case R.id.nav_all:
                 showFragment(CategoryListFragment.newInstance(""));
@@ -101,11 +114,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void showFragment(Fragment fragment){
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
+        //FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.add(R.id.containerMain, fragment);
+        ft.replace(R.id.containerMain, fragment);
         ft.commit();
+        Log.i(TAG, "STACK COUNT >>>>> " + fragmentManager.getBackStackEntryCount() + " TAG FRAGMENT " + fragment.getClass().getSimpleName());
     }
 
     private void setupToolbar(){
@@ -168,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(DialogInterface dialog, int which) {
                 String txtName = name.getText().toString();
                 String txtDescription = description.getText().toString();
-                if(txtName.length() > 5 && txtDescription.length() > 10){
+                if(txtName.length() > 5 && txtDescription.length() > 5){
                     saveCategory(txtName, txtDescription);
                 }else{
                     showMessage("Error missing characters");
@@ -189,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void saveCategory(String name, String description){
         try{
             ContentValues values = new ContentValues();
-            values.put(ContractVisitSucre.Category.CODE, Utils.generateCodeUnique("CATEGORY"));
             values.put(ContractVisitSucre.Category.LOGO, "logo");
             values.put(ContractVisitSucre.Category.NAME, name);
             values.put(ContractVisitSucre.Category.DATE, Utils.getCurrentDate().toString());
@@ -211,4 +224,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    public void onBackPressed(){
+        Log.d(TAG, "BACK");
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawers();
+        }else{
+            if(fragmentManager.getBackStackEntryCount() > 1){
+                fragmentManager.popBackStack();
+            }else{
+                finish();
+            }
+        }
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        Log.d(TAG, "ON BACK STACK CHANGED - STACK COUNT->" + getSupportFragmentManager().getBackStackEntryCount());
+    }
 }

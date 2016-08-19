@@ -43,7 +43,6 @@ public class HandlerDBVisitSucre {
 
         ContentValues values = new ContentValues();
         values.put(ContractVisitSucre.Category.ID, idCategory);
-        values.put(ContractVisitSucre.Category.CODE, category.getCode());
         values.put(ContractVisitSucre.Category.LOGO, category.getLogo());
         values.put(ContractVisitSucre.Category.NAME, category.getName());
         values.put(ContractVisitSucre.Category.DATE, category.getDate().toString());
@@ -57,7 +56,6 @@ public class HandlerDBVisitSucre {
         SQLiteDatabase db = dbVisitSucreHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ContractVisitSucre.Category.CODE, category.getCode());
         values.put(ContractVisitSucre.Category.LOGO, category.getLogo());
         values.put(ContractVisitSucre.Category.NAME, category.getName());
         values.put(ContractVisitSucre.Category.DATE, category.getDate().toString());
@@ -100,7 +98,6 @@ public class HandlerDBVisitSucre {
 
         ContentValues values = new ContentValues();
         values.put(ContractVisitSucre.Place.ID, idPlace);
-        values.put(ContractVisitSucre.Place.CODE, place.getCode());
         values.put(ContractVisitSucre.Place.NAME, place.getName());
         values.put(ContractVisitSucre.Place.ADDRESS, place.getAddress());
         values.put(ContractVisitSucre.Place.LATITUDE, place.getLatitude());
@@ -119,7 +116,6 @@ public class HandlerDBVisitSucre {
         SQLiteDatabase db = dbVisitSucreHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ContractVisitSucre.Place.CODE, place.getCode());
         values.put(ContractVisitSucre.Place.NAME, place.getName());
         values.put(ContractVisitSucre.Place.ADDRESS, place.getAddress());
         values.put(ContractVisitSucre.Place.LATITUDE, place.getLatitude());

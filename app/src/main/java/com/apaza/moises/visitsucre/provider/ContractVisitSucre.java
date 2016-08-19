@@ -11,7 +11,6 @@ public class ContractVisitSucre {
 
     interface ColumnsCategory{
         String ID = "id";
-        String CODE = "code";
         String LOGO = "logo";
         String NAME = "name";
         String DATE = "date";
@@ -24,7 +23,6 @@ public class ContractVisitSucre {
 
     interface ColumnsPlace{
         String ID = "id";
-        String CODE = "code";
         String NAME = "name";
         String ADDRESS = "address";
         String LATITUDE = "latitude";

@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 public class DBVisitSucreHelper extends SQLiteOpenHelper{
 
     private static final String NAME_DATA_BASE = "dbVisitSucre.db";
-    private static final int CURRENT_VERSION = 1;
+    private static final int CURRENT_VERSION = 2;
     private final Context context;
 
     interface Table{
@@ -24,7 +24,6 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
     private static final String tableCategory = "CREATE TABLE " + Table.CATEGORY + " (" +
             BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ContractVisitSucre.Category.ID + " TEXT UNIQUE NOT NULL, " +
-            ContractVisitSucre.Category.CODE + " TEXT NOT NULL, " +
             ContractVisitSucre.Category.LOGO + " TEXT DEFAULT 'NO LOGO', " +
             ContractVisitSucre.Category.NAME + " TEXT NOT NULL, " +
             ContractVisitSucre.Category.DATE + " DATETIME DEFAULT CURRENT_TIMESTAMP, " +
@@ -37,7 +36,6 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
     private static final String tablePlace = "CREATE TABLE " + Table.PLACE + " (" +
             BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ContractVisitSucre.Place.ID + " TEXT UNIQUE NOT NULL, " +
-            ContractVisitSucre.Place.CODE + " TEXT NOT NULL, " +
             ContractVisitSucre.Place.NAME + " TEXT NOT NULL, " +
             ContractVisitSucre.Place.ADDRESS + " TEXT DEFAULT 'NO ADDRESS', " +
             ContractVisitSucre.Place.LATITUDE + " DOUBLE DEFAULT 0, " +

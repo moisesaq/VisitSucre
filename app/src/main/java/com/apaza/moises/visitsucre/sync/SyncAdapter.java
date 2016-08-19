@@ -48,7 +48,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     private static final String[] PROJECTION = new String[]{
             BaseColumns._ID,
             ContractVisitSucre.Category.ID_REMOTE,
-            ContractVisitSucre.Category.CODE,
             ContractVisitSucre.Category.LOGO,
             ContractVisitSucre.Category.NAME,
             ContractVisitSucre.Category.DATE,
@@ -58,11 +57,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     /*INDEX FOR COLUMNS PROJECTION*/
     public static final int COLUMN_ID = 0;
     public static final int COLUMN_ID_REMOTE = 1;
-    public static final int COLUMN_CODE = 2;
-    public static final int COLUMN_LOGO = 3;
-    public static final int COLUMN_NAME = 4;
-    public static final int COLUMN_DATE = 5;
-    public static final int COLUMN_DESCRIPTION = 6;
+    public static final int COLUMN_LOGO = 2;
+    public static final int COLUMN_NAME = 3;
+    public static final int COLUMN_DATE = 4;
+    public static final int COLUMN_DESCRIPTION = 5;
 
     public SyncAdapter(Context context, boolean autoInitialize){
         super(context, autoInitialize);
@@ -274,33 +272,30 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
             syncResult.stats.numEntries++;
 
             idRemote = c.getString(COLUMN_ID_REMOTE);
-            code = c.getString(COLUMN_CODE);
             logo = c.getString(COLUMN_LOGO);
             name = c.getString(COLUMN_NAME);
             date = c.getString(COLUMN_DATE);
             description = c.getString(COLUMN_DESCRIPTION);
 
-            Category match = categoryMap.get(idRemote);
-            if(match != null){
+            Category cate = categoryMap.get(idRemote);
+            if(cate != null){
                 categoryMap.remove(idRemote);
 
                 Uri existingUri = ContractVisitSucre.Category.CONTENT_URI.buildUpon().appendPath(idRemote).build();
 
                 /*VERIFY UPDATE CATEGORY*/
-                boolean b = match.getCode() != null && !match.getCode().equals(code);
-                boolean b1 = match.getLogo() != null && !match.getLogo().equals(logo);
-                boolean b2 = match.getName() != null && !match.getName().equals(name);
-                boolean b3 = match.getDate() != null && !match.getDate().equals(date);
-                boolean b4 = match.getDescription() != null && !match.getDescription().equals(description);
+                boolean b1 = cate.getLogo() != null && !cate.getLogo().equals(logo);
+                boolean b2 = cate.getName() != null && !cate.getName().equals(name);
+                boolean b3 = cate.getDate() != null && !cate.getDate().equals(date);
+                boolean b4 = cate.getDescription() != null && !cate.getDescription().equals(description);
 
-                if(b || b1 || b2 || b3 || b4){
+                if(b1 || b2 || b3 || b4){
                     Log.i(TAG, "Programming update of: " + existingUri);
                     ops.add(ContentProviderOperation.newUpdate(existingUri)
-                            .withValue(ContractVisitSucre.Category.CODE, match.getCode())
-                            .withValue(ContractVisitSucre.Category.LOGO, match.getLogo())
-                            .withValue(ContractVisitSucre.Category.NAME, match.getName())
-                            .withValue(ContractVisitSucre.Category.DATE, match.getDate())
-                            .withValue(ContractVisitSucre.Category.DESCRIPTION, match.getDescription())
+                            .withValue(ContractVisitSucre.Category.LOGO, cate.getLogo())
+                            .withValue(ContractVisitSucre.Category.NAME, cate.getName())
+                            .withValue(ContractVisitSucre.Category.DATE, cate.getDate())
+                            .withValue(ContractVisitSucre.Category.DESCRIPTION, cate.getDescription())
                             .build());
                     syncResult.stats.numUpdates++;
                 }else {
@@ -320,7 +315,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
             Log.i(TAG, "Programming inserting of: " + ca.getIdCategory());
             ops.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
                     .withValue(ContractVisitSucre.Category.ID_REMOTE, ca.getIdCategory()) //TODO SEE HERE
-                    .withValue(ContractVisitSucre.Category.CODE, ca.getCode())
                     .withValue(ContractVisitSucre.Category.LOGO, ca.getLogo())
                     .withValue(ContractVisitSucre.Category.NAME, ca.getName())
                     .withValue(ContractVisitSucre.Category.DATE, ca.getDate())
