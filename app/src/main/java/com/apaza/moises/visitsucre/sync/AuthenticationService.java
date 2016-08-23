@@ -12,6 +12,7 @@ public class AuthenticationService extends Service{
     public void onCreate(){
         visitSucreAuthenticator = new VisitSucreAuthenticator(this);
     }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

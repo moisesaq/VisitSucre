@@ -1,5 +1,6 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -9,11 +10,16 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.CategoryAdapter;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
@@ -24,6 +30,7 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     private OnCategoryListFragmentListener mListener;
 
     private CategoryAdapter categoryAdapter;
+    private MenuItem menuSync, menuAddCategory;
 
     public CategoryListFragment() {
         // Required empty public constructor
@@ -39,6 +46,7 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
         }
@@ -64,6 +72,22 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menuSync = menu.findItem(R.id.action_sync_category).setVisible(true);
+        menuAddCategory = menu.findItem(R.id.action_new_category).setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_sync_category:
+                SyncAdapter.sincronizeNow(Global.getContext(), false);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onListItemClick(ListView l, View v, int position, long id){
 
     }
@@ -83,6 +107,11 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        if(menuSync != null)
+            menuSync.setVisible(false);
+
+        if(menuAddCategory != null)
+            menuAddCategory.setVisible(false);
     }
 
     @Override
