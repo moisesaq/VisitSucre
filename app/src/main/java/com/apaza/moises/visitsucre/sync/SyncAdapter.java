@@ -46,7 +46,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
     /*PROJECTION FOR CONSULT*/
     private static final String[] PROJECTION = new String[]{
-            BaseColumns._ID,
             ContractVisitSucre.Category.ID_REMOTE,
             ContractVisitSucre.Category.LOGO,
             ContractVisitSucre.Category.NAME,
@@ -245,16 +244,13 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         /*TABLE HASH FOR CONTAIN INPUT*/
         HashMap<String, Category> categoryMap = new HashMap<>();
         for(Category category: data){
-            //TODO CHECK AFTER THIS
-            //FIXME THIS IS ID REMOTE
-            categoryMap.put(category.getIdCategory(), category);
+            categoryMap.put(category.getIdRemote(), category);
         }
 
         /*CONSULT CURRENT REGISTER REMOTES*/
         Uri uri = ContractVisitSucre.Category.CONTENT_URI;
-        String select = ContractVisitSucre.Category.ID_REMOTE + "IS NOT NULL";
+        String select = ContractVisitSucre.Category.ID_REMOTE + " IS NOT NULL";
 
-        //TODO VERIFY AFTER THIS ALSO
         Cursor c = resolver.query(uri, PROJECTION, select, null, null);
 
         assert c != null;
@@ -263,7 +259,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
         /*FIND DATA OBSOLETE*/
         String idRemote;
-        String code;
         String logo;
         String name;
         String date;
@@ -286,15 +281,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                 /*VERIFY UPDATE CATEGORY*/
                 boolean b1 = cate.getLogo() != null && !cate.getLogo().equals(logo);
                 boolean b2 = cate.getName() != null && !cate.getName().equals(name);
-                boolean b3 = cate.getDate() != null && !cate.getDate().equals(date);
+                //boolean b3 = cate.getDate() != null && !cate.getDate().equals(date);
                 boolean b4 = cate.getDescription() != null && !cate.getDescription().equals(description);
 
-                if(b1 || b2 || b3 || b4){
+                if(b1 || b2 || b4){
                     Log.i(TAG, "Programming update of: " + existingUri);
                     ops.add(ContentProviderOperation.newUpdate(existingUri)
                             .withValue(ContractVisitSucre.Category.LOGO, cate.getLogo())
                             .withValue(ContractVisitSucre.Category.NAME, cate.getName())
-                            .withValue(ContractVisitSucre.Category.DATE, cate.getDate())
+                            //.withValue(ContractVisitSucre.Category.DATE, cate.getDate())
                             .withValue(ContractVisitSucre.Category.DESCRIPTION, cate.getDescription())
                             .build());
                     syncResult.stats.numUpdates++;
@@ -314,7 +309,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         for (Category ca: categoryMap.values()){
             Log.i(TAG, "Programming inserting of: " + ca.getIdCategory());
             ops.add(ContentProviderOperation.newInsert(ContractVisitSucre.Category.CONTENT_URI)
-                    .withValue(ContractVisitSucre.Category.ID_REMOTE, ca.getIdCategory()) //TODO SEE HERE
+                    .withValue(ContractVisitSucre.Category.ID_REMOTE, ca.getIdRemote())
                     .withValue(ContractVisitSucre.Category.LOGO, ca.getLogo())
                     .withValue(ContractVisitSucre.Category.NAME, ca.getName())
                     .withValue(ContractVisitSucre.Category.DATE, ca.getDate())

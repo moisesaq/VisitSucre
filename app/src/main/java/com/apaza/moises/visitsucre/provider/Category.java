@@ -1,30 +1,47 @@
 package com.apaza.moises.visitsucre.provider;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 public class Category {
 
     /*String ID = "id";
-    String CODE = "code";
     String LOGO = "logo";
     String NAME = "name";
     String DATE = "date";
-    String DESCRIPTION = "description";*/
+    String DESCRIPTION = "description";
 
-    public String idCategory, code, logo, name, description;
-    public Date date;
+    String STATUS = "status";
+    String ID_REMOTE = "idRemote";
+    String PENDING_INSERTION = "pendingInsertion";*/
+
+    public String idCategory;
+    public String logo;
+    public String name;
+    public String date;
+    public String description;
+
+    public int status;
+
+    @SerializedName("_id")
+    public String idRemote;
+
+    public int pendingInsertion;
 
     public Category(){
 
     }
 
-    public Category(String idCategory, String code, String logo, String name, String description, Date date){
+    public Category(String idCategory, String logo, String name, String date, String description){
         this.idCategory = idCategory;
-        this.code = code;
         this.logo = logo;
         this.name = name;
         this.date = date;
         this.description = description;
+        /*this.status = status;
+        this.idRemote = idRemote;
+        this.pendingInsertion = pendingInsertion;*/
     }
 
     public String getIdCategory() {
@@ -33,15 +50,6 @@ public class Category {
 
     public Category setIdCategory(String idCategory) {
         this.idCategory = idCategory;
-        return this;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public Category setCode(String code) {
-        this.code = code;
         return this;
     }
 
@@ -54,11 +62,11 @@ public class Category {
         return this;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public Category setDate(Date date) {
+    public Category setDate(String date) {
         this.date = date;
         return this;
     }
@@ -78,6 +86,33 @@ public class Category {
 
     public Category setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public Category setStatus(int status) {
+        this.status = status;
+        return this;
+    }
+
+    public String getIdRemote() {
+        return idRemote;
+    }
+
+    public Category setIdRemote(String idRemote) {
+        this.idRemote = idRemote;
+        return this;
+    }
+
+    public int getPendingInsertion() {
+        return pendingInsertion;
+    }
+
+    public Category setPendingInsertion(int pendingInsertion) {
+        this.pendingInsertion = pendingInsertion;
         return this;
     }
 }

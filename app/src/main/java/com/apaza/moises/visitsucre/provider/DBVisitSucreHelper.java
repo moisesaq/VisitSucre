@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 public class DBVisitSucreHelper extends SQLiteOpenHelper{
 
     private static final String NAME_DATA_BASE = "dbVisitSucre.db";
-    private static final int CURRENT_VERSION = 2;
+    private static final int CURRENT_VERSION = 1;
     private final Context context;
 
     interface Table{

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.CategoryListFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceInMapFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceListFragment;
@@ -56,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Global.setContext(this);
+
+        SyncAdapter.setupSyncAdapter(this);
+
         fragmentManager = getSupportFragmentManager();
         fragmentManager.addOnBackStackChangedListener(this);
 

@@ -14,36 +14,48 @@
         android:id="@+id/action_new_category"
         android:title="@string/new_category"
         android:orderInCategory="2"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/action_sync_category"
+        android:title="Sync"
+        android:orderInCategory="3"
+        app:showAsAction="always"
+        android:visible="false"/>
 
     <item
         android:id="@+id/action_insert_db"
         android:title="Insert DB"
         android:orderInCategory="97"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        android:visible="false"/>
 
     <item
         android:id="@+id/action_show_db"
-        android:title="Show collection"
+        android:title="Show DB"
         android:orderInCategory="98"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        android:visible="false"/>
 
     <item
-        android:id="@+id/action_delete_collections_db"
-        android:title="Delete DB collections"
+        android:id="@+id/action_delete_db"
+        android:title="Delete DB"
         android:orderInCategory="99"
-        app:showAsAction="never"/>
+        app:showAsAction="never"
+        android:visible="false"/>
 
     <item
         android:id="@+id/action_update_db"
         android:title="Update DB"
-        android:orderInCategory="99"
-        app:showAsAction="never"/>
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:visible="false"/>
 
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="101"
         app:showAsAction="never"
         android:visible="false"/>
 

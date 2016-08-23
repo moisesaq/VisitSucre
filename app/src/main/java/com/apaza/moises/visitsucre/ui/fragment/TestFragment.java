@@ -38,16 +38,20 @@ import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.provider.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.apaza.moises.visitsucre.provider.Place;
+import com.google.gson.Gson;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TestFragment extends BaseFragment implements View.OnClickListener{
@@ -60,6 +64,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     private EditText textSearch;
     private NetworkImageView imagePost;
     private TextView resultTest;
+
+    private MenuItem insert, show, delete, update;
 
     public static TestFragment newInstance(){
         return new TestFragment();
@@ -95,8 +101,10 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu, inflater);
-        //inflater.inflate(R.menu.menu_main, menu);
+        insert = menu.findItem(R.id.action_insert_db).setVisible(true);
+        show = menu.findItem(R.id.action_show_db).setVisible(true);
+        delete = menu.findItem(R.id.action_delete_db).setVisible(true);
+        update = menu.findItem(R.id.action_update_db).setVisible(true);
     }
 
     @Override
@@ -109,7 +117,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
             case R.id.action_show_db:
                 showDataBaseCollections();
                 return true;
-            case R.id.action_delete_collections_db:
+            case R.id.action_delete_db:
                 new TestDeleteDB().execute();
                 return true;
         }
@@ -122,9 +130,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.test2:
                 if(checkBox.isChecked())
-                    testRequestJsonArray(Constants.URL_PLACES);
+                    testRequestJsonObject(Constants.URL_PLACES);
                 else
-                    testRequestJsonArray(Constants.URL_CATEGORIES);
+                    testRequestJsonObject(Constants.URL_CATEGORIES);
                 break;
             case R.id.loadImage:
                 testImageLoader();
@@ -141,6 +149,15 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        insert.setVisible(false);
+        show.setVisible(false);
+        delete.setVisible(false);
+        update.setVisible(false);
     }
 
     /*TEST VOLLEY WITH DB LOCAL*/
@@ -166,6 +183,32 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     public void onErrorResponse(VolleyError error) {
                         resultTest.setText("Error: " + error.toString());
                     }
+        });
+        VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
+    }
+
+    private void testRequestJsonObject(String url){
+        JsonObjectRequest jsonArrayRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        resultTest.setText("Result: " + response.toString());
+                        try{
+                            Gson gson = new Gson();
+                            JSONArray categories = response.getJSONArray(Constants.CATEGORIES);
+                            Category[] res = gson.fromJson(categories != null ? categories.toString(): null, Category[].class);
+                            List<Category> list = Arrays.asList(res);
+                            Log.d(TAG, "Count elements " + list.size());
+                        }catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                resultTest.setText("Error: " + error.toString());
+            }
         });
         VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
     }
@@ -247,10 +290,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
             try{
                 Global.getHandlerDBVisitSucre().getDB().beginTransaction();
 
+
+
                 //Insert data
-                Category category1 = new Category(null, "code-111", "logo111", "Cathedral", "bla bla bla bla bla bla bla bla 1111111", currentDate);
-                Category category2 = new Category(null, "code-222", "logo222", "Museums", "bla bla bla bla bla bla bla bla 2222222", currentDate);
-                Category category3 = new Category(null, "code-333", "logo333", "Tourism", "bla bla bla bla bla bla bla bla 33333333", currentDate);
+                Category category1 = new Category(null, "logo111", "Cathedral", currentDate.toString(), "bla bla bla bla bla bla bla bla 1111111");
+                Category category2 = new Category(null, "logo222", "Museums", currentDate.toString(), "bla bla bla bla bla bla bla bla 2222222");
+                Category category3 = new Category(null, "logo333", "Tourism", currentDate.toString(), "bla bla bla bla bla bla bla bla 33333333");
 
                 String idCategory1 = Global.getHandlerDBVisitSucre().insertCategory(category1);
                 String idCategory2 = Global.getHandlerDBVisitSucre().insertCategory(category2);

@@ -189,12 +189,12 @@ public class ProviderVisitSucre extends ContentProvider{
         switch (uriMatcher.match(uri)){
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Category.ID + " = ?", new String[]{id});
+                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             case PLACE_ID:
                 id = ContractVisitSucre.Place.getIdPlace(uri);
-                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Category.ID + " = ?", new String[]{id});
+                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             default:
@@ -212,7 +212,7 @@ public class ProviderVisitSucre extends ContentProvider{
         switch (uriMatcher.match(uri)){
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                affects = db.update(DBVisitSucreHelper.Table.CATEGORY, values, ContractVisitSucre.Category.ID + " = ?", new String[]{id});
+                affects = db.update(DBVisitSucreHelper.Table.CATEGORY, values, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             case PLACE_ID:
