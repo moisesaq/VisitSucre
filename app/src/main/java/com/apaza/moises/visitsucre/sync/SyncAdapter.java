@@ -283,7 +283,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                 VolleySingleton.getInstance(getContext()).addToRequestQueue(
                         new JsonObjectRequest(
                                 Request.Method.POST,
-                                "URL", //TODO Fix here
+                                Constants.URL_CATEGORIES,
                                 null,
                                 new Response.Listener<JSONObject>() {
                                     @Override
@@ -352,16 +352,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
     private Cursor getDirtyRegister(){
         Uri uri = ContractVisitSucre.Category.CONTENT_URI;
-        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
-                ContractVisitSucre.Category.STATUS + "=?";
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " + ContractVisitSucre.Category.STATUS + "=?";
         String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_SYNC + ""};
         return resolver.query(uri, PROJECTION, selection, selectionArgs, null);
     }
 
     private void startUpdate(){
         Uri uri = ContractVisitSucre.Category.CONTENT_URI;
-        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
-                ContractVisitSucre.Category.STATUS + " =? ";
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " + ContractVisitSucre.Category.STATUS + " =? ";
         String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_OK + ""};
         ContentValues values = new ContentValues();
         values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_SYNC);
