@@ -1,6 +1,5 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -81,7 +80,7 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_sync_category:
-                SyncAdapter.sincronizeNow(Global.getContext(), false);
+                SyncAdapter.synchronizeNow(getActivity(), false);
                 return true;
         }
         return super.onOptionsItemSelected(item);
