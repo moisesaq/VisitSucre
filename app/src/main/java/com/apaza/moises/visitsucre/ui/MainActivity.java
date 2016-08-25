@@ -198,8 +198,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String txtName = name.getText().toString();
                 String txtDescription = description.getText().toString();
                 if(txtName.length() > 5 && txtDescription.length() > 5){
-                    //saveCategory(txtName, txtDescription);
-                    saveCategoryInDBRemote(txtName, txtDescription);
+                    saveCategory(txtName, txtDescription);
+                    //saveCategoryInDBRemote(txtName, txtDescription);
                 }else{
                     showMessage("Error missing characters");
                 }
@@ -224,8 +224,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             values.put(ContractVisitSucre.Category.DATE, Utils.getCurrentDate().toString());
             values.put(ContractVisitSucre.Category.DESCRIPTION, description);
             values.put(ContractVisitSucre.Category.PENDING_INSERTION, 1);
-            getContentResolver().insert(ContractVisitSucre.Category.CONTENT_URI, values);
-            showMessage("Category saved");
+            Uri uri = getContentResolver().insert(ContractVisitSucre.Category.CONTENT_URI, values);
+            if(uri != null){
+                showMessage("Category saved");
+                SyncAdapter.synchronizeNow(this, true);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

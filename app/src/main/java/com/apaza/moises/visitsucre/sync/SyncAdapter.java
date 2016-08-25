@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -24,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
 import com.apaza.moises.visitsucre.provider.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
@@ -158,6 +160,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         String select = ContractVisitSucre.Category.ID_REMOTE + " IS NOT NULL";
 
         Cursor c = resolver.query(uri, PROJECTION, select, null, null);
+        DatabaseUtils.dumpCursor(c);
 
         assert c != null;
 
@@ -279,12 +282,12 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         Log.i(TAG, "FOUND " + cursor.getCount() + " DIRTY REGISTER");
         if(cursor.getCount() > 0){
             while (cursor.moveToNext()){
-                final int idLocal = cursor.getInt(COLUMN_ID);
+                final int idLocal = cursor.getInt(1);//COLUMN_ID);
                 VolleySingleton.getInstance(getContext()).addToRequestQueue(
                         new JsonObjectRequest(
                                 Request.Method.POST,
                                 Constants.URL_CATEGORIES,
-                                null,
+                                Utils.cursorParseToJSONObject(cursor),
                                 new Response.Listener<JSONObject>() {
                                     @Override
                                     public void onResponse(JSONObject response) {
@@ -322,15 +325,18 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     private void processResponseInsert(JSONObject response, int idLocal){
         try{
             String status = response.getString(Constants.STATUS);
-            String message = response.getString(Constants.MESSAGE);
-            String idRemote = response.getString(Constants.ID_CATEGORY_REMOTE);
+            JSONObject categoryJSON = response.getJSONObject(Constants.CATEGORY);
+            Category category = gson.fromJson(categoryJSON.toString(), Category.class);
+            //String message = response.getString(Constants.MESSAGE);
+            String idRemote = category.getIdRemote();//response.getString(Constants.ID_CATEGORY_REMOTE);
 
             switch (status){
                 case Constants.SUCCESS:
-                    finishUpdate(idRemote, idLocal);
+                    if(idRemote != null)
+                        finishUpdate(idRemote, idLocal);
                     break;
                 case Constants.FAILED:
-                    Log.i(TAG, message);
+                    Log.i(TAG, "INSERT CATEGORY DATA BASE REMOTE FAILED");//message);
                     break;
             }
         }catch (JSONException e){
@@ -361,6 +367,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         Uri uri = ContractVisitSucre.Category.CONTENT_URI;
         String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " + ContractVisitSucre.Category.STATUS + " =? ";
         String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_OK + ""};
+
         ContentValues values = new ContentValues();
         values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_SYNC);
         int results = resolver.update(uri, values, selection, selectionArgs);
