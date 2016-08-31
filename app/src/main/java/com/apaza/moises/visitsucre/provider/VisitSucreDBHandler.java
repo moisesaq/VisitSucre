@@ -1,0 +1,40 @@
+package com.apaza.moises.visitsucre.provider;
+
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import com.apaza.moises.visitsucre.database.DaoMaster;
+import com.apaza.moises.visitsucre.database.DaoSession;
+
+public class VisitSucreDBHandler {
+    public static String TAG = "VISIT_SUCRE_DATA_BASE_HANDLER";
+    private static DaoMaster daoMaster;
+    private static DaoSession daoSession;
+
+    private static VisitSucreDBHandler handler;
+
+    private VisitSucreDBHandler(Context context){
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, ContractVisitSucre.NAME_DB, null);
+        try{
+            SQLiteDatabase db = helper.getWritableDatabase();
+            daoMaster = new DaoMaster(db);
+            daoSession = daoMaster.newSession();
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            Log.d(TAG, "DATA BASE STARTED");
+        }
+    }
+
+    public static VisitSucreDBHandler getInstance(Context context){
+        if(handler == null)
+            handler = new VisitSucreDBHandler(context);
+        return  handler;
+    }
+
+    public static DaoSession getDaoSession(){
+        daoSession = daoMaster.newSession();
+        return daoSession;
+    }
+}

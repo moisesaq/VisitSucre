@@ -12,6 +12,7 @@ public class UtilDB {
 
     public interface ColumnCategory{
         String NAME = "name";
+        String LOGO = "logo";
         String CREATED_AT = "createdAt";
         String DESCRIPTION = "description";
     }

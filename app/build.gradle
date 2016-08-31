@@ -55,4 +55,7 @@ dependencies {
 
     //Text Drawable
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    //GreenDAO
+    compile 'de.greenrobot:greendao:2.1.0'
 }

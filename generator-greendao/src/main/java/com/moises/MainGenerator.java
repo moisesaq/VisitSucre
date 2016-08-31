@@ -27,6 +27,7 @@ public class MainGenerator extends UtilDB{
         category = schema.addEntity(Table.CATEGORY);
         category.addIdProperty();
         category.addStringProperty(ColumnCategory.NAME);
+        category.addStringProperty(ColumnCategory.LOGO);
         category.addDateProperty(ColumnCategory.CREATED_AT);
         category.addStringProperty(ColumnCategory.DESCRIPTION);
         category.addContentProvider();
