@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBVisitSucreHelper extends SQLiteOpenHelper{
 
-    private static final String NAME_DATA_BASE = "dbVisitSucre.db";
+
     private static final int CURRENT_VERSION = 1;
     private final Context context;
 
@@ -46,7 +46,7 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
             ContractVisitSucre.Place.ID_CATEGORY + " TEXT NOT NULL " + References.ID_CATEGORY + ")";
 
     public DBVisitSucreHelper(Context context){
-        super(context, NAME_DATA_BASE, null, CURRENT_VERSION);
+        super(context, ContractVisitSucre.NAME_DB, null, CURRENT_VERSION);
         this.context = context;
     }
 
