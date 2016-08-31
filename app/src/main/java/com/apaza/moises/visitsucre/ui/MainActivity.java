@@ -24,8 +24,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
+<<<<<<< HEAD
+=======
+import com.apaza.moises.visitsucre.global.Constants;
+import com.apaza.moises.visitsucre.global.VolleySingleton;
+>>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.CategoryListFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceInMapFragment;
@@ -35,6 +44,11 @@ import com.apaza.moises.visitsucre.ui.fragment.TestFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
@@ -188,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String txtDescription = description.getText().toString();
                 if(txtName.length() > 5 && txtDescription.length() > 5){
                     saveCategory(txtName, txtDescription);
+                    //saveCategoryInDBRemote(txtName, txtDescription);
                 }else{
                     showMessage("Error missing characters");
                 }
@@ -211,8 +226,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             values.put(ContractVisitSucre.Category.NAME, name);
             values.put(ContractVisitSucre.Category.DATE, Utils.getCurrentDate().toString());
             values.put(ContractVisitSucre.Category.DESCRIPTION, description);
-            getContentResolver().insert(ContractVisitSucre.Category.CONTENT_URI, values);
+            values.put(ContractVisitSucre.Category.PENDING_INSERTION, 1);
+            Uri uri = getContentResolver().insert(ContractVisitSucre.Category.CONTENT_URI, values);
+            if(uri != null){
+                showMessage("Category saved");
+                SyncAdapter.synchronizeNow(this, true);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void saveCategoryInDBRemote(String name, String description){
+        JSONObject jsonObject = new JSONObject();
+        try{
+            jsonObject.put(ContractVisitSucre.Category.LOGO, "logo_999");
+            jsonObject.put(ContractVisitSucre.Category.NAME, name);
+            jsonObject.put(ContractVisitSucre.Category.DATE, Utils.getCurrentDate().toString());
+            jsonObject.put(ContractVisitSucre.Category.DESCRIPTION, description);
             showMessage("Category saved");
+
+            VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(
+                    new JsonObjectRequest(
+                            Request.Method.POST,
+                            Constants.URL_CATEGORIES,
+                            jsonObject,
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    Log.d(TAG, "Result: " + response.toString());
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.d(TAG, "ERROR VOLLEY: " + error.getMessage());
+                                }
+                            }
+                    ){
+                        @Override
+                        public Map<String, String> getHeaders(){
+                            Map<String, String> headers = new HashMap<String, String>();
+                            headers.put("Content-Type", "application/json; charset=utf-8");
+                            headers.put("Accept", "application/json");
+                            return headers;
+                        }
+
+                        @Override
+                        public String getBodyContentType(){
+                            return "application/json; charset=utf-8" + getParamsEncoding();
+                        }
+                    }
+            );
+
         }catch (Exception e){
             e.printStackTrace();
         }

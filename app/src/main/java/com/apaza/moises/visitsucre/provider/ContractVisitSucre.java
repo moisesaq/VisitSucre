@@ -5,6 +5,7 @@ import android.net.Uri;
 import java.util.UUID;
 
 public class ContractVisitSucre {
+    public static final String NAME_DB = "visitSucreDataBase";
 
     public static final int STATUS_OK = 0;
     public static final int STATUS_SYNC = 1;

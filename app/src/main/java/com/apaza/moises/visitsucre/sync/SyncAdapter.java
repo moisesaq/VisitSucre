@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.OperationApplicationException;
 import android.content.SyncResult;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -23,6 +24,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Constants;
+import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
 import com.apaza.moises.visitsucre.provider.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
@@ -46,6 +49,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
     /*PROJECTION FOR CONSULT*/
     private static final String[] PROJECTION = new String[]{
+<<<<<<< HEAD
+=======
+            ContractVisitSucre.Category.ID,
+>>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
             ContractVisitSucre.Category.ID_REMOTE,
             ContractVisitSucre.Category.LOGO,
             ContractVisitSucre.Category.NAME,
@@ -89,104 +96,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         }
     }
 
-    private void performSyncRemote() {
-        Log.d(TAG, "UPDATING SERVER....");
-        startUpdate();
-        Cursor cursor = getDirtyRegister();
-
-        Log.i(TAG, "FOUND " + cursor.getCount() + " DIRTY REGISTER");
-        if(cursor.getCount() > 0){
-            while (cursor.moveToNext()){
-                final int idLocal = cursor.getInt(COLUMN_ID);
-                VolleySingleton.getInstance(getContext()).addToRequestQueue(
-                        new JsonObjectRequest(
-                                Request.Method.POST,
-                                "URL", //TODO Fix here
-                                null,
-                                new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        processResponseInsert(response, idLocal);
-                                    }
-                                },
-                                new Response.ErrorListener() {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        Log.d(TAG, "ERROR VOLLEY: " + error.getMessage());
-                                    }
-                                }
-                        ){
-                            @Override
-                            public Map<String, String> getHeaders(){
-                                Map<String, String> headers = new HashMap<String, String>();
-                                headers.put("Content-Type", "application/json; charset=utf-8");
-                                headers.put("Accept", "application/json");
-                                return headers;
-                            }
-
-                            @Override
-                            public String getBodyContentType(){
-                                return "application/json; charset=utf-8" + getParamsEncoding();
-                            }
-                        }
-                );
-            }
-        }else{
-            Log.i(TAG, "NO REQUIRED SYNC");
-        }
-        cursor.close();
-    }
-
-    private void processResponseInsert(JSONObject response, int idLocal){
-        try{
-            String status = response.getString(Constants.STATUS);
-            String message = response.getString(Constants.MESSAGE);
-            String idRemote = response.getString(Constants.ID_CATEGORY_REMOTE);
-
-            switch (status){
-                case Constants.SUCCESS:
-                    finishUpdate(idRemote, idLocal);
-                    break;
-                case Constants.FAILED:
-                    Log.i(TAG, message);
-                    break;
-            }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void finishUpdate(String idRemote, int idLocal){
-        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
-        String selection = ContractVisitSucre.Category.ID + "=?";
-        String[] selectionArgs = new String[]{String.valueOf(idLocal)};
-
-        ContentValues values = new ContentValues();
-        values.put(ContractVisitSucre.Category.PENDING_INSERTION, "0");
-        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_OK);
-        values.put(ContractVisitSucre.Category.ID_REMOTE, idRemote);
-        resolver.update(uri, values, selection, selectionArgs);
-    }
-
-    private Cursor getDirtyRegister(){
-        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
-        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
-                ContractVisitSucre.Category.STATUS + "=?";
-        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_SYNC + ""};
-        return resolver.query(uri, PROJECTION, selection, selectionArgs, null);
-    }
-
-    private void startUpdate(){
-        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
-        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " +
-                ContractVisitSucre.Category.STATUS + " =? ";
-        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_OK + ""};
-        ContentValues values = new ContentValues();
-        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_SYNC);
-        int results = resolver.update(uri, values, selection, selectionArgs);
-        Log.d(TAG, "REGISTER IN INSERTION QUEUE: " + results);
-    }
-
+    /*--------------------SYNCHRONIZE DATA BASE LOCAL--------------*/
     private void performSyncLocal(final SyncResult syncResult){
         Log.i(TAG, "Updating client....");
 
@@ -219,6 +129,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
                     updateDataLocal(response, syncResult);
                     break;
                 case Constants.FAILED:
+                    Log.d(TAG, "SYNC DATA BASE LOCAL FAILED... :(");
                     break;
             }
         }catch (JSONException e){
@@ -252,6 +163,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         String select = ContractVisitSucre.Category.ID_REMOTE + " IS NOT NULL";
 
         Cursor c = resolver.query(uri, PROJECTION, select, null, null);
+        DatabaseUtils.dumpCursor(c);
 
         assert c != null;
 
@@ -339,8 +251,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         }
     }
 
-    public static void sincronizeNow(Context context, boolean onlyUpload){
-        Log.d(TAG, "REQUEST OF SYNCHRONIZE MANUAL.");
+    public static void synchronizeNow(Context context, boolean onlyUpload){
+        Log.d(TAG, "REQUEST OF SYNCHRONIZE MANUAL...");
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
@@ -353,11 +265,115 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         AccountManager accountManager = (AccountManager)context.getSystemService(Context.ACCOUNT_SERVICE);
         Account newAccount = new Account(context.getString(R.string.app_name), Constants.ACCOUNT_TYPE);
 
-        if(accountManager.getPassword(newAccount) == null){
+        if(null == accountManager.getPassword(newAccount)){
+            Log.i(TAG, "ACCOUNT USER NOT OBTAINED");
             if(!accountManager.addAccountExplicitly(newAccount, "", null))
                 return null;
+        }else{
+            Log.i(TAG, "ACCOUNT USER OBTAINED " + newAccount.name + " - " + newAccount.toString());
         }
-        Log.i(TAG, "ACCOUNT USER OBTAINED");
+
         return newAccount;
+    }
+
+    /*--------------------SYNCHRONIZE DATA BASE REMOTE--------------*/
+    private void performSyncRemote() {
+        Log.d(TAG, "UPDATING SERVER....");
+        startUpdate();
+        Cursor cursor = getDirtyRegister();
+
+        Log.i(TAG, "FOUND " + cursor.getCount() + " DIRTY REGISTER");
+        if(cursor.getCount() > 0){
+            while (cursor.moveToNext()){
+                final int idLocal = cursor.getInt(1);//COLUMN_ID);
+                VolleySingleton.getInstance(getContext()).addToRequestQueue(
+                        new JsonObjectRequest(
+                                Request.Method.POST,
+                                Constants.URL_CATEGORIES,
+                                Utils.cursorParseToJSONObject(cursor),
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        processResponseInsert(response, idLocal);
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Log.d(TAG, "ERROR VOLLEY: " + error.getMessage());
+                                    }
+                                }
+                        ){
+                            @Override
+                            public Map<String, String> getHeaders(){
+                                Map<String, String> headers = new HashMap<String, String>();
+                                headers.put("Content-Type", "application/json; charset=utf-8");
+                                headers.put("Accept", "application/json");
+                                return headers;
+                            }
+
+                            @Override
+                            public String getBodyContentType(){
+                                return "application/json; charset=utf-8" + getParamsEncoding();
+                            }
+                        }
+                );
+            }
+        }else{
+            Log.i(TAG, "NO REQUIRED SYNC");
+        }
+        cursor.close();
+    }
+
+    private void processResponseInsert(JSONObject response, int idLocal){
+        try{
+            String status = response.getString(Constants.STATUS);
+            JSONObject categoryJSON = response.getJSONObject(Constants.CATEGORY);
+            Category category = gson.fromJson(categoryJSON.toString(), Category.class);
+            //String message = response.getString(Constants.MESSAGE);
+            String idRemote = category.getIdRemote();//response.getString(Constants.ID_CATEGORY_REMOTE);
+
+            switch (status){
+                case Constants.SUCCESS:
+                    if(idRemote != null)
+                        finishUpdate(idRemote, idLocal);
+                    break;
+                case Constants.FAILED:
+                    Log.i(TAG, "INSERT CATEGORY DATA BASE REMOTE FAILED");//message);
+                    break;
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void finishUpdate(String idRemote, int idLocal){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.ID + "=?";
+        String[] selectionArgs = new String[]{String.valueOf(idLocal)};
+
+        ContentValues values = new ContentValues();
+        values.put(ContractVisitSucre.Category.PENDING_INSERTION, "0");
+        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_OK);
+        values.put(ContractVisitSucre.Category.ID_REMOTE, idRemote);
+        resolver.update(uri, values, selection, selectionArgs);
+    }
+
+    private Cursor getDirtyRegister(){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " + ContractVisitSucre.Category.STATUS + "=?";
+        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_SYNC + ""};
+        return resolver.query(uri, PROJECTION, selection, selectionArgs, null);
+    }
+
+    private void startUpdate(){
+        Uri uri = ContractVisitSucre.Category.CONTENT_URI;
+        String selection = ContractVisitSucre.Category.PENDING_INSERTION + " =? AND " + ContractVisitSucre.Category.STATUS + " =? ";
+        String[] selectionArgs = new String[]{"1", ContractVisitSucre.STATUS_OK + ""};
+
+        ContentValues values = new ContentValues();
+        values.put(ContractVisitSucre.Category.STATUS, ContractVisitSucre.STATUS_SYNC);
+        int results = resolver.update(uri, values, selection, selectionArgs);
+        Log.d(TAG, "REGISTER IN INSERTION QUEUE: " + results);
     }
 }

@@ -10,8 +10,19 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/generator-greendao" />
           </set>
         </option>
+<<<<<<< HEAD
+=======
+        <option name="myModules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/generator-greendao" />
+          </set>
+        </option>
+>>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
       </GradleProjectSettings>
     </option>
   </component>

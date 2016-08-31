@@ -81,7 +81,11 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_sync_category:
+<<<<<<< HEAD
                 SyncAdapter.sincronizeNow(Global.getContext(), false);
+=======
+                SyncAdapter.synchronizeNow(getActivity(), false);
+>>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -27,8 +27,8 @@
         <provider
             android:name=".provider.ProviderVisitSucre"
             android:authorities="com.apaza.moises.visitsucre"
-            android:enabled="true"
-            android:exported="true" />
+            android:syncable="true"
+            android:exported="false" />
 
         <activity
             android:name=".ui.SplashActivity"
@@ -66,14 +66,25 @@
                 android:resource="@xml/authenticator"/>
         </service>
 
+<<<<<<< HEAD
+=======
+        <!--SERVICE SYNCHRONIZE-->
+>>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
         <service
             android:name=".sync.SyncService"
             android:exported="true">
             <intent-filter>
+<<<<<<< HEAD
                 <action android:name="android.content.AsyncAdapter"/>
             </intent-filter>
             <meta-data
                 android:name="android.content.AsyncAdapter"
+=======
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+>>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
                 android:resource="@xml/sync_adapter"/>
         </service>
     </application>

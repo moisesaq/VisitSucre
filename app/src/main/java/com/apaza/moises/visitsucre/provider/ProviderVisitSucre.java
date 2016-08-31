@@ -210,6 +210,9 @@ public class ProviderVisitSucre extends ContentProvider{
         String id;
         int affects;
         switch (uriMatcher.match(uri)){
+            case CATEGORIES:
+                affects = db.update(DBVisitSucreHelper.Table.CATEGORY, values, selection, selectionArgs);
+                break;
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
                 affects = db.update(DBVisitSucreHelper.Table.CATEGORY, values, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});

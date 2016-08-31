@@ -15,6 +15,7 @@ public class Constants {
     public static final String ID_CATEGORY_REMOTE = "id";
     public static final String STATUS = "status";
     public static final String CATEGORIES = "categories";
+    public static final String CATEGORY = "category";
     public static final String MESSAGE = "message";
 
     /*CODE STATUS*/

@@ -1,11 +1,16 @@
 package com.apaza.moises.visitsucre.global;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 import net.steamcrafted.loadtoast.LoadToast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,6 +48,19 @@ public class Utils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyymmddhhmmss", Locale.getDefault());
         String date = dateFormat.format(new Date());
         return text + "-" + date;
+    }
+
+    public static JSONObject cursorParseToJSONObject(Cursor cursor){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(ContractVisitSucre.Category.LOGO, cursor.getString(2));
+            jsonObject.put(ContractVisitSucre.Category.NAME, cursor.getString(3));
+            jsonObject.put(ContractVisitSucre.Category.DATE, cursor.getString(4));
+            jsonObject.put(ContractVisitSucre.Category.DESCRIPTION, cursor.getString(5));
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 }
