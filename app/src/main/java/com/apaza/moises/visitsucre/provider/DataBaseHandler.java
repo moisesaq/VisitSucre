@@ -7,14 +7,14 @@ import android.util.Log;
 import com.apaza.moises.visitsucre.database.DaoMaster;
 import com.apaza.moises.visitsucre.database.DaoSession;
 
-public class VisitSucreDBHandler {
+public class DataBaseHandler {
     public static String TAG = "VISIT_SUCRE_DATA_BASE_HANDLER";
     private static DaoMaster daoMaster;
     private static DaoSession daoSession;
 
-    private static VisitSucreDBHandler handler;
+    private static DataBaseHandler handler;
 
-    private VisitSucreDBHandler(Context context){
+    private DataBaseHandler(Context context){
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context, ContractVisitSucre.NAME_DB, null);
         try{
             SQLiteDatabase db = helper.getWritableDatabase();
@@ -27,9 +27,9 @@ public class VisitSucreDBHandler {
         }
     }
 
-    public static VisitSucreDBHandler getInstance(Context context){
+    public static DataBaseHandler getInstance(Context context){
         if(handler == null)
-            handler = new VisitSucreDBHandler(context);
+            handler = new DataBaseHandler(context);
         return  handler;
     }
 
