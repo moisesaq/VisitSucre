@@ -7,7 +7,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table "IMAGE".
  */
-public class image {
+public class Image {
 
     private Long id;
     private String path;
@@ -18,20 +18,20 @@ public class image {
     private transient DaoSession daoSession;
 
     /** Used for active entity operations. */
-    private transient imageDao myDao;
+    private transient ImageDao myDao;
 
-    private place place;
+    private Place place;
     private Long place__resolvedKey;
 
 
-    public image() {
+    public Image() {
     }
 
-    public image(Long id) {
+    public Image(Long id) {
         this.id = id;
     }
 
-    public image(Long id, String path, String description, Long idPlace) {
+    public Image(Long id, String path, String description, Long idPlace) {
         this.id = id;
         this.path = path;
         this.description = description;
@@ -77,14 +77,14 @@ public class image {
     }
 
     /** To-one relationship, resolved on first access. */
-    public place getPlace() {
+    public Place getPlace() {
         Long __key = this.idPlace;
         if (place__resolvedKey == null || !place__resolvedKey.equals(__key)) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            placeDao targetDao = daoSession.getPlaceDao();
-            place placeNew = targetDao.load(__key);
+            PlaceDao targetDao = daoSession.getPlaceDao();
+            Place placeNew = targetDao.load(__key);
             synchronized (this) {
                 place = placeNew;
             	place__resolvedKey = __key;
@@ -93,7 +93,7 @@ public class image {
         return place;
     }
 
-    public void setPlace(place place) {
+    public void setPlace(Place place) {
         synchronized (this) {
             this.place = place;
             idPlace = place == null ? null : place.getId();
