@@ -13,17 +13,17 @@ import android.text.TextUtils;
 import de.greenrobot.dao.DaoLog;
 
 import com.apaza.moises.visitsucre.database.DaoSession;
-import com.apaza.moises.visitsucre.database.imageDao;
+import com.apaza.moises.visitsucre.database.ImageDao;
 
 /* Copy this code snippet into your AndroidManifest.xml inside the
 <application> element:
 
     <provider
-            android:name="com.apaza.moises.visitsucre.database.imageContentProvider"
+            android:name="com.apaza.moises.visitsucre.database.ImageContentProvider"
             android:authorities="com.apaza.moises.visitsucre.database.provider"/>
     */
 
-    public class imageContentProvider extends ContentProvider {
+    public class ImageContentProvider extends ContentProvider {
 
     public static final String AUTHORITY = "com.apaza.moises.visitsucre.database.provider";
     public static final String BASE_PATH = "";
@@ -33,8 +33,8 @@ import com.apaza.moises.visitsucre.database.imageDao;
     public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
     + "/" + BASE_PATH;
 
-    private static final String TABLENAME = imageDao.TABLENAME;
-    private static final String PK = imageDao.Properties.Id
+    private static final String TABLENAME = ImageDao.TABLENAME;
+    private static final String PK = ImageDao.Properties.Id
     .columnName;
 
     private static final int IMAGE_DIR = 0;

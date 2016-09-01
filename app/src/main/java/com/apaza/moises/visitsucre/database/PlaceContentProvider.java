@@ -13,17 +13,17 @@ import android.text.TextUtils;
 import de.greenrobot.dao.DaoLog;
 
 import com.apaza.moises.visitsucre.database.DaoSession;
-import com.apaza.moises.visitsucre.database.categoryDao;
+import com.apaza.moises.visitsucre.database.PlaceDao;
 
 /* Copy this code snippet into your AndroidManifest.xml inside the
 <application> element:
 
     <provider
-            android:name="com.apaza.moises.visitsucre.database.categoryContentProvider"
+            android:name="com.apaza.moises.visitsucre.database.PlaceContentProvider"
             android:authorities="com.apaza.moises.visitsucre.database.provider"/>
     */
 
-    public class categoryContentProvider extends ContentProvider {
+    public class PlaceContentProvider extends ContentProvider {
 
     public static final String AUTHORITY = "com.apaza.moises.visitsucre.database.provider";
     public static final String BASE_PATH = "";
@@ -33,19 +33,19 @@ import com.apaza.moises.visitsucre.database.categoryDao;
     public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
     + "/" + BASE_PATH;
 
-    private static final String TABLENAME = categoryDao.TABLENAME;
-    private static final String PK = categoryDao.Properties.Id
+    private static final String TABLENAME = PlaceDao.TABLENAME;
+    private static final String PK = PlaceDao.Properties.Id
     .columnName;
 
-    private static final int CATEGORY_DIR = 0;
-    private static final int CATEGORY_ID = 1;
+    private static final int PLACE_DIR = 0;
+    private static final int PLACE_ID = 1;
 
     private static final UriMatcher sURIMatcher;
 
     static {
     sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    sURIMatcher.addURI(AUTHORITY, BASE_PATH, CATEGORY_DIR);
-    sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", CATEGORY_ID);
+    sURIMatcher.addURI(AUTHORITY, BASE_PATH, PLACE_DIR);
+    sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", PLACE_ID);
     }
 
     /**
@@ -76,7 +76,7 @@ import com.apaza.moises.visitsucre.database.categoryDao;
     long id = 0;
     String path = "";
     switch (uriType) {
-    case CATEGORY_DIR:
+    case PLACE_DIR:
     id = getDatabase().insert(TABLENAME, null, values);
     path = BASE_PATH + "/" + id;
     break;
@@ -94,10 +94,10 @@ import com.apaza.moises.visitsucre.database.categoryDao;
     int rowsDeleted = 0;
     String id;
     switch (uriType) {
-    case CATEGORY_DIR:
+    case PLACE_DIR:
     rowsDeleted = db.delete(TABLENAME, selection, selectionArgs);
     break;
-    case CATEGORY_ID:
+    case PLACE_ID:
     id = uri.getLastPathSegment();
     if (TextUtils.isEmpty(selection)) {
     rowsDeleted = db.delete(TABLENAME, PK + "=" + id, null);
@@ -121,10 +121,10 @@ import com.apaza.moises.visitsucre.database.categoryDao;
     int rowsUpdated = 0;
     String id;
     switch (uriType) {
-    case CATEGORY_DIR:
+    case PLACE_DIR:
     rowsUpdated = db.update(TABLENAME, values, selection, selectionArgs);
     break;
-    case CATEGORY_ID:
+    case PLACE_ID:
     id = uri.getLastPathSegment();
     if (TextUtils.isEmpty(selection)) {
     rowsUpdated = db.update(TABLENAME, values, PK + "=" + id, null);
@@ -146,10 +146,10 @@ import com.apaza.moises.visitsucre.database.categoryDao;
     SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
     int uriType = sURIMatcher.match(uri);
     switch (uriType) {
-    case CATEGORY_DIR:
+    case PLACE_DIR:
     queryBuilder.setTables(TABLENAME);
     break;
-    case CATEGORY_ID:
+    case PLACE_ID:
     queryBuilder.setTables(TABLENAME);
     queryBuilder.appendWhere(PK + "="
     + uri.getLastPathSegment());
@@ -169,9 +169,9 @@ import com.apaza.moises.visitsucre.database.categoryDao;
     @Override
     public final String getType(Uri uri) {
     switch (sURIMatcher.match(uri)) {
-    case CATEGORY_DIR:
+    case PLACE_DIR:
     return CONTENT_TYPE;
-    case CATEGORY_ID:
+    case PLACE_ID:
     return CONTENT_ITEM_TYPE;
     default :
     throw new IllegalArgumentException("Unsupported URI: " + uri);

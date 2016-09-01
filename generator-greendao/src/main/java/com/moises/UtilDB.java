@@ -5,9 +5,9 @@ public class UtilDB {
     public static String NAME_DB = "DataBaseVisitSucre";
 
     public interface Table{
-        String CATEGORY = "category";
-        String PLACE = "place";
-        String IMAGE = "image";
+        String CATEGORY = "Category";
+        String PLACE = "Place";
+        String IMAGE = "Image";
     }
 
     public interface ColumnCategory{

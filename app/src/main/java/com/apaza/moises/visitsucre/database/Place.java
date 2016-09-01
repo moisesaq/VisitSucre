@@ -8,7 +8,7 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table "PLACE".
  */
-public class place {
+public class Place {
 
     private Long id;
     private String name;
@@ -24,21 +24,21 @@ public class place {
     private transient DaoSession daoSession;
 
     /** Used for active entity operations. */
-    private transient placeDao myDao;
+    private transient PlaceDao myDao;
 
-    private category category;
+    private Category category;
     private Long category__resolvedKey;
 
-    private List<image> PlaceImage;
+    private List<Image> PlaceImage;
 
-    public place() {
+    public Place() {
     }
 
-    public place(Long id) {
+    public Place(Long id) {
         this.id = id;
     }
 
-    public place(Long id, String name, String address, Double latitude, Double longitude, String description, Boolean favorite, java.util.Date createdAt, Long idCategory) {
+    public Place(Long id, String name, String address, Double latitude, Double longitude, String description, Boolean favorite, java.util.Date createdAt, Long idCategory) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -129,14 +129,14 @@ public class place {
     }
 
     /** To-one relationship, resolved on first access. */
-    public category getCategory() {
+    public Category getCategory() {
         Long __key = this.idCategory;
         if (category__resolvedKey == null || !category__resolvedKey.equals(__key)) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            categoryDao targetDao = daoSession.getCategoryDao();
-            category categoryNew = targetDao.load(__key);
+            CategoryDao targetDao = daoSession.getCategoryDao();
+            Category categoryNew = targetDao.load(__key);
             synchronized (this) {
                 category = categoryNew;
             	category__resolvedKey = __key;
@@ -145,7 +145,7 @@ public class place {
         return category;
     }
 
-    public void setCategory(category category) {
+    public void setCategory(Category category) {
         synchronized (this) {
             this.category = category;
             idCategory = category == null ? null : category.getId();
@@ -154,13 +154,13 @@ public class place {
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
-    public List<image> getPlaceImage() {
+    public List<Image> getPlaceImage() {
         if (PlaceImage == null) {
             if (daoSession == null) {
                 throw new DaoException("Entity is detached from DAO context");
             }
-            imageDao targetDao = daoSession.getImageDao();
-            List<image> PlaceImageNew = targetDao._queryPlace_PlaceImage(id);
+            ImageDao targetDao = daoSession.getImageDao();
+            List<Image> PlaceImageNew = targetDao._queryPlace_PlaceImage(id);
             synchronized (this) {
                 if(PlaceImage == null) {
                     PlaceImage = PlaceImageNew;

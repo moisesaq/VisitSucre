@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="InputTextView">
+        <attr name="iconImage" format="integer"/>
+        <attr name="maxLengthEnabled" format="boolean"/>
+        <attr name="maxLength" format="integer"/>
+        <attr name="hint" format="string"/>
+        <attr name="android:inputType"/>
+    </declare-styleable>
+</resources>
