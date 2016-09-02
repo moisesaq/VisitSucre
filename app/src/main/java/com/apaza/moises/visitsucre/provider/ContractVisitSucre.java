@@ -2,15 +2,33 @@ package com.apaza.moises.visitsucre.provider;
 
 import android.net.Uri;
 
+import com.apaza.moises.visitsucre.database.CategoryDao;
+import com.apaza.moises.visitsucre.database.ImageDao;
+import com.apaza.moises.visitsucre.database.PlaceDao;
+
 import java.util.UUID;
 
 public class ContractVisitSucre {
     public static final String NAME_DB = "visitSucreDataBase";
 
+    public static final String TABLE_NAME_CATEGORY = CategoryDao.TABLENAME;
+    public static final String PK_CATEGORY = CategoryDao.Properties.Id.columnName;
+
+    public static final String TABLE_NAME_PLACE = PlaceDao.TABLENAME;
+    public static final String PK_PLACE = PlaceDao.Properties.Id.columnName;
+
+    public static final String TABLE_NAME_IMAGE = ImageDao.TABLENAME;
+    public static final String PK_IMAGE = ImageDao.Properties.Id.columnName;
+
     public static final int STATUS_OK = 0;
     public static final int STATUS_SYNC = 1;
 
-    interface ColumnsCategory{
+    public interface Table{
+        String CATEGORY = "category";
+        String PLACE = "place";
+    }
+
+    public interface ColumnsCategory{
         String ID = "id";
         String LOGO = "logo";
         String NAME = "name";
@@ -22,7 +40,7 @@ public class ContractVisitSucre {
         String PENDING_INSERTION = "pendingInsertion";
     }
 
-    interface ColumnsPlace{
+    public interface ColumnsPlace{
         String ID = "id";
         String NAME = "name";
         String ADDRESS = "address";
@@ -40,6 +58,7 @@ public class ContractVisitSucre {
 
     public static final String ROUTE_CATEGORY = "route_category";
     public static final String ROUTE_PLACE = "route_place";
+    public static final String ROUTE_IMAGE = "route_image";
     //END URIS
 
     //TYPES MIME
@@ -109,6 +128,18 @@ public class ContractVisitSucre {
 
         public static boolean hasFilter(Uri uri){
             return uri != null && uri.getQueryParameter(PARAMS_FILTER) != null;
+        }
+    }
+
+    public static class Image{
+        public static final Uri CONTENT_URI = URI_BASE.buildUpon().appendPath(ROUTE_IMAGE).build();
+
+        public static Uri createUriImage(String id){
+            return CONTENT_URI.buildUpon().appendPath(id).build();
+        }
+
+        public static String getIdImage(Uri uri){
+            return uri.getLastPathSegment();
         }
     }
 }

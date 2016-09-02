@@ -15,19 +15,21 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.apaza.moises.visitsucre.database.DaoSession;
 import com.apaza.moises.visitsucre.deprecated.DBVisitSucreHelper;
 
 import java.util.ArrayList;
 
-public class ProviderVisitSucre extends ContentProvider{
+import de.greenrobot.dao.DaoLog;
+
+public class ProviderSucre extends ContentProvider{
 
     public static final String TAG = "PROVIDER VISIT SUCRE";
     public static final String NO_SUPPORTED_URI = "NO SUPPORTED URI";
 
-    private DBVisitSucreHelper helper;
     private ContentResolver resolver;
 
-    public ProviderVisitSucre(){
+    public ProviderSucre(){
 
     }
 
@@ -65,18 +67,25 @@ public class ProviderVisitSucre extends ContentProvider{
             ContractVisitSucre.Table.CATEGORY + "." + ContractVisitSucre.Category.NAME
     };
 
+    private DaoSession daoSession;
+
     @Override
     public boolean onCreate(){
-        helper = new DBVisitSucreHelper(getContext());
-        if(getContext() != null)
-            resolver = getContext().getContentResolver();
+        DaoLog.d("Content Provider started");
         return true;
+    }
+
+    protected SQLiteDatabase getDatabase() {
+        if(daoSession == null) {
+            throw new IllegalStateException("DaoSession must be set during content provider is active");
+        }
+        return daoSession.getDatabase();
     }
 
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        SQLiteDatabase db = helper.getWritableDatabase();
+        SQLiteDatabase db = getDatabase();
         String id;
         Cursor cursor;
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -156,7 +165,7 @@ public class ProviderVisitSucre extends ContentProvider{
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         Log.d(TAG, "INSERT: " + uri + "( " + values.toString() + ")\n");
-        SQLiteDatabase db = helper.getWritableDatabase();
+        SQLiteDatabase db = getDatabase();
         String id = null;
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
@@ -183,7 +192,7 @@ public class ProviderVisitSucre extends ContentProvider{
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         //db.delete(DBVisitSucreHelper.Table.CATEGORY, whereClause, whereArgs)
         Log.d(TAG, "Delete: " + uri);
-        SQLiteDatabase db = helper.getWritableDatabase();
+        SQLiteDatabase db = getDatabase();
         String id;
         int affects;
 
@@ -207,7 +216,7 @@ public class ProviderVisitSucre extends ContentProvider{
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         Log.d(TAG, "UPDATE: " + uri);
-        SQLiteDatabase db = helper.getWritableDatabase();
+        SQLiteDatabase db = getDatabase();
         String id;
         int affects;
         switch (uriMatcher.match(uri)){
@@ -236,7 +245,7 @@ public class ProviderVisitSucre extends ContentProvider{
 
     @Override
     public ContentProviderResult[] applyBatch(ArrayList<ContentProviderOperation> operations) throws OperationApplicationException{
-        final SQLiteDatabase db = helper.getWritableDatabase();
+        final SQLiteDatabase db = getDatabase();
         db.beginTransaction();
         try{
             final int numOperations = operations.size();

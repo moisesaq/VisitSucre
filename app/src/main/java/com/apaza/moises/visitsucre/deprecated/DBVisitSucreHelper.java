@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.provider;
+package com.apaza.moises.visitsucre.deprecated;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,22 +6,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
 import android.provider.BaseColumns;
 
+import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
+
 public class DBVisitSucreHelper extends SQLiteOpenHelper{
 
 
     private static final int CURRENT_VERSION = 1;
     private final Context context;
 
-    interface Table{
-        String CATEGORY = "category";
-        String PLACE = "place";
-    }
-
     interface References{
-        String ID_CATEGORY = String.format("REFERENCES %s(%s) ON DELETE CASCADE", Table.CATEGORY, ContractVisitSucre.Category.ID);
+        String ID_CATEGORY = String.format("REFERENCES %s(%s) ON DELETE CASCADE", ContractVisitSucre.Table.CATEGORY, ContractVisitSucre.Category.ID);
     }
 
-    private static final String tableCategory = "CREATE TABLE " + Table.CATEGORY + " (" +
+    private static final String tableCategory = "CREATE TABLE " + ContractVisitSucre.Table.CATEGORY + " (" +
             BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ContractVisitSucre.Category.ID + " TEXT UNIQUE NOT NULL, " +
             ContractVisitSucre.Category.LOGO + " TEXT DEFAULT 'NO LOGO', " +
@@ -33,7 +30,7 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
             ContractVisitSucre.Category.ID_REMOTE + " TEXT UNIQUE, " +
             ContractVisitSucre.Category.PENDING_INSERTION + " INTEGER NOT NULL DEFAULT 0)";
 
-    private static final String tablePlace = "CREATE TABLE " + Table.PLACE + " (" +
+    private static final String tablePlace = "CREATE TABLE " + ContractVisitSucre.Table.PLACE + " (" +
             BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             ContractVisitSucre.Place.ID + " TEXT UNIQUE NOT NULL, " +
             ContractVisitSucre.Place.NAME + " TEXT NOT NULL, " +
@@ -85,8 +82,8 @@ public class DBVisitSucreHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
         if(newVersion > oldVersion){
-            db.execSQL("DROP TABLE IF EXISTS " + Table.CATEGORY);
-            db.execSQL("DROP TABLE IF EXISTS " + Table.PLACE);
+            db.execSQL("DROP TABLE IF EXISTS " + ContractVisitSucre.Table.CATEGORY);
+            db.execSQL("DROP TABLE IF EXISTS " + ContractVisitSucre.Table.PLACE);
             onCreate(db);
         }
 

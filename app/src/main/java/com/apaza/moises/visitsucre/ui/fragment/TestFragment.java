@@ -36,9 +36,9 @@ import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
-import com.apaza.moises.visitsucre.provider.Category;
+import com.apaza.moises.visitsucre.deprecated.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
-import com.apaza.moises.visitsucre.provider.Place;
+import com.apaza.moises.visitsucre.deprecated.Place;
 import com.google.gson.Gson;
 
 import net.steamcrafted.loadtoast.LoadToast;

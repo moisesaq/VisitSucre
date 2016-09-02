@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 
-import com.apaza.moises.visitsucre.provider.HandlerDBVisitSucre;
+import com.apaza.moises.visitsucre.deprecated.HandlerDBVisitSucre;
 
 public class Global {
     private static Activity context;
