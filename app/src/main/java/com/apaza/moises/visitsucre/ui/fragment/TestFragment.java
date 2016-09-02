@@ -1,5 +1,6 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.OperationApplicationException;
@@ -46,6 +47,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -135,7 +147,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     testRequestJsonObject(Constants.URL_CATEGORIES);
                 break;
             case R.id.loadImage:
-                testImageLoader();
+                //testImageLoader();
+                new TestNetPay().execute();
                 break;
             case R.id.search:
                 String text = textSearch.getText().toString();
@@ -510,5 +523,131 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
             else
                 loadToast.error();
         }
+    }
+
+    /*TEST NET PAY*/
+    public class TestNetPay extends AsyncTask<Void, Void, String>{
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getContext());
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setTitle("Testing..");
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String result = "";
+            HttpURLConnection conn = null;
+            URL url;
+
+            try {
+                url = new URL("http://200.57.87.243:9855/");
+
+                String data = getPostDataString(getTestParams());
+
+                conn = (HttpURLConnection)url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                //conn.setDoOutput(true);
+                conn.setFixedLengthStreamingMode(data.getBytes().length);
+
+                conn.setRequestProperty("Content-Type", "text/plain; charset=utf-8");//"application/x-www-form-urlencoded");
+                //conn.setRequestProperty("charset", "utf-8");
+                conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+
+                out.write(data.getBytes());
+                out.flush();
+                out.close();
+                Log.d("REQUEST", conn.getURL().toString());
+                Log.d("SEND DATA", data);
+                int status = conn.getResponseCode();
+
+                String[] values = conn.getContentType().split(";"); // values.length should be 2
+                String charset = "";
+
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(15000);
+
+                for (String value : values) {
+                    value = value.trim();
+
+                    if (value.toLowerCase().startsWith("charset=")) {
+                        charset = value.substring("charset=".length());
+                    }
+                }
+
+                if ("".equals(charset)) {
+                    charset = "UTF-8"; //Assumption
+                }
+
+                Log.d("STATUS", conn.getResponseMessage() + " -- " + conn.getResponseCode() + " - " +conn.getContentEncoding() + " - " + charset);
+                if(status != 200){
+                    result = "Error";
+                }else{
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                    result = streamReader.readLine();
+                    StringBuilder responseStrBuilder = new StringBuilder();
+
+                    String inputStr;
+                    while ((inputStr = streamReader.readLine()) != null)
+                        responseStrBuilder.append(inputStr);
+                    //new JSONObject(responseStrBuilder.toString());
+                    result = responseStrBuilder.toString();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if(conn != null)
+                    conn.disconnect();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonObject) {
+            super.onPostExecute(jsonObject);
+            progressDialog.dismiss();
+            textSearch.setText(jsonObject);
+            Log.d("RESULT DATA", " >>>> " + jsonObject);
+        }
+
+        private HashMap<String, String> getTestParams(){
+            HashMap<String, String> params = new HashMap<>();
+            params.put("ResourceName", "CustomerRegistration");
+            params.put("ContentType", "Config");
+            params.put("Mode", "D");
+            params.put("StoreId", "6501");
+            params.put("UserName", "barto");
+            params.put("Password", "asdasd");
+            params.put("CardNumber", "1111222233334444");
+            params.put("ExpDate", "01/18");
+            params.put("CVV2", "1234");
+            params.put("OrderId", "1767242015012311220310982");
+            return params;
+        }
+    }
+
+    private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
     }
 }
