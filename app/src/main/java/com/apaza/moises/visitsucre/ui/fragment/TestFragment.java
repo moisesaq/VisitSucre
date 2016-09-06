@@ -3,10 +3,12 @@ package com.apaza.moises.visitsucre.ui.fragment;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -32,7 +34,11 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.CategoryDao;
+import com.apaza.moises.visitsucre.database.ImageDao;
+import com.apaza.moises.visitsucre.database.PlaceDao;
 import com.apaza.moises.visitsucre.global.Constants;
+import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
@@ -124,13 +130,15 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         switch (item.getItemId()){
             case R.id.action_insert_db:
                 Global.showMessage("test db");
-                new TestProvider().execute();
+                //new TestProviderVisitSucre().execute();
+                new TestProviderSucre().execute();
                 return true;
             case R.id.action_show_db:
                 showDataBaseCollections();
                 return true;
             case R.id.action_delete_db:
-                new TestDeleteDB().execute();
+                //new TestDeleteDB().execute();
+                deleteDataBase();
                 return true;
         }
 
@@ -371,11 +379,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 Global.getHandlerDBVisitSucre().getDB().beginTransaction();
 
                 //Delete data
-                Cursor cursor = Global.getHandlerDBVisitSucre().getCategories();
+                Cursor cursor = getContext().getContentResolver().query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null);
                 if(cursor != null){
                     for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
                         Global.getHandlerDBVisitSucre().deleteCategory(cursor.getString(1));
                     }
+                    cursor.close();
                 }
 
                 Log.d("CATEGORIES", "CATEGORIES");
@@ -384,10 +393,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 DatabaseUtils.dumpCursor(Global.getHandlerDBVisitSucre().getPlaces());
 
                 Global.getHandlerDBVisitSucre().getDB().setTransactionSuccessful();
+
             }catch (Exception e){
                 e.printStackTrace();
                 return false;
             } finally {
+
                 Global.getHandlerDBVisitSucre().getDB().endTransaction();
                 return true;
             }
@@ -417,9 +428,103 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Place
                 .CONTENT_URI_DETAILED.buildUpon().appendQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER, ContractVisitSucre.Place.FILTER_CATEGORY).build(),
                 null, null, null, null));
+
+        Log.d("PLACES", "---------------------------IMAGES------------------");
+        DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Image.CONTENT_URI, null, null, null, null));
     }
 
-    public class TestProvider extends AsyncTask<Void, Void, Boolean>{
+    public void deleteDataBase(){
+        ContentResolver resolver = getContext().getContentResolver();
+        resolver.delete(ContractVisitSucre.Image.CONTENT_URI, null, null);
+        resolver.delete(ContractVisitSucre.Place.CONTENT_URI, null, null);
+        resolver.delete(ContractVisitSucre.Category.CONTENT_URI, null, null);
+        Global.showMessage("Remove collections data base");
+    }
+
+    public class TestProviderSucre extends AsyncTask<Void, Void, Boolean>{
+        LoadToast loadToast;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadToast = new LoadToast(getContext());
+            loadToast.setText("Testing...");
+            loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE).setProgressColor(Color.BLUE);
+            loadToast.setTranslationY(120);
+            loadToast.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Boolean status = false;
+
+            ContentResolver resolver = getActivity().getContentResolver();
+
+            //Insert with custom provider
+            ContentValues valuesCategory = new ContentValues();
+            valuesCategory.put(CategoryDao.Properties.Name.columnName, "Cathedral");
+            valuesCategory.put(CategoryDao.Properties.Logo.columnName, "logo111");
+            valuesCategory.put(CategoryDao.Properties.CreatedAt.columnName, Utils.getCurrentDate().toString());
+            valuesCategory.put(CategoryDao.Properties.Description.columnName, "Cathedral description");
+
+            Uri uriCategory = resolver.insert(ContractVisitSucre.Category.CONTENT_URI, valuesCategory);
+            String idCategory = ContractVisitSucre.Category.getIdCategory(uriCategory);
+
+            ContentValues valuesPlace = new ContentValues();
+            valuesPlace.put(PlaceDao.Properties.Name.columnName, "Plaza 25 de mayo");
+            valuesPlace.put(PlaceDao.Properties.Address.columnName, "adress 123");
+            valuesPlace.put(PlaceDao.Properties.Latitude.columnName, -34.3452341);
+            valuesPlace.put(PlaceDao.Properties.Longitude.columnName, -34.3452341);
+            valuesPlace.put(PlaceDao.Properties.Description.columnName, "Description 2222");
+            valuesPlace.put(PlaceDao.Properties.CreatedAt.columnName, Utils.getCurrentDate().toString());
+            valuesPlace.put(PlaceDao.Properties.IdCategory.columnName, idCategory);
+
+            Uri uriPlace = resolver.insert(ContractVisitSucre.Place.CONTENT_URI, valuesPlace);
+            String idPlace = ContractVisitSucre.Place.getIdPlace(uriPlace);
+
+            ContentValues valuesImage = new ContentValues();
+            valuesImage.put(ImageDao.Properties.Path.columnName, "path_image_123");
+            valuesImage.put(ImageDao.Properties.Description.columnName, "description image");
+            valuesImage.put(ImageDao.Properties.IdPlace.columnName, idPlace);
+
+            resolver.insert(ContractVisitSucre.Image.CONTENT_URI, valuesImage);
+
+            /*//Delete with custom provider
+            listOperations.add(ContentProviderOperation.newDelete(ContractVisitSucre.Place.createUriPlace(idPlace2)).build());
+
+            //Update with custom provider
+
+            listOperations.add(ContentProviderOperation.newUpdate(ContractVisitSucre.Place.createUriPlace(idPlace3))
+                    .withValue(ContractVisitSucre.Place.NAME, "TARABUCO").build());
+
+            try{
+                resolver.applyBatch(ContractVisitSucre.AUTHORITY, listOperations);
+                status = true;
+            }catch (RemoteException e){
+                e.printStackTrace();
+            }catch (OperationApplicationException e){
+                e.printStackTrace();
+            }*/
+
+            Log.d("CATEGORIES", ">>>>>>>>>>>>>>>>>>> CATEGORIES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
+            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
+            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>IMAGES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Image.CONTENT_URI, null, null, null, null));
+            return status;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if(result)
+                loadToast.success();
+            else
+                loadToast.error();
+        }
+    }
+
+    public class TestProviderVisitSucre extends AsyncTask<Void, Void, Boolean>{
         LoadToast loadToast;
         @Override
         protected void onPreExecute() {

@@ -25,7 +25,7 @@
             android:value="AIzaSyCS_fNa0Ea1GZEii0HUULcwnuF-2ThVnsQ"/>
 
         <provider
-            android:name=".provider.ProviderVisitSucre"
+            android:name=".provider.ProviderSucre"
             android:authorities="com.apaza.moises.visitsucre"
             android:syncable="true"
             android:exported="false" />

@@ -15,7 +15,9 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.apaza.moises.visitsucre.database.CategoryDao;
 import com.apaza.moises.visitsucre.database.DaoSession;
+import com.apaza.moises.visitsucre.database.PlaceDao;
 import com.apaza.moises.visitsucre.deprecated.DBVisitSucreHelper;
 
 import java.util.ArrayList;
@@ -42,6 +44,8 @@ public class ProviderSucre extends ContentProvider{
     public static final int PLACE_ID = 201;
     public static final int PLACE_ID_DETAIL = 202;
     public static final int DETAILED_PLACES = 203;
+    public static final int IMAGES = 300;
+    public static final int IMAGE_ID = 301;
 
     public static final String AUTHORITY = "com.apaza.moises.visitsucre";
 
@@ -55,24 +59,33 @@ public class ProviderSucre extends ContentProvider{
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/detailed", DETAILED_PLACES);
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/*", PLACE_ID);
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_PLACE + "/*/detail", PLACE_ID_DETAIL);
+
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_IMAGE, IMAGES);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_IMAGE + "/*", IMAGE_ID);
     }
 
-    private static final String PLACE_JOIN_CATEGORY = "place as place INNER JOIN category as category " +
-            "ON place.idCategory = category.id";
+    private static final String PLACE_JOIN_CATEGORY = "PLACE as place INNER JOIN CATEGORY as category " +
+            "ON place.ID_CATEGORY = category._id";
 
     private final String[] projectionPlace = new String[]{
-            ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.ID,
-            ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.NAME,
-            ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.DESCRIPTION,
-            ContractVisitSucre.Table.CATEGORY + "." + ContractVisitSucre.Category.NAME
+            ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Id.columnName,
+            ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Name.columnName,
+            ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Description.columnName,
+            ContractVisitSucre.TABLE_NAME_CATEGORY + "." + CategoryDao.Properties.Name.columnName
     };
 
-    private DaoSession daoSession;
+    private static DaoSession daoSession;
 
     @Override
     public boolean onCreate(){
         DaoLog.d("Content Provider started");
+        if(getContext() != null)
+            resolver = getContext().getContentResolver();
         return true;
+    }
+
+    public static void setDaoSession(DaoSession daoSession){
+        ProviderSucre.daoSession = daoSession;
     }
 
     protected SQLiteDatabase getDatabase() {
@@ -91,22 +104,22 @@ public class ProviderSucre extends ContentProvider{
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
-                cursor = db.query(ContractVisitSucre.Table.CATEGORY, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_CATEGORY, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                cursor = db.query(ContractVisitSucre.Table.CATEGORY, projection,
-                        ContractVisitSucre.Category.ID + "=" + "\'" + id + "\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_CATEGORY, projection,
+                        ContractVisitSucre.PK_CATEGORY + "=" + "\'" + id + "\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
                         selectionArgs, null , null, sortOrder);
                 break;
             case PLACES:
-                cursor = db.query(ContractVisitSucre.Table.PLACE, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_PLACE, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
 
             case PLACE_ID:
                 id = ContractVisitSucre.Place.getIdPlace(uri);
-                cursor = db.query(ContractVisitSucre.Table.PLACE, projection,
-                        ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_PLACE, projection,
+                        ContractVisitSucre.PK_PLACE + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
                         selectionArgs, null, null, sortOrder);
                 break;
 
@@ -114,7 +127,7 @@ public class ProviderSucre extends ContentProvider{
                 id = ContractVisitSucre.Place.getIdPlaceForDetail(uri);
                 builder.setTables(PLACE_JOIN_CATEGORY);
                 cursor = builder.query(db, projectionPlace,
-                        ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : "") ,
+                        ContractVisitSucre.TABLE_NAME_PLACE + "." + ContractVisitSucre.PK_PLACE + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : "") ,
                         selectionArgs, null, null, sortOrder);
                 break;
 
@@ -122,6 +135,17 @@ public class ProviderSucre extends ContentProvider{
                 String filter = ContractVisitSucre.Place.hasFilter(uri) ? createFilter(uri.getQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER)) : null;
                 builder.setTables(PLACE_JOIN_CATEGORY);
                 cursor = builder.query(db, projectionPlace, selection, selectionArgs, null, null, filter);//sortOrder);
+                break;
+
+            case IMAGES:
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_IMAGE, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+
+            case IMAGE_ID:
+                id = ContractVisitSucre.Image.getIdImage(uri);
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_IMAGE, projection,
+                        ContractVisitSucre.PK_IMAGE + "=" + "\'" + id + "\'" + (!TextUtils.isEmpty(selection) ? "AND (" +selection + ")" : ""),
+                        selectionArgs, null, null, sortOrder);
                 break;
 
             default:
@@ -149,13 +173,17 @@ public class ProviderSucre extends ContentProvider{
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
-                return ContractVisitSucre.generateMime(ContractVisitSucre.Table.CATEGORY);
+                return ContractVisitSucre.generateMime(ContractVisitSucre.TABLE_NAME_CATEGORY);
             case CATEGORY_ID:
-                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.Table.CATEGORY);
+                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.TABLE_NAME_CATEGORY);
             case PLACES:
-                return ContractVisitSucre.generateMime(ContractVisitSucre.Table.PLACE);
+                return ContractVisitSucre.generateMime(ContractVisitSucre.TABLE_NAME_PLACE);
             case PLACE_ID:
-                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.Table.PLACE);
+                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.TABLE_NAME_PLACE);
+            case IMAGES:
+                return ContractVisitSucre.generateMime(ContractVisitSucre.TABLE_NAME_IMAGE);
+            case IMAGE_ID:
+                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.TABLE_NAME_IMAGE);
             default:
                 throw new UnsupportedOperationException("Uri unknown: " + uri);
         }
@@ -166,45 +194,57 @@ public class ProviderSucre extends ContentProvider{
     public Uri insert(Uri uri, ContentValues values) {
         Log.d(TAG, "INSERT: " + uri + "( " + values.toString() + ")\n");
         SQLiteDatabase db = getDatabase();
-        String id = null;
+        String id;
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
-                if(values.getAsString(ContractVisitSucre.Category.ID) == null){
-                    id = ContractVisitSucre.Category.generateIdCategory();
-                    values.put(ContractVisitSucre.Category.ID, id);
-                }
-                db.insertOrThrow(ContractVisitSucre.Table.CATEGORY, null, values);
+                id = String.valueOf(db.insertOrThrow(ContractVisitSucre.TABLE_NAME_CATEGORY, null, values));
                 notifyChange(uri);
                 return ContractVisitSucre.Category.createUriCategory(id);
             case PLACES:
-                if(values.getAsString(ContractVisitSucre.Place.ID) == null){
-                    id = ContractVisitSucre.Place.generateIdPlace();
-                    values.put(ContractVisitSucre.Place.ID, id);
-                }
-                db.insertOrThrow(ContractVisitSucre.Table.PLACE, null, values);
+                id = String.valueOf(db.insertOrThrow(ContractVisitSucre.TABLE_NAME_PLACE, null, values));
                 notifyChange(uri);
                 return ContractVisitSucre.Place.createUriPlace(id);
+            case IMAGES:
+                id = String.valueOf(db.insertOrThrow(ContractVisitSucre.TABLE_NAME_IMAGE, null, values));
+                notifyChange(uri);
+                return ContractVisitSucre.Image.createUriImage(id);
         }
         return null;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        //db.delete(DBVisitSucreHelper.Table.CATEGORY, whereClause, whereArgs)
         Log.d(TAG, "Delete: " + uri);
         SQLiteDatabase db = getDatabase();
         String id;
         int affects;
 
         switch (uriMatcher.match(uri)){
+            case CATEGORIES:
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_CATEGORY, null, null);
+                notifyChange(uri);
+                break;
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                affects = db.delete(ContractVisitSucre.Table.CATEGORY, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_CATEGORY, ContractVisitSucre.PK_CATEGORY + " = ?", new String[]{id});
+                notifyChange(uri);
+                break;
+            case PLACES:
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_PLACE, null, null);
                 notifyChange(uri);
                 break;
             case PLACE_ID:
                 id = ContractVisitSucre.Place.getIdPlace(uri);
-                affects = db.delete(ContractVisitSucre.Table.CATEGORY, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_PLACE, ContractVisitSucre.PK_PLACE + " = ?", new String[]{id});
+                notifyChange(uri);
+                break;
+            case IMAGES:
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_IMAGE, null, null);
+                notifyChange(uri);
+                break;
+            case IMAGE_ID:
+                id = ContractVisitSucre.Image.getIdImage(uri);
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_IMAGE, ContractVisitSucre.PK_IMAGE + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             default:
@@ -221,16 +261,20 @@ public class ProviderSucre extends ContentProvider{
         int affects;
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
-                affects = db.update(ContractVisitSucre.Table.CATEGORY, values, selection, selectionArgs);
+                affects = db.update(ContractVisitSucre.TABLE_NAME_CATEGORY, values, selection, selectionArgs);
                 break;
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                affects = db.update(ContractVisitSucre.Table.CATEGORY, values, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
+                affects = db.update(ContractVisitSucre.TABLE_NAME_CATEGORY, values, ContractVisitSucre.PK_CATEGORY + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             case PLACE_ID:
                 id = ContractVisitSucre.Place.getIdPlace(uri);
-                affects = db.update(ContractVisitSucre.Table.PLACE, values, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
+                affects = db.update(ContractVisitSucre.TABLE_NAME_PLACE, values, ContractVisitSucre.PK_PLACE + " = ?", new String[]{id});
+                break;
+            case IMAGE_ID:
+                id = ContractVisitSucre.Image.getIdImage(uri);
+                affects = db.update(ContractVisitSucre.TABLE_NAME_IMAGE, values, ContractVisitSucre.PK_IMAGE + " = ?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException(NO_SUPPORTED_URI);

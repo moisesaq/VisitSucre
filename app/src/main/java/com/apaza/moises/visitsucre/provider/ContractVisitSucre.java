@@ -103,8 +103,8 @@ public class ContractVisitSucre {
         public static final Uri CONTENT_URI_DETAILED = CONTENT_URI.buildUpon().appendPath("detailed").build();
 
         public static final String PARAMS_FILTER = "filter";
-        public static final String FILTER_PLACE_DATE = "date";
-        public static final String FILTER_CATEGORY = "category";
+        public static final String FILTER_PLACE_DATE = "CREATED_AT";
+        public static final String FILTER_CATEGORY = "CATEGORY";
 
         public static Uri createUriPlace(String id){
             return CONTENT_URI.buildUpon().appendPath(id).build();

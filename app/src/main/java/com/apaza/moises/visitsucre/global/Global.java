@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.view.View;
 
 import com.apaza.moises.visitsucre.deprecated.HandlerDBVisitSucre;
+import com.apaza.moises.visitsucre.provider.DataBaseHandler;
 
 public class Global {
     private static Activity context;
@@ -14,6 +15,7 @@ public class Global {
 
     public static void setContext(Activity context){
         Global.context = context;
+        DataBaseHandler.getInstance(context);
     }
 
     public static Activity getContext(){

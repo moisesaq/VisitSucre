@@ -20,6 +20,7 @@ public class DataBaseHandler {
             SQLiteDatabase db = helper.getWritableDatabase();
             daoMaster = new DaoMaster(db);
             daoSession = daoMaster.newSession();
+            ProviderSucre.setDaoSession(daoSession);
         }catch (Exception e){
             e.printStackTrace();
         }finally {
