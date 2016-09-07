@@ -16,9 +16,9 @@ public class Place {
     private Double latitude;
     private Double longitude;
     private String description;
-    private Boolean favorite;
     private java.util.Date createdAt;
     private Long idCategory;
+    private Long idUser;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -29,6 +29,9 @@ public class Place {
     private Category category;
     private Long category__resolvedKey;
 
+    private User user;
+    private Long user__resolvedKey;
+
     private List<Image> PlaceImage;
 
     public Place() {
@@ -38,16 +41,16 @@ public class Place {
         this.id = id;
     }
 
-    public Place(Long id, String name, String address, Double latitude, Double longitude, String description, Boolean favorite, java.util.Date createdAt, Long idCategory) {
+    public Place(Long id, String name, String address, Double latitude, Double longitude, String description, java.util.Date createdAt, Long idCategory, Long idUser) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
-        this.favorite = favorite;
         this.createdAt = createdAt;
         this.idCategory = idCategory;
+        this.idUser = idUser;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -104,14 +107,6 @@ public class Place {
         this.description = description;
     }
 
-    public Boolean getFavorite() {
-        return favorite;
-    }
-
-    public void setFavorite(Boolean favorite) {
-        this.favorite = favorite;
-    }
-
     public java.util.Date getCreatedAt() {
         return createdAt;
     }
@@ -126,6 +121,14 @@ public class Place {
 
     public void setIdCategory(Long idCategory) {
         this.idCategory = idCategory;
+    }
+
+    public Long getIdUser() {
+        return idUser;
+    }
+
+    public void setIdUser(Long idUser) {
+        this.idUser = idUser;
     }
 
     /** To-one relationship, resolved on first access. */
@@ -150,6 +153,31 @@ public class Place {
             this.category = category;
             idCategory = category == null ? null : category.getId();
             category__resolvedKey = idCategory;
+        }
+    }
+
+    /** To-one relationship, resolved on first access. */
+    public User getUser() {
+        Long __key = this.idUser;
+        if (user__resolvedKey == null || !user__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            UserDao targetDao = daoSession.getUserDao();
+            User userNew = targetDao.load(__key);
+            synchronized (this) {
+                user = userNew;
+            	user__resolvedKey = __key;
+            }
+        }
+        return user;
+    }
+
+    public void setUser(User user) {
+        synchronized (this) {
+            this.user = user;
+            idUser = user == null ? null : user.getId();
+            user__resolvedKey = idUser;
         }
     }
 

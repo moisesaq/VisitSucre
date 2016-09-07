@@ -37,6 +37,7 @@ import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.database.CategoryDao;
 import com.apaza.moises.visitsucre.database.ImageDao;
 import com.apaza.moises.visitsucre.database.PlaceDao;
+import com.apaza.moises.visitsucre.database.UserDao;
 import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
@@ -417,6 +418,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     /*TEST DB WITH PROVIDER*/
 
     private void showDataBaseCollections(){
+        Log.d("USERS", ">>>>>>>>>>>>>>>>>>>>>>>>USERS WITH PROVIDER");
+        DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.User.CONTENT_URI, null, null, null, null));
+
         Log.d("CATEGORIES", "---------------------CATEGORIES----------------");
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
         Log.d("PLACES", "---------------------------PLACES------------------");
@@ -429,12 +433,13 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 .CONTENT_URI_DETAILED.buildUpon().appendQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER, ContractVisitSucre.Place.FILTER_CATEGORY).build(),
                 null, null, null, null));
 
-        Log.d("PLACES", "---------------------------IMAGES------------------");
+        Log.d("IMAGES", "---------------------------IMAGES------------------");
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Image.CONTENT_URI, null, null, null, null));
     }
 
     public void deleteDataBase(){
         ContentResolver resolver = getContext().getContentResolver();
+        resolver.delete(ContractVisitSucre.User.CONTENT_URI, null, null);
         resolver.delete(ContractVisitSucre.Image.CONTENT_URI, null, null);
         resolver.delete(ContractVisitSucre.Place.CONTENT_URI, null, null);
         resolver.delete(ContractVisitSucre.Category.CONTENT_URI, null, null);
@@ -455,11 +460,17 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            Boolean status = false;
 
             ContentResolver resolver = getActivity().getContentResolver();
 
             //Insert with custom provider
+            ContentValues valuesUser = new ContentValues();
+            valuesUser.put(UserDao.Properties.Name.columnName, "Moises");
+            valuesUser.put(UserDao.Properties.LastName.columnName, "Apaza");
+
+            Uri uriUser = resolver.insert(ContractVisitSucre.User.CONTENT_URI, valuesUser);
+            String idUser = ContractVisitSucre.User.getIdUser(uriUser);
+
             ContentValues valuesCategory = new ContentValues();
             valuesCategory.put(CategoryDao.Properties.Name.columnName, "Cathedral");
             valuesCategory.put(CategoryDao.Properties.Logo.columnName, "logo111");
@@ -477,6 +488,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
             valuesPlace.put(PlaceDao.Properties.Description.columnName, "Description 2222");
             valuesPlace.put(PlaceDao.Properties.CreatedAt.columnName, Utils.getCurrentDate().toString());
             valuesPlace.put(PlaceDao.Properties.IdCategory.columnName, idCategory);
+            valuesPlace.put(PlaceDao.Properties.IdUser.columnName, idUser);
 
             Uri uriPlace = resolver.insert(ContractVisitSucre.Place.CONTENT_URI, valuesPlace);
             String idPlace = ContractVisitSucre.Place.getIdPlace(uriPlace);
@@ -488,30 +500,16 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
 
             resolver.insert(ContractVisitSucre.Image.CONTENT_URI, valuesImage);
 
-            /*//Delete with custom provider
-            listOperations.add(ContentProviderOperation.newDelete(ContractVisitSucre.Place.createUriPlace(idPlace2)).build());
-
-            //Update with custom provider
-
-            listOperations.add(ContentProviderOperation.newUpdate(ContractVisitSucre.Place.createUriPlace(idPlace3))
-                    .withValue(ContractVisitSucre.Place.NAME, "TARABUCO").build());
-
-            try{
-                resolver.applyBatch(ContractVisitSucre.AUTHORITY, listOperations);
-                status = true;
-            }catch (RemoteException e){
-                e.printStackTrace();
-            }catch (OperationApplicationException e){
-                e.printStackTrace();
-            }*/
-
+            Log.d("USERS", ">>>>>>>>>>>>>>>>>>>>>>>>USERS WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.User.CONTENT_URI, null, null, null, null));
             Log.d("CATEGORIES", ">>>>>>>>>>>>>>>>>>> CATEGORIES WITH PROVIDER");
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
             Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES WITH PROVIDER");
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
-            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>IMAGES WITH PROVIDER");
+            Log.d("IMAGES", ">>>>>>>>>>>>>>>>>>>>>>>>IMAGES WITH PROVIDER");
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Image.CONTENT_URI, null, null, null, null));
-            return status;
+
+            return true;
         }
 
         @Override

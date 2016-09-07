@@ -5,11 +5,15 @@ import android.net.Uri;
 import com.apaza.moises.visitsucre.database.CategoryDao;
 import com.apaza.moises.visitsucre.database.ImageDao;
 import com.apaza.moises.visitsucre.database.PlaceDao;
+import com.apaza.moises.visitsucre.database.UserDao;
 
 import java.util.UUID;
 
 public class ContractVisitSucre {
     public static final String NAME_DB = "visitSucreDataBase";
+
+    public static final String TABLE_NAME_USER = UserDao.TABLENAME;
+    public static final String PK_USER = UserDao.Properties.Id.columnName;
 
     public static final String TABLE_NAME_CATEGORY = CategoryDao.TABLENAME;
     public static final String PK_CATEGORY = CategoryDao.Properties.Id.columnName;
@@ -56,6 +60,7 @@ public class ContractVisitSucre {
     public static final String AUTHORITY = "com.apaza.moises.visitsucre";
     public static final Uri URI_BASE = Uri.parse("content://" + AUTHORITY);
 
+    public static final String ROUTE_USER = "route_user";
     public static final String ROUTE_CATEGORY = "route_category";
     public static final String ROUTE_PLACE = "route_place";
     public static final String ROUTE_IMAGE = "route_image";
@@ -80,6 +85,18 @@ public class ContractVisitSucre {
             return null;
     }
     //END MIME
+
+    public static class User{
+        public static final Uri CONTENT_URI = URI_BASE.buildUpon().appendPath(ROUTE_USER).build();
+
+        public static Uri createUriUser(String id){
+            return CONTENT_URI.buildUpon().appendPath(id).build();
+        }
+
+        public static String getIdUser(Uri uri){
+            return uri.getLastPathSegment();
+        }
+    }
 
     public static class Category implements ColumnsCategory{
         public static final Uri CONTENT_URI = URI_BASE.buildUpon().appendPath(ROUTE_CATEGORY).build();

@@ -37,6 +37,9 @@ public class ProviderSucre extends ContentProvider{
 
     public static final UriMatcher uriMatcher;
 
+    public static final int USER = 50;
+    public static final int USER_ID = 51;
+
     public static final int CATEGORIES = 100;
     public static final int CATEGORY_ID = 101;
 
@@ -44,6 +47,7 @@ public class ProviderSucre extends ContentProvider{
     public static final int PLACE_ID = 201;
     public static final int PLACE_ID_DETAIL = 202;
     public static final int DETAILED_PLACES = 203;
+
     public static final int IMAGES = 300;
     public static final int IMAGE_ID = 301;
 
@@ -51,6 +55,9 @@ public class ProviderSucre extends ContentProvider{
 
     static{
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_USER, USER);
+        uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_USER+"/*", USER_ID);
 
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_CATEGORY, CATEGORIES);
         uriMatcher.addURI(AUTHORITY, ContractVisitSucre.ROUTE_CATEGORY+"/*", CATEGORY_ID);
@@ -103,6 +110,15 @@ public class ProviderSucre extends ContentProvider{
         Cursor cursor;
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         switch (uriMatcher.match(uri)){
+            case USER:
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_USER, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case USER_ID:
+                id = ContractVisitSucre.User.getIdUser(uri);
+                cursor = db.query(ContractVisitSucre.TABLE_NAME_USER, projection,
+                        ContractVisitSucre.PK_USER + "=" + "\'" + id + "\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
+                        selectionArgs, null , null, sortOrder);
+                break;
             case CATEGORIES:
                 cursor = db.query(ContractVisitSucre.TABLE_NAME_CATEGORY, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
@@ -172,6 +188,10 @@ public class ProviderSucre extends ContentProvider{
     @Override
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)){
+            case USER:
+                return ContractVisitSucre.generateMime(ContractVisitSucre.TABLE_NAME_USER);
+            case USER_ID:
+                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.TABLE_NAME_USER);
             case CATEGORIES:
                 return ContractVisitSucre.generateMime(ContractVisitSucre.TABLE_NAME_CATEGORY);
             case CATEGORY_ID:
@@ -196,6 +216,10 @@ public class ProviderSucre extends ContentProvider{
         SQLiteDatabase db = getDatabase();
         String id;
         switch (uriMatcher.match(uri)){
+            case USER:
+                id = String.valueOf(db.insertOrThrow(ContractVisitSucre.TABLE_NAME_USER, null, values));
+                notifyChange(uri);
+                return ContractVisitSucre.User.createUriUser(id);
             case CATEGORIES:
                 id = String.valueOf(db.insertOrThrow(ContractVisitSucre.TABLE_NAME_CATEGORY, null, values));
                 notifyChange(uri);
@@ -220,6 +244,15 @@ public class ProviderSucre extends ContentProvider{
         int affects;
 
         switch (uriMatcher.match(uri)){
+            case USER:
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_USER, null, null);
+                notifyChange(uri);
+                break;
+            case USER_ID:
+                id = ContractVisitSucre.User.getIdUser(uri);
+                affects = db.delete(ContractVisitSucre.TABLE_NAME_USER, ContractVisitSucre.PK_USER + " = ?", new String[]{id});
+                notifyChange(uri);
+                break;
             case CATEGORIES:
                 affects = db.delete(ContractVisitSucre.TABLE_NAME_CATEGORY, null, null);
                 notifyChange(uri);
@@ -260,6 +293,14 @@ public class ProviderSucre extends ContentProvider{
         String id;
         int affects;
         switch (uriMatcher.match(uri)){
+            case USER:
+                affects = db.update(ContractVisitSucre.TABLE_NAME_USER, values, selection, selectionArgs);
+                break;
+            case USER_ID:
+                id = ContractVisitSucre.User.getIdUser(uri);
+                affects = db.update(ContractVisitSucre.TABLE_NAME_USER, values, ContractVisitSucre.PK_USER + " = ?", new String[]{id});
+                notifyChange(uri);
+                break;
             case CATEGORIES:
                 affects = db.update(ContractVisitSucre.TABLE_NAME_CATEGORY, values, selection, selectionArgs);
                 break;
