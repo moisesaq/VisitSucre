@@ -77,8 +77,9 @@ public class ProviderSucre extends ContentProvider{
     private final String[] projectionPlace = new String[]{
             ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Id.columnName,
             ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Name.columnName,
+            ContractVisitSucre.TABLE_NAME_PLACE + "." +PlaceDao.Properties.Address.columnName,
             ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Description.columnName,
-            ContractVisitSucre.TABLE_NAME_CATEGORY + "." + CategoryDao.Properties.Name.columnName
+            ContractVisitSucre.TABLE_NAME_CATEGORY + "." + CategoryDao.Properties.Name.columnName,
     };
 
     private static DaoSession daoSession;

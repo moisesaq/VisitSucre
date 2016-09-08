@@ -11,9 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.CategoryDao;
+import com.apaza.moises.visitsucre.database.PlaceDao;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
+    /*INDEX FOR COLUMN DETAILED PLACE*/
+    public static final int COLUMN_ID = 0;
+    public static final int COLUMN_NAME = 1;
+    public static final int COLUMN_ADDRESS = 2;
+    public static final int COLUMN_DESCRIPTION = 3;
+    public static final int COLUMN_CATEGORY = 4;
 
     private final Context context;
     private Cursor cursor;
@@ -41,11 +49,11 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
         String text;
         //text = cursor.getString(cursor.getColumnIndex(ContractVisitSucre.Place.PATH_IMAGE));
         //Glide.with(context).load(text).centerCrop().into(holder.imagePlace);
-        text = cursor.getString(cursor.getColumnIndex(ContractVisitSucre.Place.NAME));
+        text = cursor.getString(COLUMN_NAME);
         holder.namePlace.setText(text);
-        text = cursor.getString(cursor.getColumnIndex(ContractVisitSucre.Place.ID_CATEGORY));
+        text = cursor.getString(COLUMN_CATEGORY);
         holder.category.setText(text);
-        text = cursor.getString(cursor.getColumnIndex(ContractVisitSucre.Place.DESCRIPTION));
+        text = cursor.getString(COLUMN_DESCRIPTION);
         holder.description.setText(text);
     }
 
@@ -59,7 +67,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
     public String getIdPlace(int position){
         if(cursor != null){
             if(cursor.moveToPosition(position))
-                return cursor.getString(cursor.getColumnIndex(ContractVisitSucre.Place.ID));
+                return cursor.getString(COLUMN_ID);
             else
                 return "";
         }else{
@@ -101,6 +109,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
         return cursor;
     }
 
+
+
     /*this.idPlace = idPlace;
     this.code = code;
     this.name = name;
@@ -111,5 +121,4 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
     this.pathImage = pathImage;
     this.date = date;
     this.idCategory = idCategory;*/
-
 }

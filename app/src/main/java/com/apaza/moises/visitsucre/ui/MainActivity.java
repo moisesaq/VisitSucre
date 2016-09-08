@@ -33,6 +33,7 @@ import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
+import com.apaza.moises.visitsucre.ui.fragment.AboutSucreFragment;
 import com.apaza.moises.visitsucre.ui.fragment.CategoryListFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceInMapFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceListFragment;
@@ -76,8 +77,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupToolbar();
         setupNavigationView();
-        showFragment(TestFragment.newInstance());
-
+        showFragment(PlaceListFragment.newInstance(""));
     }
 
     private void setupNavigationView(){
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        item.setChecked(true);
+        //item.setChecked(true);
         String title = item.getTitle().toString();
         selectItem(item, title);
         return true;
@@ -106,7 +106,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void selectItem(MenuItem item, String title){
         switch (item.getItemId()){
-            case R.id.nav_register_place:
+            case R.id.nav_tourist_places:
+                showFragment(PlaceListFragment.newInstance(""));
+                break;
+            case R.id.nav_more_places:
+                showFragment(CategoryListFragment.newInstance(""));
+                break;
+            case R.id.nav_nearby:
+                showFragment(PlaceInMapFragment.newInstance(""));
+                break;
+
+            case R.id.nav_suggest_place:
                 Fragment frag = fragmentManager.findFragmentByTag(RegisterPlaceFragment.class.getSimpleName());
                 if(frag != null){
                     Log.d(TAG, "Fragment not null " + RegisterPlaceFragment.class.getSimpleName());
@@ -116,8 +126,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     showFragment(RegisterPlaceFragment.newInstance(""));
                 }
                 break;
-            case R.id.nav_all:
-                showFragment(CategoryListFragment.newInstance(""));
+
+            case R.id.nav_about_sucre:
+                showFragment(AboutSucreFragment.newInstance());
                 break;
             case R.id.test_db:
                 TestFragment testFragment = (TestFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_test);
@@ -146,6 +157,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu_sidebar);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    public void setTitle(String title){
+        if(actionBar != null)
+            actionBar.setTitle(title);
     }
 
     @Override

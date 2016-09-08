@@ -173,6 +173,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         }
     }
 
+    public void ordenar(String[] list, String alfabeto){
+        String alfa = "zyxwvutsrqponmlkjihgfedcba";
+        //alfa.length()
+        char[] array = alfa.toCharArray();
+    }
+
     @Override
     public void onDetach(){
         super.onDetach();

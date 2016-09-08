@@ -10,13 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.CategoryDao;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class CategoryAdapter extends CursorAdapter{
 
     private Context context;
     public CategoryAdapter(Context context){
-        super(context, null, 0);
+        super(context, null, 10);
         this.context = context;
     }
     @Override
@@ -27,13 +28,15 @@ public class CategoryAdapter extends CursorAdapter{
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ImageView logo = (ImageView)view.findViewById(R.id.logo);
-        //TODO: Here to complete for load image or logo
+        if(cursor != null){
+            ImageView logo = (ImageView)view.findViewById(R.id.logo);
 
-        TextView name = (TextView)view.findViewById(R.id.name);
-        name.setText(cursor.getString(cursor.getColumnIndex(ContractVisitSucre.Category.NAME)));
+            TextView name = (TextView)view.findViewById(R.id.name);
+            name.setText(cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Name.columnName)));
 
-        TextView description = (TextView)view.findViewById(R.id.description);
-        description.setText(cursor.getString(cursor.getColumnIndex(ContractVisitSucre.Category.DESCRIPTION)));
+            TextView description = (TextView)view.findViewById(R.id.description);
+            description.setText(cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Description.columnName)));
+        }
+
     }
 }
