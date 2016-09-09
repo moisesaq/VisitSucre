@@ -325,7 +325,7 @@ public class ProviderSucre extends ContentProvider{
         return affects;
     }
 
-    private void notifyChange(Uri uri){
+    public void notifyChange(Uri uri){
         resolver.notifyChange(uri, null);
     }
 

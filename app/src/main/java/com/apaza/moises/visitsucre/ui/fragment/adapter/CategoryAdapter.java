@@ -15,28 +15,37 @@ import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class CategoryAdapter extends CursorAdapter{
 
-    private Context context;
     public CategoryAdapter(Context context){
         super(context, null, 10);
-        this.context = context;
     }
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return inflater.inflate(R.layout.category_item, parent, false);
+        /*LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        return inflater.inflate(R.layout.category_item, parent, false);*/
+        return getView(parent);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         if(cursor != null){
-            ImageView logo = (ImageView)view.findViewById(R.id.logo);
+            ImageView logo = (ImageView)view.findViewById(R.id.ivLogo);
 
-            TextView name = (TextView)view.findViewById(R.id.name);
+            TextView name = (TextView)view.findViewById(R.id.tvName);
             name.setText(cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Name.columnName)));
 
-            TextView description = (TextView)view.findViewById(R.id.description);
+            TextView description = (TextView)view.findViewById(R.id.tvDescription);
             description.setText(cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Description.columnName)));
         }
+    }
 
+    @Override
+    public View newDropDownView(Context context, Cursor cursor, ViewGroup parent) {
+        /*return super.newDropDownView(context, cursor, parent);*/
+        return getView(parent);
+    }
+
+    private View getView(ViewGroup parent){
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        return inflater.inflate(R.layout.category_item, parent, false);
     }
 }

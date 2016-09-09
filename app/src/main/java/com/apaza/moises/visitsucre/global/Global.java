@@ -39,4 +39,8 @@ public class Global {
             handlerDBVisitSucre = HandlerDBVisitSucre.getInstance(context);
         return handlerDBVisitSucre;
     }
+
+    public static DataBaseHandler getDataBaseHandler(){
+        return DataBaseHandler.getInstance(context);
+    }
 }

@@ -4,9 +4,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <dimen name="paddingMaxGlobal">20dp</dimen>
-    <dimen name="paddingMediumGlobal">10dp</dimen>
-    <dimen name="paddingMinGlobal">5dp</dimen>
+    <dimen name="paddingMaxGlobal">24dp</dimen>
+    <dimen name="paddingMediumGlobal">16dp</dimen>
+    <dimen name="paddingMinGlobal">8dp</dimen>
 
     <dimen name="marginMaxGlobal">15dp</dimen>
     <dimen name="marginMediumGlobal">10dp</dimen>

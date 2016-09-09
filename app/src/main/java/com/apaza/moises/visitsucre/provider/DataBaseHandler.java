@@ -34,7 +34,7 @@ public class DataBaseHandler {
         return  handler;
     }
 
-    public static DaoSession getDaoSession(){
+    public DaoSession getDaoSession(){
         daoSession = daoMaster.newSession();
         return daoSession;
     }
