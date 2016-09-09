@@ -29,7 +29,7 @@
             android:layout_marginTop="@dimen/marginMaxGlobal">
 
             <Spinner
-                android:id="@+id/idCategory"
+                android:id="@+id/spCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

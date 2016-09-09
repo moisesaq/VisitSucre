@@ -1,11 +1,14 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
+import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -31,13 +34,18 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.CategoryDao;
+import com.apaza.moises.visitsucre.database.ImageDao;
+import com.apaza.moises.visitsucre.database.PlaceDao;
+import com.apaza.moises.visitsucre.database.UserDao;
 import com.apaza.moises.visitsucre.global.Constants;
+import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
-import com.apaza.moises.visitsucre.provider.Category;
+import com.apaza.moises.visitsucre.deprecated.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
-import com.apaza.moises.visitsucre.provider.Place;
+import com.apaza.moises.visitsucre.deprecated.Place;
 import com.google.gson.Gson;
 
 import net.steamcrafted.loadtoast.LoadToast;
@@ -46,6 +54,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -112,13 +131,15 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         switch (item.getItemId()){
             case R.id.action_insert_db:
                 Global.showMessage("test db");
-                new TestProvider().execute();
+                //new TestProviderVisitSucre().execute();
+                new TestProviderSucre().execute();
                 return true;
             case R.id.action_show_db:
                 showDataBaseCollections();
                 return true;
             case R.id.action_delete_db:
-                new TestDeleteDB().execute();
+                //new TestDeleteDB().execute();
+                deleteDataBase();
                 return true;
         }
 
@@ -135,7 +156,8 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     testRequestJsonObject(Constants.URL_CATEGORIES);
                 break;
             case R.id.loadImage:
-                testImageLoader();
+                //testImageLoader();
+                new TestNetPay().execute();
                 break;
             case R.id.search:
                 String text = textSearch.getText().toString();
@@ -149,6 +171,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 }
                 break;
         }
+    }
+
+    public void ordenar(String[] list, String alfabeto){
+        String alfa = "zyxwvutsrqponmlkjihgfedcba";
+        //alfa.length()
+        char[] array = alfa.toCharArray();
     }
 
     @Override
@@ -358,11 +386,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 Global.getHandlerDBVisitSucre().getDB().beginTransaction();
 
                 //Delete data
-                Cursor cursor = Global.getHandlerDBVisitSucre().getCategories();
+                Cursor cursor = getContext().getContentResolver().query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null);
                 if(cursor != null){
                     for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()){
                         Global.getHandlerDBVisitSucre().deleteCategory(cursor.getString(1));
                     }
+                    cursor.close();
                 }
 
                 Log.d("CATEGORIES", "CATEGORIES");
@@ -371,10 +400,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                 DatabaseUtils.dumpCursor(Global.getHandlerDBVisitSucre().getPlaces());
 
                 Global.getHandlerDBVisitSucre().getDB().setTransactionSuccessful();
+
             }catch (Exception e){
                 e.printStackTrace();
                 return false;
             } finally {
+
                 Global.getHandlerDBVisitSucre().getDB().endTransaction();
                 return true;
             }
@@ -393,6 +424,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     /*TEST DB WITH PROVIDER*/
 
     private void showDataBaseCollections(){
+        Log.d("USERS", ">>>>>>>>>>>>>>>>>>>>>>>>USERS WITH PROVIDER");
+        DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.User.CONTENT_URI, null, null, null, null));
+
         Log.d("CATEGORIES", "---------------------CATEGORIES----------------");
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
         Log.d("PLACES", "---------------------------PLACES------------------");
@@ -404,9 +438,97 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Place
                 .CONTENT_URI_DETAILED.buildUpon().appendQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER, ContractVisitSucre.Place.FILTER_CATEGORY).build(),
                 null, null, null, null));
+
+        Log.d("IMAGES", "---------------------------IMAGES------------------");
+        DatabaseUtils.dumpCursor(getActivity().getContentResolver().query(ContractVisitSucre.Image.CONTENT_URI, null, null, null, null));
     }
 
-    public class TestProvider extends AsyncTask<Void, Void, Boolean>{
+    public void deleteDataBase(){
+        ContentResolver resolver = getContext().getContentResolver();
+        resolver.delete(ContractVisitSucre.User.CONTENT_URI, null, null);
+        resolver.delete(ContractVisitSucre.Image.CONTENT_URI, null, null);
+        resolver.delete(ContractVisitSucre.Place.CONTENT_URI, null, null);
+        resolver.delete(ContractVisitSucre.Category.CONTENT_URI, null, null);
+        Global.showMessage("Remove collections data base");
+    }
+
+    public class TestProviderSucre extends AsyncTask<Void, Void, Boolean>{
+        LoadToast loadToast;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loadToast = new LoadToast(getContext());
+            loadToast.setText("Testing...");
+            loadToast.setTextColor(Color.BLACK).setBackgroundColor(Color.WHITE).setProgressColor(Color.BLUE);
+            loadToast.setTranslationY(120);
+            loadToast.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            ContentResolver resolver = getActivity().getContentResolver();
+
+            //Insert with custom provider
+            ContentValues valuesUser = new ContentValues();
+            valuesUser.put(UserDao.Properties.Name.columnName, "Moises");
+            valuesUser.put(UserDao.Properties.LastName.columnName, "Apaza");
+
+            Uri uriUser = resolver.insert(ContractVisitSucre.User.CONTENT_URI, valuesUser);
+            String idUser = ContractVisitSucre.User.getIdUser(uriUser);
+
+            ContentValues valuesCategory = new ContentValues();
+            valuesCategory.put(CategoryDao.Properties.Name.columnName, "Cathedral");
+            valuesCategory.put(CategoryDao.Properties.Logo.columnName, "logo111");
+            valuesCategory.put(CategoryDao.Properties.CreatedAt.columnName, Utils.getCurrentDate().toString());
+            valuesCategory.put(CategoryDao.Properties.Description.columnName, "Cathedral description");
+
+            Uri uriCategory = resolver.insert(ContractVisitSucre.Category.CONTENT_URI, valuesCategory);
+            String idCategory = ContractVisitSucre.Category.getIdCategory(uriCategory);
+
+            ContentValues valuesPlace = new ContentValues();
+            valuesPlace.put(PlaceDao.Properties.Name.columnName, "Plaza 25 de mayo");
+            valuesPlace.put(PlaceDao.Properties.Address.columnName, "adress 123");
+            valuesPlace.put(PlaceDao.Properties.Latitude.columnName, -34.3452341);
+            valuesPlace.put(PlaceDao.Properties.Longitude.columnName, -34.3452341);
+            valuesPlace.put(PlaceDao.Properties.Description.columnName, "Description 2222");
+            valuesPlace.put(PlaceDao.Properties.CreatedAt.columnName, Utils.getCurrentDate().toString());
+            valuesPlace.put(PlaceDao.Properties.IdCategory.columnName, idCategory);
+            valuesPlace.put(PlaceDao.Properties.IdUser.columnName, idUser);
+
+            Uri uriPlace = resolver.insert(ContractVisitSucre.Place.CONTENT_URI, valuesPlace);
+            String idPlace = ContractVisitSucre.Place.getIdPlace(uriPlace);
+
+            ContentValues valuesImage = new ContentValues();
+            valuesImage.put(ImageDao.Properties.Path.columnName, "path_image_123");
+            valuesImage.put(ImageDao.Properties.Description.columnName, "description image");
+            valuesImage.put(ImageDao.Properties.IdPlace.columnName, idPlace);
+
+            resolver.insert(ContractVisitSucre.Image.CONTENT_URI, valuesImage);
+
+            Log.d("USERS", ">>>>>>>>>>>>>>>>>>>>>>>>USERS WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.User.CONTENT_URI, null, null, null, null));
+            Log.d("CATEGORIES", ">>>>>>>>>>>>>>>>>>> CATEGORIES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
+            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
+            Log.d("IMAGES", ">>>>>>>>>>>>>>>>>>>>>>>>IMAGES WITH PROVIDER");
+            DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Image.CONTENT_URI, null, null, null, null));
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            super.onPostExecute(result);
+            if(result)
+                loadToast.success();
+            else
+                loadToast.error();
+        }
+    }
+
+    public class TestProviderVisitSucre extends AsyncTask<Void, Void, Boolean>{
         LoadToast loadToast;
         @Override
         protected void onPreExecute() {
@@ -510,5 +632,131 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
             else
                 loadToast.error();
         }
+    }
+
+    /*TEST NET PAY*/
+    public class TestNetPay extends AsyncTask<Void, Void, String>{
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(getContext());
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setTitle("Testing..");
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String result = "";
+            HttpURLConnection conn = null;
+            URL url;
+
+            try {
+                url = new URL("http://200.57.87.243:9855/");
+
+                String data = getPostDataString(getTestParams());
+
+                conn = (HttpURLConnection)url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                //conn.setDoOutput(true);
+                conn.setFixedLengthStreamingMode(data.getBytes().length);
+
+                conn.setRequestProperty("Content-Type", "text/plain; charset=utf-8");//"application/x-www-form-urlencoded");
+                //conn.setRequestProperty("charset", "utf-8");
+                conn.setRequestProperty("Content-Length", Integer.toString(data.length()));
+
+                OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+
+                out.write(data.getBytes());
+                out.flush();
+                out.close();
+                Log.d("REQUEST", conn.getURL().toString());
+                Log.d("SEND DATA", data);
+                int status = conn.getResponseCode();
+
+                String[] values = conn.getContentType().split(";"); // values.length should be 2
+                String charset = "";
+
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(15000);
+
+                for (String value : values) {
+                    value = value.trim();
+
+                    if (value.toLowerCase().startsWith("charset=")) {
+                        charset = value.substring("charset=".length());
+                    }
+                }
+
+                if ("".equals(charset)) {
+                    charset = "UTF-8"; //Assumption
+                }
+
+                Log.d("STATUS", conn.getResponseMessage() + " -- " + conn.getResponseCode() + " - " +conn.getContentEncoding() + " - " + charset);
+                if(status != 200){
+                    result = "Error";
+                }else{
+                    InputStream in = new BufferedInputStream(conn.getInputStream());
+                    BufferedReader streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+                    result = streamReader.readLine();
+                    StringBuilder responseStrBuilder = new StringBuilder();
+
+                    String inputStr;
+                    while ((inputStr = streamReader.readLine()) != null)
+                        responseStrBuilder.append(inputStr);
+                    //new JSONObject(responseStrBuilder.toString());
+                    result = responseStrBuilder.toString();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if(conn != null)
+                    conn.disconnect();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonObject) {
+            super.onPostExecute(jsonObject);
+            progressDialog.dismiss();
+            textSearch.setText(jsonObject);
+            Log.d("RESULT DATA", " >>>> " + jsonObject);
+        }
+
+        private HashMap<String, String> getTestParams(){
+            HashMap<String, String> params = new HashMap<>();
+            params.put("ResourceName", "CustomerRegistration");
+            params.put("ContentType", "Config");
+            params.put("Mode", "D");
+            params.put("StoreId", "6501");
+            params.put("UserName", "barto");
+            params.put("Password", "asdasd");
+            params.put("CardNumber", "1111222233334444");
+            params.put("ExpDate", "01/18");
+            params.put("CVV2", "1234");
+            params.put("OrderId", "1767242015012311220310982");
+            return params;
+        }
+    }
+
+    private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
     }
 }

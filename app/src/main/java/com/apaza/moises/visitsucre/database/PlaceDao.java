@@ -34,14 +34,15 @@ public class PlaceDao extends AbstractDao<Place, Long> {
         public final static Property Latitude = new Property(3, Double.class, "latitude", false, "LATITUDE");
         public final static Property Longitude = new Property(4, Double.class, "longitude", false, "LONGITUDE");
         public final static Property Description = new Property(5, String.class, "description", false, "DESCRIPTION");
-        public final static Property Favorite = new Property(6, Boolean.class, "favorite", false, "FAVORITE");
-        public final static Property CreatedAt = new Property(7, java.util.Date.class, "createdAt", false, "CREATED_AT");
-        public final static Property IdCategory = new Property(8, Long.class, "idCategory", false, "ID_CATEGORY");
+        public final static Property CreatedAt = new Property(6, java.util.Date.class, "createdAt", false, "CREATED_AT");
+        public final static Property IdCategory = new Property(7, Long.class, "idCategory", false, "ID_CATEGORY");
+        public final static Property IdUser = new Property(8, Long.class, "idUser", false, "ID_USER");
     };
 
     private DaoSession daoSession;
 
     private Query<Place> category_CategoryPlaceQuery;
+    private Query<Place> user_UserPlaceQuery;
 
     public PlaceDao(DaoConfig config) {
         super(config);
@@ -62,9 +63,9 @@ public class PlaceDao extends AbstractDao<Place, Long> {
                 "\"LATITUDE\" REAL," + // 3: latitude
                 "\"LONGITUDE\" REAL," + // 4: longitude
                 "\"DESCRIPTION\" TEXT," + // 5: description
-                "\"FAVORITE\" INTEGER," + // 6: favorite
-                "\"CREATED_AT\" INTEGER," + // 7: createdAt
-                "\"ID_CATEGORY\" INTEGER);"); // 8: idCategory
+                "\"CREATED_AT\" INTEGER," + // 6: createdAt
+                "\"ID_CATEGORY\" INTEGER," + // 7: idCategory
+                "\"ID_USER\" INTEGER);"); // 8: idUser
     }
 
     /** Drops the underlying database table. */
@@ -108,19 +109,19 @@ public class PlaceDao extends AbstractDao<Place, Long> {
             stmt.bindString(6, description);
         }
  
-        Boolean favorite = entity.getFavorite();
-        if (favorite != null) {
-            stmt.bindLong(7, favorite ? 1L: 0L);
-        }
- 
         java.util.Date createdAt = entity.getCreatedAt();
         if (createdAt != null) {
-            stmt.bindLong(8, createdAt.getTime());
+            stmt.bindLong(7, createdAt.getTime());
         }
  
         Long idCategory = entity.getIdCategory();
         if (idCategory != null) {
-            stmt.bindLong(9, idCategory);
+            stmt.bindLong(8, idCategory);
+        }
+ 
+        Long idUser = entity.getIdUser();
+        if (idUser != null) {
+            stmt.bindLong(9, idUser);
         }
     }
 
@@ -146,9 +147,9 @@ public class PlaceDao extends AbstractDao<Place, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getDouble(offset + 3), // latitude
             cursor.isNull(offset + 4) ? null : cursor.getDouble(offset + 4), // longitude
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // description
-            cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0, // favorite
-            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // createdAt
-            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8) // idCategory
+            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // createdAt
+            cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7), // idCategory
+            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8) // idUser
         );
         return entity;
     }
@@ -162,9 +163,9 @@ public class PlaceDao extends AbstractDao<Place, Long> {
         entity.setLatitude(cursor.isNull(offset + 3) ? null : cursor.getDouble(offset + 3));
         entity.setLongitude(cursor.isNull(offset + 4) ? null : cursor.getDouble(offset + 4));
         entity.setDescription(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setFavorite(cursor.isNull(offset + 6) ? null : cursor.getShort(offset + 6) != 0);
-        entity.setCreatedAt(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
-        entity.setIdCategory(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
+        entity.setCreatedAt(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
+        entity.setIdCategory(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
+        entity.setIdUser(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
      }
     
     /** @inheritdoc */
@@ -205,6 +206,21 @@ public class PlaceDao extends AbstractDao<Place, Long> {
         return query.list();
     }
 
+    /** Internal query to resolve the "UserPlace" to-many relationship of User. */
+    public List<Place> _queryUser_UserPlace(Long idUser) {
+        synchronized (this) {
+            if (user_UserPlaceQuery == null) {
+                QueryBuilder<Place> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.IdUser.eq(null));
+                queryBuilder.orderRaw("T.'CREATED_AT' ASC");
+                user_UserPlaceQuery = queryBuilder.build();
+            }
+        }
+        Query<Place> query = user_UserPlaceQuery.forCurrentThread();
+        query.setParameter(0, idUser);
+        return query.list();
+    }
+
     private String selectDeep;
 
     protected String getSelectDeep() {
@@ -213,8 +229,11 @@ public class PlaceDao extends AbstractDao<Place, Long> {
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
             SqlUtils.appendColumns(builder, "T0", daoSession.getCategoryDao().getAllColumns());
+            builder.append(',');
+            SqlUtils.appendColumns(builder, "T1", daoSession.getUserDao().getAllColumns());
             builder.append(" FROM PLACE T");
             builder.append(" LEFT JOIN CATEGORY T0 ON T.\"ID_CATEGORY\"=T0.\"_id\"");
+            builder.append(" LEFT JOIN USER T1 ON T.\"ID_USER\"=T1.\"_id\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -227,6 +246,10 @@ public class PlaceDao extends AbstractDao<Place, Long> {
 
         Category category = loadCurrentOther(daoSession.getCategoryDao(), cursor, offset);
         entity.setCategory(category);
+        offset += daoSession.getCategoryDao().getAllColumns().length;
+
+        User user = loadCurrentOther(daoSession.getUserDao(), cursor, offset);
+        entity.setUser(user);
 
         return entity;    
     }

@@ -1,9 +1,11 @@
-package com.apaza.moises.visitsucre.provider;
+package com.apaza.moises.visitsucre.deprecated;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class HandlerDBVisitSucre {
 
@@ -26,13 +28,13 @@ public class HandlerDBVisitSucre {
 
     public Cursor getCategories(){
         SQLiteDatabase db = dbVisitSucreHelper.getWritableDatabase();
-        String sql = String.format("SELECT * FROM %s", DBVisitSucreHelper.Table.CATEGORY);
+        String sql = String.format("SELECT * FROM %s", ContractVisitSucre.Table.CATEGORY);
         return db.rawQuery(sql, null);
     }
 
     public Cursor getCategoryWithId(String idCategory){
         SQLiteDatabase db = dbVisitSucreHelper.getWritableDatabase();
-        String sql = String.format("SELECT * FROM %s WHERE %s=?", DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Category.ID);
+        String sql = String.format("SELECT * FROM %s WHERE %s=?", ContractVisitSucre.Table.CATEGORY, ContractVisitSucre.Category.ID);
         String[] selectionArgs = {idCategory};
         return db.rawQuery(sql, selectionArgs);
     }
@@ -48,7 +50,7 @@ public class HandlerDBVisitSucre {
         values.put(ContractVisitSucre.Category.DATE, category.getDate().toString());
         values.put(ContractVisitSucre.Category.DESCRIPTION, category.getDescription());
 
-        db.insertOrThrow(DBVisitSucreHelper.Table.CATEGORY, null, values);
+        db.insertOrThrow(ContractVisitSucre.Table.CATEGORY, null, values);
         return idCategory;
     }
 
@@ -64,7 +66,7 @@ public class HandlerDBVisitSucre {
         String whereClause = String.format("%s=?", ContractVisitSucre.Category.ID);
         String[] whereArgs = {category.getIdCategory()};
 
-        int result = db.update(DBVisitSucreHelper.Table.CATEGORY, values, whereClause, whereArgs);
+        int result = db.update(ContractVisitSucre.Table.CATEGORY, values, whereClause, whereArgs);
 
         return result > 0;
     }
@@ -75,19 +77,19 @@ public class HandlerDBVisitSucre {
         String whereClause = String.format("%s=?", ContractVisitSucre.Category.ID);
         String[] whereArgs = {idCategory};
 
-        int result = db.delete(DBVisitSucreHelper.Table.CATEGORY, whereClause, whereArgs);
+        int result = db.delete(ContractVisitSucre.Table.CATEGORY, whereClause, whereArgs);
         return result > 0;
     }
 
     public Cursor getPlaces(){
         SQLiteDatabase db = dbVisitSucreHelper.getWritableDatabase();
-        String sql = String.format("SELECT * FROM %s", DBVisitSucreHelper.Table.PLACE);
+        String sql = String.format("SELECT * FROM %s", ContractVisitSucre.Table.PLACE);
         return db.rawQuery(sql, null);
     }
 
     public Cursor getPlaceWithId(String idPlace){
         SQLiteDatabase db = dbVisitSucreHelper.getWritableDatabase();
-        String sql = String.format("SELECT * FROM %s WHERE %s=?", DBVisitSucreHelper.Table.PLACE, ContractVisitSucre.Place.ID);
+        String sql = String.format("SELECT * FROM %s WHERE %s=?", ContractVisitSucre.Table.PLACE, ContractVisitSucre.Place.ID);
         String[] selectArgs = {idPlace};
         return db.rawQuery(sql, selectArgs);
     }
@@ -107,7 +109,7 @@ public class HandlerDBVisitSucre {
         values.put(ContractVisitSucre.Place.DATE, place.getDate().toString());
         values.put(ContractVisitSucre.Place.ID_CATEGORY, place.getIdCategory());
 
-        db.insertOrThrow(DBVisitSucreHelper.Table.PLACE, null, values);
+        db.insertOrThrow(ContractVisitSucre.Table.PLACE, null, values);
 
         return idPlace;
     }
@@ -128,7 +130,7 @@ public class HandlerDBVisitSucre {
         String whereClause = String.format("%s=?", ContractVisitSucre.Place.ID);
         String[] whereArgs = {place.getIdPlace()};
 
-        int result =db.update(DBVisitSucreHelper.Table.PLACE, values,whereClause, whereArgs);
+        int result =db.update(ContractVisitSucre.Table.PLACE, values,whereClause, whereArgs);
 
         return result > 0;
     }
@@ -138,7 +140,7 @@ public class HandlerDBVisitSucre {
         String whereClause = String.format("%s=?", ContractVisitSucre.Place.ID);
         String[] whereArgs = {idPlace};
 
-        int result = db.delete(DBVisitSucreHelper.Table.PLACE, whereClause, whereArgs);
+        int result = db.delete(ContractVisitSucre.Table.PLACE, whereClause, whereArgs);
         return result > 0;
     }
 

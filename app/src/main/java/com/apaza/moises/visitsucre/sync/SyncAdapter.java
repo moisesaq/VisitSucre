@@ -15,7 +15,6 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.provider.BaseColumns;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -24,10 +23,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Constants;
-import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
-import com.apaza.moises.visitsucre.provider.Category;
+import com.apaza.moises.visitsucre.deprecated.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.google.gson.Gson;
 

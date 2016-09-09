@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_register_place"
+            android:id="@+id/nav_tourist_places"
+            android:checked="true"
+            android:icon="@mipmap/ic_places_fav"
+            android:title="Tourist places"/>
+
+        <item
+            android:id="@+id/nav_more_places"
+            android:icon="@mipmap/ic_fav_off"
+            android:title="More places"/>
+
+        <item
+            android:id="@+id/nav_nearby"
+            android:icon="@mipmap/ic_camera"
+            android:title="Nearby" />
+
+        <item
+            android:id="@+id/nav_suggest_place"
             android:checked="true"
             android:icon="@mipmap/ic_card"
-            android:title="@string/register"/>
+            android:title="Suggest places"/>
 
         <item
-            android:id="@+id/nav_food"
-            android:checked="true"
-            android:icon="@mipmap/ic_camera"
-            android:title="@string/foods" />
-        <item
-            android:id="@+id/nav_hotel"
+            android:id="@+id/nav_about_sucre"
             android:icon="@mipmap/ic_places_home"
-            android:title="@string/hotel" />
-
-        <item
-            android:id="@+id/nav_all"
-            android:icon="@mipmap/ic_fav_off"
-            android:title="@string/all"/>
+            android:title="About Sucre" />
 
         <item
             android:id="@+id/test_db"

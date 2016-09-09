@@ -147,8 +147,21 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
     }
 
     @Override
+    public void onDestroy(){
+        super.onDestroy();
+        try{
+            getLoaderManager().destroyLoader(0);
+            if(adapter != null){
+                adapter = null;
+            }
+        }catch (Throwable throwable){
+            throwable.printStackTrace();
+        }
+    }
+
+    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), ContractVisitSucre.Place.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), ContractVisitSucre.Place.CONTENT_URI_DETAILED, null, null, null, null);
     }
 
     @Override

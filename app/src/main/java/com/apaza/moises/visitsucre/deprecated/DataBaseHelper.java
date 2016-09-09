@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.provider.deprecated;
+package com.apaza.moises.visitsucre.deprecated;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

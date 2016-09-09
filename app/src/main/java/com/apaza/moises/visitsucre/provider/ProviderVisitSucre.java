@@ -11,10 +11,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.apaza.moises.visitsucre.deprecated.DBVisitSucreHelper;
 
 import java.util.ArrayList;
 
@@ -58,10 +59,10 @@ public class ProviderVisitSucre extends ContentProvider{
             "ON place.idCategory = category.id";
 
     private final String[] projectionPlace = new String[]{
-            DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.ID,
-            DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.NAME,
-            DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.DESCRIPTION,
-            DBVisitSucreHelper.Table.CATEGORY + "." + ContractVisitSucre.Category.NAME
+            ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.ID,
+            ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.NAME,
+            ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.DESCRIPTION,
+            ContractVisitSucre.Table.CATEGORY + "." + ContractVisitSucre.Category.NAME
     };
 
     @Override
@@ -81,21 +82,21 @@ public class ProviderVisitSucre extends ContentProvider{
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
-                cursor = db.query(DBVisitSucreHelper.Table.CATEGORY, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(ContractVisitSucre.Table.CATEGORY, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                cursor = db.query(DBVisitSucreHelper.Table.CATEGORY, projection,
+                cursor = db.query(ContractVisitSucre.Table.CATEGORY, projection,
                         ContractVisitSucre.Category.ID + "=" + "\'" + id + "\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
                         selectionArgs, null , null, sortOrder);
                 break;
             case PLACES:
-                cursor = db.query(DBVisitSucreHelper.Table.PLACE, projection, selection, selectionArgs, null, null, sortOrder);
+                cursor = db.query(ContractVisitSucre.Table.PLACE, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
 
             case PLACE_ID:
                 id = ContractVisitSucre.Place.getIdPlace(uri);
-                cursor = db.query(DBVisitSucreHelper.Table.PLACE, projection,
+                cursor = db.query(ContractVisitSucre.Table.PLACE, projection,
                         ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ")" : ""),
                         selectionArgs, null, null, sortOrder);
                 break;
@@ -104,7 +105,7 @@ public class ProviderVisitSucre extends ContentProvider{
                 id = ContractVisitSucre.Place.getIdPlaceForDetail(uri);
                 builder.setTables(PLACE_JOIN_CATEGORY);
                 cursor = builder.query(db, projectionPlace,
-                        DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : "") ,
+                        ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.Place.ID + "=" + "\'" + id +"\'" + (!TextUtils.isEmpty(selection) ? " AND (" + selection + ')' : "") ,
                         selectionArgs, null, null, sortOrder);
                 break;
 
@@ -125,10 +126,10 @@ public class ProviderVisitSucre extends ContentProvider{
         String sequence = null;
         switch (filter){
             case ContractVisitSucre.Place.FILTER_PLACE_DATE:
-                sequence = DBVisitSucreHelper.Table.PLACE + "." + ContractVisitSucre.ColumnsPlace.DATE;
+                sequence = ContractVisitSucre.Table.PLACE + "." + ContractVisitSucre.ColumnsPlace.DATE;
                 break;
             case ContractVisitSucre.Place.FILTER_CATEGORY:
-                sequence = DBVisitSucreHelper.Table.CATEGORY + "." + ContractVisitSucre.ColumnsCategory.NAME;
+                sequence = ContractVisitSucre.Table.CATEGORY + "." + ContractVisitSucre.ColumnsCategory.NAME;
                 break;
         }
         return sequence;
@@ -139,13 +140,13 @@ public class ProviderVisitSucre extends ContentProvider{
     public String getType(Uri uri) {
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
-                return ContractVisitSucre.generateMime(DBVisitSucreHelper.Table.CATEGORY);
+                return ContractVisitSucre.generateMime(ContractVisitSucre.Table.CATEGORY);
             case CATEGORY_ID:
-                return ContractVisitSucre.generateMimeItem(DBVisitSucreHelper.Table.CATEGORY);
+                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.Table.CATEGORY);
             case PLACES:
-                return ContractVisitSucre.generateMime(DBVisitSucreHelper.Table.PLACE);
+                return ContractVisitSucre.generateMime(ContractVisitSucre.Table.PLACE);
             case PLACE_ID:
-                return ContractVisitSucre.generateMimeItem(DBVisitSucreHelper.Table.PLACE);
+                return ContractVisitSucre.generateMimeItem(ContractVisitSucre.Table.PLACE);
             default:
                 throw new UnsupportedOperationException("Uri unknown: " + uri);
         }
@@ -163,7 +164,7 @@ public class ProviderVisitSucre extends ContentProvider{
                     id = ContractVisitSucre.Category.generateIdCategory();
                     values.put(ContractVisitSucre.Category.ID, id);
                 }
-                db.insertOrThrow(DBVisitSucreHelper.Table.CATEGORY, null, values);
+                db.insertOrThrow(ContractVisitSucre.Table.CATEGORY, null, values);
                 notifyChange(uri);
                 return ContractVisitSucre.Category.createUriCategory(id);
             case PLACES:
@@ -171,7 +172,7 @@ public class ProviderVisitSucre extends ContentProvider{
                     id = ContractVisitSucre.Place.generateIdPlace();
                     values.put(ContractVisitSucre.Place.ID, id);
                 }
-                db.insertOrThrow(DBVisitSucreHelper.Table.PLACE, null, values);
+                db.insertOrThrow(ContractVisitSucre.Table.PLACE, null, values);
                 notifyChange(uri);
                 return ContractVisitSucre.Place.createUriPlace(id);
         }
@@ -189,12 +190,12 @@ public class ProviderVisitSucre extends ContentProvider{
         switch (uriMatcher.match(uri)){
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
+                affects = db.delete(ContractVisitSucre.Table.CATEGORY, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             case PLACE_ID:
                 id = ContractVisitSucre.Place.getIdPlace(uri);
-                affects = db.delete(DBVisitSucreHelper.Table.CATEGORY, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
+                affects = db.delete(ContractVisitSucre.Table.CATEGORY, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             default:
@@ -211,16 +212,16 @@ public class ProviderVisitSucre extends ContentProvider{
         int affects;
         switch (uriMatcher.match(uri)){
             case CATEGORIES:
-                affects = db.update(DBVisitSucreHelper.Table.CATEGORY, values, selection, selectionArgs);
+                affects = db.update(ContractVisitSucre.Table.CATEGORY, values, selection, selectionArgs);
                 break;
             case CATEGORY_ID:
                 id = ContractVisitSucre.Category.getIdCategory(uri);
-                affects = db.update(DBVisitSucreHelper.Table.CATEGORY, values, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
+                affects = db.update(ContractVisitSucre.Table.CATEGORY, values, ContractVisitSucre.Category.ID_REMOTE + " = ?", new String[]{id});
                 notifyChange(uri);
                 break;
             case PLACE_ID:
                 id = ContractVisitSucre.Place.getIdPlace(uri);
-                affects = db.update(DBVisitSucreHelper.Table.PLACE, values, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
+                affects = db.update(ContractVisitSucre.Table.PLACE, values, ContractVisitSucre.Place.ID + " = ?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException(NO_SUPPORTED_URI);

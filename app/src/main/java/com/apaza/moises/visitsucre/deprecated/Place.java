@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.provider;
+package com.apaza.moises.visitsucre.deprecated;
 
 import java.util.Date;
 

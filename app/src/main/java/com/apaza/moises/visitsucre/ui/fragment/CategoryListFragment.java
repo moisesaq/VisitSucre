@@ -60,15 +60,15 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
-        categoryAdapter = new CategoryAdapter(getActivity());
+        categoryAdapter = new CategoryAdapter(getContext());
         setListAdapter(categoryAdapter);
-        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(10, null, this);
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        getLoaderManager().restartLoader(0, null, this);
+        //getLoaderManager().restartLoader(10, null, this);
     }
 
     @Override
@@ -121,6 +121,7 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        data.moveToFirst();
         categoryAdapter.swapCursor(data);
     }
 
@@ -137,7 +138,7 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     public void onDestroy(){
         super.onDestroy();
         try{
-            getLoaderManager().destroyLoader(0);
+            getLoaderManager().destroyLoader(10);
             if(categoryAdapter != null){
                 categoryAdapter.changeCursor(null);
                 categoryAdapter = null;
