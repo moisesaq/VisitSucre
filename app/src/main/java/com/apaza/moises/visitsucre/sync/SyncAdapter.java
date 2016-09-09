@@ -49,10 +49,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 
     /*PROJECTION FOR CONSULT*/
     private static final String[] PROJECTION = new String[]{
-<<<<<<< HEAD
-=======
             ContractVisitSucre.Category.ID,
->>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
             ContractVisitSucre.Category.ID_REMOTE,
             ContractVisitSucre.Category.LOGO,
             ContractVisitSucre.Category.NAME,

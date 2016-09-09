@@ -30,11 +30,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
-<<<<<<< HEAD
-=======
 import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.VolleySingleton;
->>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.CategoryListFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceInMapFragment;

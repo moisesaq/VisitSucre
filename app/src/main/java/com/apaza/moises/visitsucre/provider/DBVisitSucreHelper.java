@@ -8,11 +8,7 @@ import android.provider.BaseColumns;
 
 public class DBVisitSucreHelper extends SQLiteOpenHelper{
 
-<<<<<<< HEAD
     private static final String NAME_DATA_BASE = "dbVisitSucre.db";
-=======
-
->>>>>>> 0948feacd57ce90e6b793f77fcd10366e1ef4582
     private static final int CURRENT_VERSION = 1;
     private final Context context;
 
