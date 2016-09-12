@@ -270,6 +270,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     }
         };
         //VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(request);
+
         Global.getVolleySingleton().addToRequestQueue(request);
     }
 
