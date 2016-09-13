@@ -44,6 +44,18 @@ public class CategoryAdapter extends CursorAdapter{
         return getView(parent);
     }
 
+    public long getIdCategory(int position){
+        Cursor cursor = getCursor();
+        if(cursor != null){
+            if(cursor.moveToPosition(position))
+                return cursor.getLong(0);
+            else
+                return 0;
+        }else{
+            return 0;
+        }
+    }
+
     private View getView(ViewGroup parent){
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         return inflater.inflate(R.layout.category_item, parent, false);

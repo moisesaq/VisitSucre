@@ -7,100 +7,149 @@
     android:orientation="vertical"
     tools:context=".ui.fragment.RegisterPlaceFragment">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/selectImage"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/default_profile"
-            android:padding="@dimen/paddingMaxGlobal"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/grayTechno"/>
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="@dimen/paddingMaxGlobal"
-            android:layout_marginTop="@dimen/marginMaxGlobal">
-
-            <Spinner
-                android:id="@+id/spCategory"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textAlignment="center"/>
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <!--<android.support.design.widget.TextInputLayout
-                android:id="@+id/tilName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/name"
+                <LinearLayout
+                    android:id="@+id/lyImages"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:ems="10"
-                    android:hint="@string/name"/>
+                    android:background="@color/grayTechno"
+                    android:orientation="vertical">
 
-            </android.support.design.widget.TextInputLayout>-->
-            <com.apaza.moises.visitsucre.ui.InputTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                moi:iconImage="@mipmap/ic_help"
-                moi:hint="@string/name"
-                moi:maxLengthEnabled="true"
-                moi:maxLength="10"
-                android:inputType="phone"/>
+                    <ImageView
+                        android:id="@+id/selectImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_camera_burst_grey600_48dp"
+                        android:padding="@dimen/paddingMaxGlobal"
+                        android:layout_margin="@dimen/marginMaxGlobal"
+                        android:layout_gravity="center_horizontal" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/tilAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                </LinearLayout>
 
-                <EditText
-                    android:id="@+id/address"
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:ems="10"
-                    android:hint="@string/address"/>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="@dimen/paddingMinGlobal">
 
-            </android.support.design.widget.TextInputLayout>
+                    <Spinner
+                        android:id="@+id/spCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/marginMaxGlobal"/>
+
+                    <com.apaza.moises.visitsucre.ui.InputTextView
+                        android:id="@+id/itvName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        moi:iconImage="@mipmap/ic_camera_iris_grey600_24dp"
+                        moi:hint="@string/name"
+                        moi:maxLengthEnabled="true"
+                        moi:maxLength="10"
+                        android:inputType="textCapSentences"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <ImageButton
+                            android:id="@+id/iBtnSelectGoogleMaps"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_google_maps_grey600_24dp"
+                            android:padding="@dimen/paddingMinGlobal"
+                            android:visibility="visible"/>
+
+                        <TextView
+                            android:id="@+id/tvAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="Plaza 25 de mayo" />
+
+                    </LinearLayout>
+
+                    <com.apaza.moises.visitsucre.ui.InputTextView
+                        android:id="@+id/itvDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        moi:iconImage="@mipmap/ic_pen_grey600_24dp"
+                        moi:hint="@string/description"
+                        moi:maxLengthEnabled="true"
+                        moi:maxLength="250"
+                        android:lines="3"
+                        android:inputType="textMultiLine"/>
+
+                    <!--<LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_pen_grey600_24dp"
+                            android:layout_marginTop="12dp"
+                            android:padding="@dimen/paddingMinGlobal"/>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/tilDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:errorEnabled="true"
+                            app:counterOverflowTextAppearance="@style/CounterOverFlow"
+                            app:counterTextAppearance="@style/Counter"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="250">
+
+                            <EditText
+                                android:id="@+id/etDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textCapSentences"
+                                android:ems="10"
+                                android:gravity="start|top"
+                                android:lines="3"
+                                android:hint="@string/description"/>
+
+                        </android.support.design.widget.TextInputLayout>
+
+                    </LinearLayout>-->
 
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/tilDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:ems="10"
-                    android:hint="@string/description"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-            <Button
-                android:id="@+id/register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_button"
-                android:textColor="@android:color/white"
-                android:text="@string/register" />
+                    <Button
+                        android:id="@+id/btnSave"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_button"
+                        android:textColor="@android:color/white"
+                        android:text="@string/register" />
 
 
-        </LinearLayout>
+                </LinearLayout>
 
-    </LinearLayout>
+            </LinearLayout>
+            
+        </ScrollView>
+
+
+    </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -109,81 +158,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@mipmap/ic_camera_white_24dp"
         app:borderWidth="0dp"
-        app:layout_anchor="@id/selectImage"
+        app:layout_anchor="@id/lyImages"
         app:layout_anchorGravity="bottom|right|end" />
-
-    <!--<com.github.clans.fab.FloatingActionMenu
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:borderWidth="0dp"
-        app:layout_anchor="@id/detail1"
-        app:layout_anchorGravity="bottom|right|end"
-        fab:menu_animationDelayPerItem="55"
-        fab:menu_backgroundColor="@android:color/transparent"
-        fab:menu_buttonSpacing="0dp"
-        fab:menu_colorNormal="@color/color_accent"
-        fab:menu_colorPressed="@color/colorAccent"
-        fab:menu_colorRipple="@color/grayTechno"
-        fab:menu_fab_label="Floating Action Menu"
-        fab:menu_fab_size="normal"
-        fab:menu_icon="@drawable/fab_add"
-        fab:menu_labels_colorNormal="@color/grayTechno"
-        fab:menu_labels_colorPressed="@color/colorAccent"
-        fab:menu_labels_colorRipple="@color/colorPrimary"
-        fab:menu_labels_cornerRadius="@dimen/cornerDefault"
-        fab:menu_labels_ellipsize="none"
-        fab:menu_labels_hideAnimation="@anim/fab_slide_out_to_right"
-        fab:menu_labels_margin="0dp"
-        fab:menu_labels_maxLines="-1"
-        fab:menu_labels_padding="2dp"
-        fab:menu_labels_position="left"
-        fab:menu_labels_showAnimation="@anim/fab_slide_in_from_right"
-        fab:menu_labels_showShadow="false"
-        fab:menu_labels_singleLine="true"
-        fab:menu_labels_textColor="@android:color/white"
-        fab:menu_labels_textSize="15sp"
-        fab:menu_openDirection="down"
-        fab:menu_shadowColor="@android:color/transparent"
-        fab:menu_shadowRadius="4dp"
-        fab:menu_shadowXOffset="1dp"
-        fab:menu_shadowYOffset="0dp"
-        fab:menu_showShadow="true"
-        android:visibility="gone">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/shareFace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_share_facebook"
-            fab:fab_colorNormal="@android:color/white"
-            fab:fab_colorPressed="@color/colorPrimary"
-            fab:fab_colorRipple="@android:color/darker_gray"
-            fab:fab_label="Menu Item 1"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/shareWhatsApp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_share_whatsapp"
-            fab:fab_colorNormal="@android:color/white"
-            fab:fab_colorPressed="@color/colorPrimary"
-            fab:fab_colorRipple="@android:color/darker_gray"
-            fab:fab_label="Menu Item 2"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/shareTwitter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_share_twitter"
-            fab:fab_colorNormal="@android:color/white"
-            fab:fab_colorPressed="@color/colorPrimary"
-            fab:fab_colorRipple="@android:color/darker_gray"
-            fab:fab_label="Menu Item 3"
-            fab:fab_size="mini" />
-    </com.github.clans.fab.FloatingActionMenu>-->
 
 </android.support.design.widget.CoordinatorLayout>

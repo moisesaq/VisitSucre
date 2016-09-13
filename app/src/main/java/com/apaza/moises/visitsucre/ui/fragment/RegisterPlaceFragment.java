@@ -2,29 +2,46 @@ package com.apaza.moises.visitsucre.ui.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.Category;
+import com.apaza.moises.visitsucre.database.Place;
+import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
+import com.apaza.moises.visitsucre.ui.InputTextView;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.CategoryAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 
-public class RegisterPlaceFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class RegisterPlaceFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, AdapterView.OnItemSelectedListener{
+    public static final String TAG = "REGISTER PLACE";
     private static final String ARG_PARAM1 = "param1";
 
     private String mParam1;
 
     private View view;
-    private Spinner spCategory;
     private CategoryAdapter categoryAdapter;
+    private Spinner spCategory;
+    private long idCategory;
+
+    private InputTextView itvName, itvDescription;
+    private TextView tvAddress;
 
     private OnRegisterPlaceFragmentListener mListener;
 
@@ -58,9 +75,54 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     private void setupView() {
         spCategory = (Spinner)view.findViewById(R.id.spCategory);
+        spCategory.setOnItemSelectedListener(this);
         categoryAdapter = new CategoryAdapter(getContext());
         spCategory.setAdapter(categoryAdapter);
         getLoaderManager().initLoader(2, null, this);
+
+        itvName = (InputTextView)view.findViewById(R.id.itvName);
+        ImageButton iBtnSelectGoogleMaps = (ImageButton)view.findViewById(R.id.iBtnSelectGoogleMaps);
+        iBtnSelectGoogleMaps.setOnClickListener(this);
+        tvAddress = (TextView)view.findViewById(R.id.tvAddress);
+        itvDescription = (InputTextView) view.findViewById(R.id.itvDescription);
+        Button btnSave = (Button)view.findViewById(R.id.btnSave);
+        btnSave.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.iBtnSelectGoogleMaps:
+                break;
+            case R.id.btnSave:
+                if(itvDescription.isTextValid("Description invalid") && itvName.isTextValid("Name invalid")){
+                    savePlace();
+                }
+                break;
+        }
+    }
+
+    private void savePlace(){
+        Place place = new Place();
+        place.setName(itvName.getText());
+        place.setAddress("Test address");
+        place.setDescription(itvDescription.getText());
+        place.setCreatedAt(Utils.getCurrentDate());
+        place.setIdCategory(idCategory);
+
+        long idPlace = Global.getDataBaseHandler().getDaoSession().getPlaceDao().insert(place);
+        if(idPlace > 0){
+            Utils.showMessageTest(getContext(), "Place saved");
+            getActivity().getContentResolver().notifyChange(ContractVisitSucre.Place.createUriPlace(String.valueOf(idPlace)), null);
+            clearAllFields();
+        }else{
+            Utils.showMessageTest(getContext(), "Error");
+        }
+    }
+
+    public void clearAllFields(){
+        itvName.clearField();
+        itvDescription.clearField();
     }
 
     @Override
@@ -111,6 +173,17 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
         categoryAdapter.swapCursor(null);
     }
 
+    /*ITEM SELECTED LISTENER SPINNER*/
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        idCategory = adapterView.getItemIdAtPosition(i);
+        Log.d(TAG, "Category >> " + idCategory);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 
     public interface OnRegisterPlaceFragmentListener {
         void onRegisterPlaceClick();

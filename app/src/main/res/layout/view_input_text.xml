@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_email"
         android:layout_marginTop="15dp"
-        android:padding="10dp"
+        android:padding="@dimen/paddingMinGlobal"
         android:visibility="visible"/>
 
     <android.support.design.widget.TextInputLayout

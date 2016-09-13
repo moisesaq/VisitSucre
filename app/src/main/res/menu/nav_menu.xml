@@ -21,7 +21,7 @@
         <item
             android:id="@+id/nav_suggest_place"
             android:checked="true"
-            android:icon="@mipmap/ic_card"
+            android:icon="@mipmap/ic_credit_card_grey600_24dp"
             android:title="Suggest places"/>
 
         <item

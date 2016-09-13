@@ -8,6 +8,8 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Patterns;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -15,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.apaza.moises.visitsucre.R;
+
+import java.util.regex.Pattern;
 
 public class InputTextView extends LinearLayout{
 
@@ -27,6 +31,8 @@ public class InputTextView extends LinearLayout{
     private int maxLength;
     private int inputType;
     private String hint;
+
+    private int lines;
 
     public InputTextView(Context context) {
         super(context);
@@ -45,6 +51,9 @@ public class InputTextView extends LinearLayout{
         setMaxLength(maxLength);
         inputType = typedArray.getInt(R.styleable.InputTextView_android_inputType, InputType.TYPE_NULL);
         setInputType(inputType);
+
+        lines = typedArray.getInt(R.styleable.InputTextView_android_lines, 1);
+        setLines(lines);
         hint = typedArray.getString(R.styleable.InputTextView_hint);
         setHint(hint);
         typedArray.recycle();
@@ -65,7 +74,7 @@ public class InputTextView extends LinearLayout{
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                textInputLayout.setError(null);
             }
 
             @Override
@@ -75,16 +84,19 @@ public class InputTextView extends LinearLayout{
         });
     }
 
+    public String getText(){
+        return editText.getText().toString();
+    }
+
+    public void clearField(){
+        this.editText.getText().clear();
+    }
+
     public void setImageIcon(Drawable imageIcon){
         if(imageIcon != null){
             icon.setVisibility(View.VISIBLE);
             icon.setImageDrawable(imageIcon);
         }
-
-        /*if(imageIcon != 0){
-            icon.setVisibility(View.VISIBLE);
-            icon.setImageResource(imageIcon);
-        }*/
     }
 
     public void setMaxLengthEnabled(boolean enabled){
@@ -99,8 +111,54 @@ public class InputTextView extends LinearLayout{
         editText.setInputType(inputType);
     }
 
+    public void setLines(int lines){
+        if(lines > 1){
+            editText.setGravity(Gravity.START|Gravity.TOP);
+            editText.setLines(lines);
+        }
+    }
     public void setHint(String text){
         if(!text.isEmpty())
             textInputLayout.setHint(text);
+    }
+
+    public boolean isTextValid(String textError){
+        String text = editText.getText().toString();
+        Pattern pattern = Pattern.compile("^[a-zA-Z ]+$");
+        if(!pattern.matcher(text).matches()){
+            if(maxLengthEnabled){
+                if(text.length() > textInputLayout.getCounterMaxLength()){
+                    textInputLayout.setError(textError);
+                    return false;
+                }
+            }else{
+                textInputLayout.setError(null);
+                return false;
+            }
+
+        }else {
+            textInputLayout.setError(null);
+        }
+        return true;
+    }
+
+    public boolean isPhoneValid(String phone){
+        if(!Patterns.PHONE.matcher(phone).matches()){
+            textInputLayout.setError("Phone invalid");
+            return false;
+        }else{
+            textInputLayout.setError(null);
+        }
+        return true;
+    }
+
+    public boolean isEmailValid(String email){
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            textInputLayout.setError("Email invalid");
+            return false;
+        }else {
+            textInputLayout.setError(null);
+        }
+        return true;
     }
 }
