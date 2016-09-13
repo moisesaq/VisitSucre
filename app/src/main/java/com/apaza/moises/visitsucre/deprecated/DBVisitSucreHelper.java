@@ -10,7 +10,7 @@ import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class DBVisitSucreHelper extends SQLiteOpenHelper{
 
-
+    private static final String NAME_DATA_BASE = "dbVisitSucre.db";
     private static final int CURRENT_VERSION = 1;
     private final Context context;
 

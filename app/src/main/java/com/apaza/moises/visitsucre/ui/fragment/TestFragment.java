@@ -270,6 +270,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
                     }
         };
         //VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(request);
+
         Global.getVolleySingleton().addToRequestQueue(request);
     }
 
@@ -617,9 +618,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
 
             Log.d("CATEGORIES", ">>>>>>>>>>>>>>>>>>> CATEGORIES WITH PROVIDER");
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Category.CONTENT_URI, null, null, null, null));
-            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>PLACES WITH PROVIDER");
+            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>> PLACES WITH PROVIDER");
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.CONTENT_URI, null, null, null, null));
-            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>>DETAILED PLACE #1 ");
+            Log.d("PLACES", ">>>>>>>>>>>>>>>>>>>>>>>> DETAILED PLACE #1 ");
             DatabaseUtils.dumpCursor(resolver.query(ContractVisitSucre.Place.createUriForDetail(idPlace1), null, null, null, null));
             return status;
         }

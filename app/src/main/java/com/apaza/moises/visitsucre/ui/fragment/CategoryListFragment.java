@@ -1,5 +1,6 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;

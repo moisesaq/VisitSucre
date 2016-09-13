@@ -12,7 +12,6 @@ public class SyncService extends Service{
     private final static Object lock = new Object();
     @Override
     public void onCreate(){
-        Log.d("SYNC SERVICE", "ON CREATE SYNC SERVICE");
         synchronized (lock){
             if(syncAdapter == null){
                 Log.d("SYNC SERVICE", "INSTANCE SYNC SERVICE");
