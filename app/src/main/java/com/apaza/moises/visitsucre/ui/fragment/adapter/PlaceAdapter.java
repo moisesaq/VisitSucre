@@ -29,7 +29,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
     public OnPlaceItemClickListener listener;
 
     public interface OnPlaceItemClickListener{
-        void onPlaceClick(ViewHolder viewHolder, String idPlace);
+        void onPlaceClick(ViewHolder viewHolder, long idPlace);
     }
 
     public PlaceAdapter(Context context, OnPlaceItemClickListener listener){
@@ -64,14 +64,14 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
         return 0;
     }
 
-    public String getIdPlace(int position){
+    public long getIdPlace(int position){
         if(cursor != null){
             if(cursor.moveToPosition(position))
-                return cursor.getString(COLUMN_ID);
+                return cursor.getLong(0);
             else
-                return "";
+                return 0;
         }else{
-            return "";
+            return 0;
         }
     }
 

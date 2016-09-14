@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Utils {
+    public static final double latitudeDefault = -34.60386351802505;
+    public static final double longitudeDefault = -58.38021799928402;
 
     //LANGUAGE
     public static final String LANGUAGE_SPANISH = "es";

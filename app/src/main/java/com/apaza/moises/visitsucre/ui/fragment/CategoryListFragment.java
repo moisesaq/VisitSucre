@@ -1,14 +1,13 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,16 +17,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.CategoryAdapter;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class CategoryListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+    public static final String TAG = "CATEGORY LIST";
     private static final String ARG_PARAM1 = "param1";
 
     private String mParam1;
-    private OnCategoryListFragmentListener mListener;
+    private OnCategoryListFragmentListener onCategoryListFragmentListener;
 
     private CategoryAdapter categoryAdapter;
     private MenuItem menuSync, menuAddCategory;
@@ -89,14 +88,17 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id){
-
+        long idCategory = categoryAdapter.getIdCategory(position);
+        Log.d(TAG, "DEFAULT >>> " + id + " CUSTOM >>> " + idCategory);
+        if(onCategoryListFragmentListener != null)
+            onCategoryListFragmentListener.onCategoryItemClick(idCategory);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnCategoryListFragmentListener) {
-            mListener = (OnCategoryListFragmentListener) context;
+            onCategoryListFragmentListener = (OnCategoryListFragmentListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnCategoryListFragmentListener");
@@ -106,7 +108,7 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        onCategoryListFragmentListener = null;
         if(menuSync != null)
             menuSync.setVisible(false);
 
@@ -131,7 +133,7 @@ public class CategoryListFragment extends ListFragment implements LoaderManager.
     }
 
     public interface OnCategoryListFragmentListener {
-        void onCategoryItemClick(Uri uri);
+        void onCategoryItemClick(long idCategory);
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -23,19 +24,22 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.Place;
+import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallback, LocationListener, View.OnClickListener {
     public static final String TAG = "PLACE IN MAP FRAGMENT";
-    private static final String ARG_PARAM1 = "param1";
-    private String mParam1;
+    private static final String ID_PLACE = "idPlace";
+    private long idPlace;
 
     private OnPlaceInMapFragmentListener mListener;
 
@@ -52,10 +56,10 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     public PlaceInMapFragment() {
     }
 
-    public static PlaceInMapFragment newInstance(String param1) {
+    public static PlaceInMapFragment newInstance(long idPlace) {
         PlaceInMapFragment fragment = new PlaceInMapFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putLong(ID_PLACE, idPlace);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +69,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            idPlace = getArguments().getLong(ID_PLACE, 0);
         }
     }
 
@@ -75,6 +79,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
             view = inflater.inflate(R.layout.fragment_place_in_map, container, false);
         setupView();
         getCurrentLocation();
+        //loadMarker();
         return view;
     }
 
@@ -108,6 +113,11 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         showLocation(location);
     }
 
+    private void loadMarker(){
+        if(idPlace > 0){
+            addMarker();
+        }
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -118,29 +128,53 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         }
 
         this.googleMap.setMyLocationEnabled(true);
+        LatLng latLng = new LatLng(Utils.latitudeDefault, Utils.longitudeDefault);
+        if(location != null){
+            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        moveToLocation(latLng);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnLocation:
-                moveToLocation(location);
+                /*LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                moveToLocation(latLng);*/
+                loadMarker();
                 break;
         }
     }
 
-    private void moveToLocation(Location location){
+    private void moveToLocation(LatLng latLng){
         try{
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             googleMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
-
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
+    private void addMarker(){
+        Place place = Global.getDataBaseHandler().getDaoSession().getPlaceDao().loadDeep(idPlace);
+        LatLng latLng = new LatLng(Utils.latitudeDefault, Utils.longitudeDefault);//LatLng(place.getLatitude(), place.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions()
+                .title(place.getName())
+                .position(latLng);
+        showMarker(latLng);
+        this.googleMap.addMarker(markerOptions);
+    }
+
+    private void showMarker(LatLng latLng){
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(8)
+                .bearing(90)
+                .tilt(90)
+                .build();
+        this.googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
     /*LOCATION LISTENER*/
     @Override
     public void onLocationChanged(Location location) {

@@ -77,8 +77,9 @@ public class ProviderSucre extends ContentProvider{
     private final String[] projectionPlace = new String[]{
             ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Id.columnName,
             ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Name.columnName,
-            ContractVisitSucre.TABLE_NAME_PLACE + "." +PlaceDao.Properties.Address.columnName,
+            ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Address.columnName,
             ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.Description.columnName,
+            ContractVisitSucre.TABLE_NAME_PLACE + "." + PlaceDao.Properties.IdCategory.columnName,
             ContractVisitSucre.TABLE_NAME_CATEGORY + "." + CategoryDao.Properties.Name.columnName,
     };
 
@@ -150,6 +151,7 @@ public class ProviderSucre extends ContentProvider{
 
             case DETAILED_PLACES:
                 String filter = ContractVisitSucre.Place.hasFilter(uri) ? createFilter(uri.getQueryParameter(ContractVisitSucre.Place.PARAMS_FILTER)) : null;
+
                 builder.setTables(PLACE_JOIN_CATEGORY);
                 cursor = builder.query(db, projectionPlace, selection, selectionArgs, null, null, filter);//sortOrder);
                 break;
