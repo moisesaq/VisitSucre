@@ -53,8 +53,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
         CategoryListFragment.OnCategoryListFragmentListener,
-        PlaceListFragment.OnFragmentInteractionListener,
-        PlaceInMapFragment.OnPlaceInMapFragmentListener, FragmentManager.OnBackStackChangedListener{
+        PlaceListFragment.OnFragmentInteractionListener, FragmentManager.OnBackStackChangedListener{
 
     public static String TAG = "MAIN ACTIVITY";
     private DrawerLayout drawerLayout;
@@ -315,12 +314,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void showMessage(String message){
         Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
-    }
-
-    /*PLACE IN MAP FRAGMENT LISTENER*/
-    @Override
-    public void onPlaceLocaled(Uri uri) {
-
     }
 
     @Override

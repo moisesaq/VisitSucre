@@ -2,34 +2,34 @@ package com.apaza.moises.visitsucre.ui.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.database.Category;
 import com.apaza.moises.visitsucre.database.Place;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.apaza.moises.visitsucre.ui.InputTextView;
+import com.apaza.moises.visitsucre.ui.MainActivity;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.CategoryAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 
-public class RegisterPlaceFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class RegisterPlaceFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener,
+        AdapterView.OnItemSelectedListener, PlaceInMapFragment.OnPlaceInMapFragmentListener{
     public static final String TAG = "REGISTER PLACE";
     private static final String ARG_PARAM1 = "param1";
 
@@ -81,8 +81,8 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
         getLoaderManager().initLoader(2, null, this);
 
         itvName = (InputTextView)view.findViewById(R.id.itvName);
-        ImageButton iBtnSelectGoogleMaps = (ImageButton)view.findViewById(R.id.iBtnSelectGoogleMaps);
-        iBtnSelectGoogleMaps.setOnClickListener(this);
+        ImageButton iBtnSelectLocation = (ImageButton)view.findViewById(R.id.iBtnSelectLocation);
+        iBtnSelectLocation.setOnClickListener(this);
         tvAddress = (TextView)view.findViewById(R.id.tvAddress);
         itvDescription = (InputTextView) view.findViewById(R.id.itvDescription);
         Button btnSave = (Button)view.findViewById(R.id.btnSave);
@@ -92,7 +92,10 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.iBtnSelectGoogleMaps:
+            case R.id.iBtnSelectLocation:
+                PlaceInMapFragment placeInMapFragment = PlaceInMapFragment.newInstance(0);
+                placeInMapFragment.setOnPlaceInMapFragmentListener(this);
+                ((MainActivity)getActivity()).showFragment(placeInMapFragment);
                 break;
             case R.id.btnSave:
                 if(itvDescription.isTextValid("Description invalid") && itvName.isTextValid("Name invalid")){
@@ -182,6 +185,12 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    /*ON PLACE FRAGMENT LISTENER*/
+    @Override
+    public void onPlaceLocaled(Address address) {
 
     }
 

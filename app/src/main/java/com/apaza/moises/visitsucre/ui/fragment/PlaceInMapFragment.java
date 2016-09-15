@@ -1,19 +1,19 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -36,12 +36,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallback, LocationListener, View.OnClickListener {
+import java.util.List;
+import java.util.Locale;
+
+public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallback, LocationListener, View.OnClickListener,
+                                                            GoogleMap.OnCameraChangeListener{
     public static final String TAG = "PLACE IN MAP FRAGMENT";
     private static final String ID_PLACE = "idPlace";
     private long idPlace;
 
-    private OnPlaceInMapFragmentListener mListener;
+    private OnPlaceInMapFragmentListener onPlaceInMapFragmentListener;
 
     private View view;
     private SupportMapFragment mapFragment;
@@ -62,6 +66,10 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         args.putLong(ID_PLACE, idPlace);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setOnPlaceInMapFragmentListener(OnPlaceInMapFragmentListener listener){
+        this.onPlaceInMapFragmentListener = listener;
     }
 
     @Override
@@ -113,12 +121,6 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         showLocation(location);
     }
 
-    private void loadMarker(){
-        if(idPlace > 0){
-            addMarker();
-        }
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
@@ -146,10 +148,27 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         }
     }
 
+    private void loadMarker(){
+        if(idPlace > 0)
+            addMarker();
+        else
+            prepareSelectionMode();
+    }
+
+    private void prepareSelectionMode(){
+        LatLng latLng = new LatLng(Utils.latitudeDefault, Utils.longitudeDefault);
+        moveToLocation(latLng);
+
+        this.googleMap.getUiSettings().setZoomControlsEnabled(false);
+        this.googleMap.getUiSettings().setZoomGesturesEnabled(false);
+        this.googleMap.setOnCameraChangeListener(this);
+        //mapFragment.getView();
+    }
+
     private void moveToLocation(LatLng latLng){
         try{
             googleMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -169,9 +188,9 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     private void showMarker(LatLng latLng){
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng)
-                .zoom(8)
-                .bearing(90)
-                .tilt(90)
+                .zoom(12)
+                //.bearing(90)
+                .tilt(45)
                 .build();
         this.googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
@@ -205,19 +224,9 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnPlaceInMapFragmentListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnPlaceInMapFragmentListener");
-        }
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        onPlaceInMapFragmentListener = null;
     }
 
     @Override
@@ -251,7 +260,45 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         dialog.create().show();
     }
 
+    /*GOOGLE MAPS - CAMERA CHANGELISTENER*/
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        LatLng centerLocation = cameraPosition.target;
+        searchLocation(centerLocation);
+    }
+
+    private void searchLocation(final LatLng latLng){
+        final Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        new AsyncTask<Void, Void, List<Address>>(){
+            @Override
+            public void onPreExecute(){
+                txtLatitude.setText("Searching...");
+            }
+
+            @Override
+            public List<Address> doInBackground(Void... params){
+                List<Address> list = null;
+                try{
+                    list = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 5);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                return list;
+            }
+
+            @Override
+            public void onPostExecute(List<Address> result){
+                if(result != null && result.size() > 0){
+                    Address address = result.get(0);
+                    txtLatitude.setText("Result: " + address.getAddressLine(0) + " - " +address.getLatitude());
+                }else{
+                    txtLatitude.setText("No result :(");
+                }
+            }
+        }.execute();
+    }
+
     public interface OnPlaceInMapFragmentListener {
-        void onPlaceLocaled(Uri uri);
+        void onPlaceLocaled(Address address);
     }
 }
