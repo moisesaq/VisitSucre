@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallback, LocationListener, View.OnClickListener,
-                                                            GoogleMap.OnCameraChangeListener, SupportMap.OnSupportMapListener{
+                                                            GoogleMap.OnCameraChangeListener, TouchableWrapper.OnTouchSupportMapListener{
     public static final String TAG = "PLACE IN MAP FRAGMENT";
     private static final String ID_PLACE = "idPlace";
     private long idPlace;
@@ -57,6 +57,8 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     private int TIME_FOR_UPDATE = 10000;
     private int DISTANCE_FOR_UPDATE = 10;
     private Location location;
+
+    private LatLng lastLatLng;
 
     public PlaceInMapFragment() {
     }
@@ -97,8 +99,8 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         mapFragment.getMapAsync(this);*/
 
         supportMap = (SupportMap)getChildFragmentManager().findFragmentById(R.id.supportMap);
-        supportMap.setOnSupportMapListener(this);
-        this.googleMap = supportMap.getGoogleMap();
+        supportMap.getMapAsync(this);
+        supportMap.setOnTouchMapListener(this);
 
         txtLatitude = (TextView) view.findViewById(R.id.txtLatitude);
         txtLongitude = (TextView) view.findViewById(R.id.txtLongitude);
@@ -128,7 +130,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-       /* this.googleMap = googleMap;
+        this.googleMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -139,7 +141,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         if(location != null){
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
-        moveToLocation(latLng);*/
+        moveToLocation(latLng);
     }
 
     @Override
@@ -172,7 +174,6 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         this.googleMap.getUiSettings().setZoomControlsEnabled(false);
         this.googleMap.getUiSettings().setZoomGesturesEnabled(false);
         this.googleMap.setOnCameraChangeListener(this);
-        //mapFragment.getView();
     }
 
     private void moveToLocation(LatLng latLng){
@@ -204,6 +205,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
                 .build();
         this.googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
+
     /*LOCATION LISTENER*/
     @Override
     public void onLocationChanged(Location location) {
@@ -273,8 +275,20 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     /*GOOGLE MAPS - CAMERA CHANGELISTENER*/
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        LatLng centerLocation = cameraPosition.target;
-        searchLocation(centerLocation);
+        lastLatLng = cameraPosition.target;
+    }
+
+    /*SUPPORT MAP LISTENER*/
+    @Override
+    public void onTouchDownMap() {
+        Global.showToastMessage("ON DOWN MAP");
+    }
+
+    @Override
+    public void onTouchUpMap() {
+        if(lastLatLng != null)
+            searchLocation(lastLatLng);
+        Global.showToastMessage("ON UP MAP");
     }
 
     private void searchLocation(final LatLng latLng){
@@ -306,17 +320,6 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
                 }
             }
         }.execute();
-    }
-
-    /*SUPPORT MAP LISTENER*/
-    @Override
-    public void onDownMap() {
-        Global.showToastMessage("ON DOWN MAP");
-    }
-
-    @Override
-    public void onUpMap() {
-        Global.showToastMessage("ON UP MAP");
     }
 
     public interface OnPlaceInMapFragmentListener {
