@@ -3,6 +3,7 @@ package com.apaza.moises.visitsucre.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -87,15 +88,17 @@ public class SupportMap extends Fragment implements OnMapReadyCallback, View.OnT
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (motionEvent.getAction()){
             case MotionEvent.ACTION_DOWN:
+                Log.d("TOUCH", " ACTION DOWN");
                 if(onSupportMapListener != null)
                     onSupportMapListener.onDownMap();
                 break;
             case MotionEvent.ACTION_UP:
+                Log.d("TOUCH", " ACTION UP");
                 if(onSupportMapListener != null)
                     onSupportMapListener.onUpMap();
                 break;
         }
-        return false;
+        return true;
     }
 
     public interface OnSupportMapListener{

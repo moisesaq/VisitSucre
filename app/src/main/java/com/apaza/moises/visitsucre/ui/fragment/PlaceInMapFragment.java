@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallback, LocationListener, View.OnClickListener,
-                                                            GoogleMap.OnCameraChangeListener{
+                                                            GoogleMap.OnCameraChangeListener, SupportMap.OnSupportMapListener{
     public static final String TAG = "PLACE IN MAP FRAGMENT";
     private static final String ID_PLACE = "idPlace";
     private long idPlace;
@@ -49,6 +49,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
 
     private View view;
     private SupportMapFragment mapFragment;
+    private SupportMap supportMap;
     private GoogleMap googleMap;
     private TextView txtLatitude, txtLongitude;
 
@@ -92,9 +93,13 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     }
 
     private void setupView() {
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapVisitSucre);
-        //if (mapFragment != null)
-            mapFragment.getMapAsync(this);
+        /*mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapVisitSucre);
+        mapFragment.getMapAsync(this);*/
+
+        supportMap = (SupportMap)getChildFragmentManager().findFragmentById(R.id.supportMap);
+        supportMap.setOnSupportMapListener(this);
+        this.googleMap = supportMap.getGoogleMap();
+
         txtLatitude = (TextView) view.findViewById(R.id.txtLatitude);
         txtLongitude = (TextView) view.findViewById(R.id.txtLongitude);
         Button btnLocation = (Button) view.findViewById(R.id.btnLocation);
@@ -123,7 +128,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        this.googleMap = googleMap;
+       /* this.googleMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -134,7 +139,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         if(location != null){
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
-        moveToLocation(latLng);
+        moveToLocation(latLng);*/
     }
 
     @Override
@@ -149,6 +154,11 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     }
 
     private void loadMarker(){
+        if(googleMap == null){
+            Global.showToastMessage("Google map null");
+            return;
+        }
+
         if(idPlace > 0)
             addMarker();
         else
@@ -296,6 +306,17 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
                 }
             }
         }.execute();
+    }
+
+    /*SUPPORT MAP LISTENER*/
+    @Override
+    public void onDownMap() {
+        Global.showToastMessage("ON DOWN MAP");
+    }
+
+    @Override
+    public void onUpMap() {
+        Global.showToastMessage("ON UP MAP");
     }
 
     public interface OnPlaceInMapFragmentListener {
