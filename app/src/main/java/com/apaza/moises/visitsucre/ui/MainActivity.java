@@ -53,8 +53,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
         CategoryListFragment.OnCategoryListFragmentListener,
-        PlaceListFragment.OnFragmentInteractionListener,
-        PlaceInMapFragment.OnPlaceInMapFragmentListener, FragmentManager.OnBackStackChangedListener{
+        PlaceListFragment.OnFragmentInteractionListener, FragmentManager.OnBackStackChangedListener{
 
     public static String TAG = "MAIN ACTIVITY";
     private DrawerLayout drawerLayout;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupToolbar();
         setupNavigationView();
-        showFragment(PlaceListFragment.newInstance(""));
+        showFragment(PlaceListFragment.newInstance(0));
     }
 
     private void setupNavigationView(){
@@ -109,13 +108,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void selectItem(MenuItem item, String title){
         switch (item.getItemId()){
             case R.id.nav_tourist_places:
-                showFragment(PlaceListFragment.newInstance(""));
+                showFragment(PlaceListFragment.newInstance(0));
                 break;
             case R.id.nav_more_places:
                 showFragment(CategoryListFragment.newInstance(""));
                 break;
             case R.id.nav_nearby:
-                showFragment(PlaceInMapFragment.newInstance(""));
+                //showFragment(PlaceInMapFragment.newInstance(""));
                 break;
 
             case R.id.nav_suggest_place:
@@ -195,13 +194,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onFragmentInteraction(long idPlace) {
+        showFragment(PlaceInMapFragment.newInstance(idPlace));
     }
 
     @Override
-    public void onCategoryItemClick(Uri uri) {
-
+    public void onCategoryItemClick(long idCategory) {
+        showFragment(PlaceListFragment.newInstance(idCategory));
     }
 
     public void registerNewCategory(){
@@ -315,12 +314,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void showMessage(String message){
         Toast.makeText(getApplicationContext(),message, Toast.LENGTH_SHORT).show();
-    }
-
-    /*PLACE IN MAP FRAGMENT LISTENER*/
-    @Override
-    public void onPlaceLocaled(Uri uri) {
-
     }
 
     @Override

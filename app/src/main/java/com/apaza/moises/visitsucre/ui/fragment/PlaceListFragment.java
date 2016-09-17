@@ -19,15 +19,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.apaza.moises.visitsucre.ui.DetailPlaceActivity;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.PlaceDao;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.PlaceAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPlaceItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{
-    private static final String ARG_PARAM1 = "param1";
-    private String mParam1;
+    private static final String ID_CATEGORY = "idCategory";
+    private long idCategory;
 
     private View view;
     private RecyclerView listPlaces;
@@ -39,10 +39,10 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
 
     private OnFragmentInteractionListener mListener;
 
-    public static PlaceListFragment newInstance(String param1) {
+    public static PlaceListFragment newInstance(long idCategory) {
         PlaceListFragment fragment = new PlaceListFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putLong(ID_CATEGORY, idCategory);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,7 +56,7 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            idCategory = getArguments().getLong(ID_CATEGORY);
         }
     }
 
@@ -115,18 +115,15 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
 
     //This method is from adapter
     @Override
-    public void onPlaceClick(PlaceAdapter.ViewHolder viewHolder, String idPlace) {
+    public void onPlaceClick(PlaceAdapter.ViewHolder viewHolder, long idPlace) {
         ///Snackbar.make(getActivity().findViewById(android.R.id.content), String.format("ID place: %s", idPlace), Snackbar.LENGTH_SHORT).show();
-        ContentValues values = new ContentValues();
+       /* ContentValues values = new ContentValues();
         values.put(ContractVisitSucre.Place.NAME, "CASA DE LA LIBERTAD SUCRE :)");
-        getActivity().getContentResolver().update(ContractVisitSucre.Place.createUriPlace(idPlace), values, null, null);
+        getActivity().getContentResolver().update(ContractVisitSucre.Place.createUriPlace(idPlace), values, null, null);*/
         //DetailPlaceActivity.createInstance(getActivity(), idPlace);
-    }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        if(mListener != null)
+            mListener.onFragmentInteraction(idPlace);
     }
 
     @Override
@@ -161,7 +158,10 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), ContractVisitSucre.Place.CONTENT_URI_DETAILED, null, null, null, null);
+        String selection = null;
+        if(idCategory > 0)
+            selection = PlaceDao.Properties.IdCategory.columnName + " = " + idCategory;
+        return new CursorLoader(getActivity(), ContractVisitSucre.Place.CONTENT_URI_DETAILED, null, selection, null, null);
     }
 
     @Override
@@ -176,6 +176,6 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(long idPlace);
     }
 }
