@@ -78,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setupToolbar();
         setupNavigationView();
-        showFragment(PlaceListFragment.newInstance(0));
+        showFragment(TestFragment.newInstance());
+        //showFragment(PlaceListFragment.newInstance(0));
     }
 
     private void setupNavigationView(){

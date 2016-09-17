@@ -18,11 +18,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -73,7 +75,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TestFragment extends BaseFragment implements View.OnClickListener{
+public class TestFragment extends BaseFragment implements View.OnClickListener, View.OnTouchListener{
 
     public static final String TAG = "TEST_FRAGMENT";
 
@@ -83,6 +85,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
     private EditText textSearch;
     private NetworkImageView imagePost;
     private TextView resultTest;
+
+    private FrameLayout lyTest;
+    private ImageView ivMarker;
 
     private MenuItem insert, show, delete, update;
 
@@ -116,6 +121,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         imageTest = (ImageView)view.findViewById(R.id.imageTest);
         imagePost = (NetworkImageView)view.findViewById(R.id.imagePost);
         resultTest = (TextView)view.findViewById(R.id.resultTest);
+
+        lyTest = (FrameLayout)view.findViewById(R.id.lyTest);
+        ivMarker = (ImageView)view.findViewById(R.id.ivMarker);
     }
 
     @Override
@@ -177,6 +185,17 @@ public class TestFragment extends BaseFragment implements View.OnClickListener{
         String alfa = "zyxwvutsrqponmlkjihgfedcba";
         //alfa.length()
         char[] array = alfa.toCharArray();
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (motionEvent.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+        return true;
     }
 
     @Override
