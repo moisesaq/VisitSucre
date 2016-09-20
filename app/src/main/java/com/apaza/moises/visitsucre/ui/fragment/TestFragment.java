@@ -1,5 +1,8 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
@@ -14,6 +17,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +25,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -87,9 +92,12 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
     private TextView resultTest;
 
     private FrameLayout lyTest;
-    private ImageView ivMarker;
+    private ImageView marker;
+    private View shadow;
 
     private MenuItem insert, show, delete, update;
+
+    private GestureDetector gestureDetector;
 
     public static TestFragment newInstance(){
         return new TestFragment();
@@ -110,6 +118,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     private void setupView() {
+        gestureDetector = new GestureDetector(getContext(), new GestureListener());
         Button loadImage = (Button)view.findViewById(R.id.loadImage);
         checkBox = (CheckBox)view.findViewById(R.id.checkBox);
         loadImage.setOnClickListener(this);
@@ -123,7 +132,9 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
         resultTest = (TextView)view.findViewById(R.id.resultTest);
 
         lyTest = (FrameLayout)view.findViewById(R.id.lyTest);
-        ivMarker = (ImageView)view.findViewById(R.id.ivMarker);
+        lyTest.setOnTouchListener(this);
+        marker = (ImageView)view.findViewById(R.id.marker);
+        shadow = view.findViewById(R.id.shadow);
     }
 
     @Override
@@ -158,14 +169,16 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.test2:
-                if(checkBox.isChecked())
+                /*if(checkBox.isChecked())
                     testRequestJsonObject(Constants.URL_PLACES);
                 else
-                    testRequestJsonObject(Constants.URL_CATEGORIES);
+                    testRequestJsonObject(Constants.URL_CATEGORIES);*/
+                animateDown();
                 break;
             case R.id.loadImage:
                 //testImageLoader();
-                new TestNetPay().execute();
+                //new TestNetPay().execute();
+                animateUp();
                 break;
             case R.id.search:
                 String text = textSearch.getText().toString();
@@ -189,13 +202,110 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+        this.gestureDetector.onTouchEvent(motionEvent);
         switch (motionEvent.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                break;
+            /*case MotionEvent.ACTION_DOWN:
+                animateDown();
+                break;*/
             case MotionEvent.ACTION_UP:
+                animateUp();
                 break;
+
+            /*case MotionEvent.ACTION_MOVE:
+                Log.d(TAG, " >>> MOVE");
+                break;
+
+            case MotionEvent.ACTION_CANCEL:
+                Log.d(TAG, " >>> CANCEL");
+                break;*/
         }
         return true;
+    }
+
+    private void animateDown(){
+        ObjectAnimator anim = ObjectAnimator.ofFloat(marker, "translationY", 0, -marker.getHeight());
+        anim.start();
+        showShadow();
+    }
+
+    private void animateUp(){
+        ObjectAnimator anim = ObjectAnimator.ofFloat(marker, "translationY", -100, 0);
+        anim.setInterpolator(new AccelerateInterpolator());
+        anim.start();
+        hideShadow();
+    }
+
+    private void showShadow(){
+        ObjectAnimator anim1 = ObjectAnimator.ofFloat(shadow, "scaleX", 0f, 1.0f);
+        ObjectAnimator anim2 = ObjectAnimator.ofFloat(shadow, "scaleY", 0f, 1.0f);
+        //ObjectAnimator animColor = ObjectAnimator.ofObject(view, "backgroundColor", new ArgbEvaluator(),Color.parseColor("#8B0000"), Color.parseColor("#FF0000"));
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(anim2, anim1);
+        animatorSet.start();
+    }
+
+    private void hideShadow(){
+        ObjectAnimator anim1 = ObjectAnimator.ofFloat(shadow, "scaleX", 1.0f, 0f);
+        ObjectAnimator anim2 = ObjectAnimator.ofFloat(shadow, "scaleY", 1.0f, 0f);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(anim2, anim1);
+        animatorSet.start();
+    }
+
+
+    public class GestureListener extends GestureDetector.SimpleOnGestureListener{
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            switch (e.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    animateDown();
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            switch (e.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.d(TAG, " >>>>>>>> SINGLE TAP DOWN" );
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Log.d(TAG, " >>>>>>>> SINGLE TAP UP" );
+                    /*if(onRecordButtonListener != null)
+                        collapseText(time);*/
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            switch (e.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    break;
+            }
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            switch (e.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    Log.d(TAG, " >>>>>>>> DOUBLE TAP DOWN" );
+                    break;
+                case MotionEvent.ACTION_UP:
+                    Log.d(TAG, " >>>>>>>> DOUBLE TAP UP" );
+                    break;
+            }
+            return true;
+        }
+
+
     }
 
     @Override
