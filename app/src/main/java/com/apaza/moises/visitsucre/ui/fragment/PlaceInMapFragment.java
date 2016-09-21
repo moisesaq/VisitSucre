@@ -28,6 +28,7 @@ import com.apaza.moises.visitsucre.database.Place;
 import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.ui.view.MarkerAnimateView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,10 +49,9 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     private OnPlaceInMapFragmentListener onPlaceInMapFragmentListener;
 
     private View view;
-    private SupportMapFragment mapFragment;
     private SupportMap supportMap;
     private GoogleMap googleMap;
-    private TextView txtLatitude, txtLongitude;
+    private TextView tvAddress, tvDescription;
 
     private LocationManager locationManager;
     private int TIME_FOR_UPDATE = 10000;
@@ -59,6 +59,8 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     private Location location;
 
     private LatLng lastLatLng;
+
+    private MarkerAnimateView marker;
 
     public PlaceInMapFragment() {
     }
@@ -95,17 +97,15 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     }
 
     private void setupView() {
-        /*mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapVisitSucre);
-        mapFragment.getMapAsync(this);*/
-
         supportMap = (SupportMap)getChildFragmentManager().findFragmentById(R.id.supportMap);
         supportMap.getMapAsync(this);
         supportMap.setOnTouchMapListener(this);
 
-        txtLatitude = (TextView) view.findViewById(R.id.txtLatitude);
-        txtLongitude = (TextView) view.findViewById(R.id.txtLongitude);
-        Button btnLocation = (Button) view.findViewById(R.id.btnLocation);
-        btnLocation.setOnClickListener(this);
+        marker = (MarkerAnimateView)view.findViewById(R.id.marker);
+        tvAddress = (TextView) view.findViewById(R.id.tvAddress);
+        tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        Button btnOk = (Button) view.findViewById(R.id.btnOK);
+        btnOk.setOnClickListener(this);
     }
 
     private void getCurrentLocation() {
@@ -142,15 +142,31 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
             latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
         moveToLocation(latLng);
+        loadMarker();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        //loadMarker();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnLocation:
-                /*LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                moveToLocation(latLng);*/
-                loadMarker();
+            case R.id.btnOK:
+                if(onPlaceInMapFragmentListener != null){
+                    Address address = (Address)tvAddress.getTag();
+                    if(address != null){
+                        Log.d(TAG, "adress selected");
+                        onPlaceInMapFragmentListener.onPlaceLocaled(address);
+                    }else{
+                        Log.d(TAG, "adress null");
+                    }
+                }else {
+                    Log.d(TAG, "Listener null");
+                }
+
                 break;
         }
     }
@@ -178,8 +194,8 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
 
     private void moveToLocation(LatLng latLng){
         try{
-            googleMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            //googleMap.addMarker(new MarkerOptions().position(latLng).title("Your location"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -230,8 +246,8 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
 
     private void showLocation(Location location){
         if(location != null){
-            txtLatitude.setText("Latitude: " + location.getLatitude());
-            txtLongitude.setText("Longitude: " + location.getLongitude());
+            tvAddress.setText("Latitude: " + location.getLatitude());
+            tvDescription.setText("Longitude: " + location.getLongitude());
         }
     }
 
@@ -281,14 +297,16 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     /*SUPPORT MAP LISTENER*/
     @Override
     public void onTouchDownMap() {
-        Global.showToastMessage("ON DOWN MAP");
+        marker.startAnimationMarker();
+        //Global.showToastMessage("ON DOWN MAP");
     }
 
     @Override
     public void onTouchUpMap() {
         if(lastLatLng != null)
             searchLocation(lastLatLng);
-        Global.showToastMessage("ON UP MAP");
+        marker.endAnimationMarker();
+        //Global.showToastMessage("ON UP MAP");
     }
 
     private void searchLocation(final LatLng latLng){
@@ -296,7 +314,7 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         new AsyncTask<Void, Void, List<Address>>(){
             @Override
             public void onPreExecute(){
-                txtLatitude.setText("Searching...");
+                tvAddress.setText("Searching...");
             }
 
             @Override
@@ -314,9 +332,10 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
             public void onPostExecute(List<Address> result){
                 if(result != null && result.size() > 0){
                     Address address = result.get(0);
-                    txtLatitude.setText("Result: " + address.getAddressLine(0) + " - " +address.getLatitude());
+                    tvAddress.setText(address.getAddressLine(0) != null ? address.getAddressLine(0) : address.getLocality());
+                    tvAddress.setTag(address);
                 }else{
-                    txtLatitude.setText("No result :(");
+                    tvAddress.setText("No result :(");
                 }
             }
         }.execute();

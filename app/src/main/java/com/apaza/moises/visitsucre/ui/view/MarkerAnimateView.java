@@ -16,7 +16,8 @@ import com.apaza.moises.visitsucre.R;
 public class MarkerAnimateView extends FrameLayout{
 
     private ImageView ivMarker;
-    private View shadow;
+    private View vShadow;
+    private int positionY;
 
     public MarkerAnimateView(Context context) {
         super(context);
@@ -29,14 +30,15 @@ public class MarkerAnimateView extends FrameLayout{
     }
 
     private void setup(){
-        LayoutInflater inflater = LayoutInflater.from(getContext());
+        LayoutInflater inflater = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_marker, this, true);
-        ivMarker = (ImageView)findViewById(R.id.marker);
-        shadow = findViewById(R.id.shadow);
+        ivMarker = (ImageView)findViewById(R.id.ivMarker);
+        positionY = ivMarker.getHeight();
+        vShadow = findViewById(R.id.vShadow);
     }
 
     public void startAnimationMarker(){
-        ObjectAnimator anim = ObjectAnimator.ofFloat(ivMarker, "translationY", 0, -ivMarker.getHeight());
+        ObjectAnimator anim = ObjectAnimator.ofFloat(ivMarker, "translationY", 0, -90);
         anim.setInterpolator(new AnticipateOvershootInterpolator());
         anim.start();
         showShadow();
@@ -50,8 +52,8 @@ public class MarkerAnimateView extends FrameLayout{
     }
 
     private void showShadow(){
-        ObjectAnimator anim1 = ObjectAnimator.ofFloat(shadow, "scaleX", 0f, 1.0f);
-        ObjectAnimator anim2 = ObjectAnimator.ofFloat(shadow, "scaleY", 0f, 1.0f);
+        ObjectAnimator anim1 = ObjectAnimator.ofFloat(vShadow, "scaleX", 0f, 1.0f);
+        ObjectAnimator anim2 = ObjectAnimator.ofFloat(vShadow, "scaleY", 0f, 1.0f);
         //ObjectAnimator animColor = ObjectAnimator.ofObject(view, "backgroundColor", new ArgbEvaluator(),Color.parseColor("#8B0000"), Color.parseColor("#FF0000"));
 
         AnimatorSet animatorSet = new AnimatorSet();
@@ -60,8 +62,8 @@ public class MarkerAnimateView extends FrameLayout{
     }
 
     private void hideShadow(){
-        ObjectAnimator anim1 = ObjectAnimator.ofFloat(shadow, "scaleX", 1.0f, 0f);
-        ObjectAnimator anim2 = ObjectAnimator.ofFloat(shadow, "scaleY", 1.0f, 0f);
+        ObjectAnimator anim1 = ObjectAnimator.ofFloat(vShadow, "scaleX", 1.0f, 0f);
+        ObjectAnimator anim2 = ObjectAnimator.ofFloat(vShadow, "scaleY", 1.0f, 0f);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(anim2, anim1);

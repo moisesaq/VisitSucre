@@ -42,6 +42,7 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     private InputTextView itvName, itvDescription;
     private TextView tvAddress;
+    private Address address;
 
     private OnRegisterPlaceFragmentListener mListener;
 
@@ -99,7 +100,11 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
                 break;
             case R.id.btnSave:
                 if(itvDescription.isTextValid("Description invalid") && itvName.isTextValid("Name invalid")){
-                    savePlace();
+                    if(address != null){
+                        savePlace();
+                    }else {
+                        Global.showToastMessage("Select place location");
+                    }
                 }
                 break;
         }
@@ -108,7 +113,12 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     private void savePlace(){
         Place place = new Place();
         place.setName(itvName.getText());
-        place.setAddress("Test address");
+        if(address != null){
+            place.setAddress(address.getAddressLine(0) != null ? address.getAddressLine(0) : address.getLocality());
+            place.setLatitude(address.getLatitude());
+            place.setLongitude(address.getLongitude());
+        }
+
         place.setDescription(itvDescription.getText());
         place.setCreatedAt(Utils.getCurrentDate());
         place.setIdCategory(idCategory);
@@ -191,7 +201,8 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     /*ON PLACE FRAGMENT LISTENER*/
     @Override
     public void onPlaceLocaled(Address address) {
-
+        tvAddress.setText(address.getAddressLine(0) != null ? address.getAddressLine(0) : address.getLocality());
+        this.address = address;
     }
 
     public interface OnRegisterPlaceFragmentListener {

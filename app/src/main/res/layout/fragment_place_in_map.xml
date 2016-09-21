@@ -4,23 +4,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragment.PlaceInMapFragment">
 
-
-    <!--<fragment
-        android:id="@+id/mapVisitSucre"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        class="com.google.android.gms.maps.SupportMapFragment"/>-->
-
     <fragment
         android:id="@+id/supportMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.apaza.moises.visitsucre.ui.fragment.SupportMap"/>
 
-    <ImageView
+    <com.apaza.moises.visitsucre.ui.view.MarkerAnimateView
+        android:id="@+id/marker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_map_marker_grey600_24dp"
+        android:layout_marginBottom="40dp"
         android:layout_gravity="center"/>
 
     <LinearLayout
@@ -33,14 +27,14 @@
         android:layout_gravity="start|bottom">
 
         <TextView
-            android:id="@+id/txtLatitude"
+            android:id="@+id/tvAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Medium Text" />
 
         <TextView
-            android:id="@+id/txtLongitude"
+            android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
@@ -49,8 +43,8 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Test"
-            android:id="@+id/btnLocation" />
+            android:text="@android:string/ok"
+            android:id="@+id/btnOK" />
     </LinearLayout>
 
 </FrameLayout>

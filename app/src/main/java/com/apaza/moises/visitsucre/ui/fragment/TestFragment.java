@@ -204,20 +204,13 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
     public boolean onTouch(View view, MotionEvent motionEvent) {
         this.gestureDetector.onTouchEvent(motionEvent);
         switch (motionEvent.getAction()){
-            /*case MotionEvent.ACTION_DOWN:
-                animateDown();
-                break;*/
+            case MotionEvent.ACTION_DOWN:
+                //animateDown();
+                break;
             case MotionEvent.ACTION_UP:
-                animateUp();
+                //animateUp();
+                Log.d(TAG, " >>> UP");
                 break;
-
-            /*case MotionEvent.ACTION_MOVE:
-                Log.d(TAG, " >>> MOVE");
-                break;
-
-            case MotionEvent.ACTION_CANCEL:
-                Log.d(TAG, " >>> CANCEL");
-                break;*/
         }
         return true;
     }
@@ -268,17 +261,25 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
         }
 
         @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            switch (e.getAction()) {
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            switch (e1.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    Log.d(TAG, " >>>>>>>> SINGLE TAP DOWN" );
+                    Log.d(TAG, " >>>>>>>> ORIGIN TAP DOWN" );
+                    animateDown();
                     break;
+
                 case MotionEvent.ACTION_UP:
-                    Log.d(TAG, " >>>>>>>> SINGLE TAP UP" );
-                    /*if(onRecordButtonListener != null)
-                        collapseText(time);*/
+                    Log.d(TAG, " >>>>>>>> ORIGIN TAP UP" );
                     break;
-                default:
+            }
+            switch (e2.getAction()){
+                case MotionEvent.ACTION_DOWN:
+                    Log.d(TAG, " >>>>>>>> DESTINATION TAP DOWN" );
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    Log.d(TAG, " >>>>>>>> DESTINATION TAP UP" );
+                    animateUp();
                     break;
             }
             return true;
@@ -288,24 +289,14 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
         public void onLongPress(MotionEvent e) {
             switch (e.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    break;
-            }
-        }
 
-        @Override
-        public boolean onDoubleTapEvent(MotionEvent e) {
-            switch (e.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    Log.d(TAG, " >>>>>>>> DOUBLE TAP DOWN" );
                     break;
+
                 case MotionEvent.ACTION_UP:
-                    Log.d(TAG, " >>>>>>>> DOUBLE TAP UP" );
+
                     break;
             }
-            return true;
         }
-
-
     }
 
     @Override
