@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.location.Address;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -41,7 +40,7 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     private long idCategory;
 
     private InputTextView itvName, itvDescription;
-    private TextView tvAddress;
+    private TextView tvAddressPlace;
     private Address address;
 
     private OnRegisterPlaceFragmentListener mListener;
@@ -84,7 +83,7 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
         itvName = (InputTextView)view.findViewById(R.id.itvName);
         ImageButton iBtnSelectLocation = (ImageButton)view.findViewById(R.id.iBtnSelectLocation);
         iBtnSelectLocation.setOnClickListener(this);
-        tvAddress = (TextView)view.findViewById(R.id.tvAddress);
+        tvAddressPlace = (TextView)view.findViewById(R.id.tvAddressPlace);
         itvDescription = (InputTextView) view.findViewById(R.id.itvDescription);
         Button btnSave = (Button)view.findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
@@ -201,8 +200,11 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     /*ON PLACE FRAGMENT LISTENER*/
     @Override
     public void onPlaceLocaled(Address address) {
-        tvAddress.setText(address.getAddressLine(0) != null ? address.getAddressLine(0) : address.getLocality());
+        Log.d(TAG, " Address selected >>> " + address.getAddressLine(0));
         this.address = address;
+        Global.showToastMessage(address.getAddressLine(0));
+        tvAddressPlace.setText(" tes sadasd");// != null ? address.getAddressLine(0) : address.getLocality());
+
     }
 
     public interface OnRegisterPlaceFragmentListener {

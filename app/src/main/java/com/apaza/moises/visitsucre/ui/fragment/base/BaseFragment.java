@@ -47,7 +47,7 @@ public class BaseFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void onBack(){
+    protected void onBack(){
         getActivity().onBackPressed();
     }
 }

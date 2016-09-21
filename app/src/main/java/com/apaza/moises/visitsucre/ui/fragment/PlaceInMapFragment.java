@@ -159,7 +159,9 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
                     Address address = (Address)tvAddress.getTag();
                     if(address != null){
                         Log.d(TAG, "adress selected");
+                        onBack();
                         onPlaceInMapFragmentListener.onPlaceLocaled(address);
+
                     }else{
                         Log.d(TAG, "adress null");
                     }
