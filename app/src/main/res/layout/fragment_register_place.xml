@@ -59,7 +59,7 @@
                         moi:iconImage="@mipmap/ic_camera_iris_grey600_24dp"
                         moi:hint="@string/name"
                         moi:maxLengthEnabled="true"
-                        moi:maxLength="10"
+                        moi:maxLength="15"
                         android:inputType="textCapSentences"/>
 
                     <LinearLayout
@@ -81,7 +81,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:text="test easdfsafdasd" />
+                            android:text="test 123123" />
 
                     </LinearLayout>
 

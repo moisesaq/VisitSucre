@@ -74,11 +74,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SyncAdapter.setupSyncAdapter(this);
 
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.addOnBackStackChangedListener(this);
+        //fragmentManager.addOnBackStackChangedListener(this);
 
         setupToolbar();
         setupNavigationView();
-        showFragment(TestFragment.newInstance());
+        showFragment(RegisterPlaceFragment.newInstance(""));
         //showFragment(PlaceListFragment.newInstance(0));
     }
 
@@ -119,14 +119,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
 
             case R.id.nav_suggest_place:
-                Fragment frag = fragmentManager.findFragmentByTag(RegisterPlaceFragment.class.getSimpleName());
+                showFragment(RegisterPlaceFragment.newInstance(""));
+                /*Fragment frag = fragmentManager.findFragmentByTag(RegisterPlaceFragment.class.getSimpleName());
                 if(frag != null){
                     Log.d(TAG, "Fragment not null " + RegisterPlaceFragment.class.getSimpleName());
                     fragmentManager.popBackStack(RegisterPlaceFragment.class.getSimpleName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }else{
                     Log.d(TAG, "Fragment null " + RegisterPlaceFragment.class.getSimpleName());
                     showFragment(RegisterPlaceFragment.newInstance(""));
-                }
+                }*/
                 break;
 
             case R.id.nav_about_sucre:
@@ -143,12 +144,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void showFragment(Fragment fragment){
-        //FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
         ft.replace(R.id.containerMain, fragment);
         ft.commit();
-        Log.i(TAG, "STACK COUNT >>>>> " + fragmentManager.getBackStackEntryCount() + " TAG FRAGMENT " + fragment.getClass().getSimpleName());
+        //Log.i(TAG, "STACK COUNT >>>>> " + fragmentManager.getBackStackEntryCount() + " TAG FRAGMENT " + fragment.getClass().getSimpleName());
     }
 
     private void setupToolbar(){
@@ -323,8 +324,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawers();
         }else{
-            if(fragmentManager.getBackStackEntryCount() > 1){
-                fragmentManager.popBackStack();
+            if(getSupportFragmentManager().getBackStackEntryCount() > 1){
+                getSupportFragmentManager().popBackStack();
             }else{
                 finish();
             }
