@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.apaza.moises.visitsucre.ui.MainActivity;
+
 public class BaseFragment extends Fragment {
 
     public ActionBar actionBar;

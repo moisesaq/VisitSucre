@@ -125,21 +125,20 @@ public class InputTextView extends LinearLayout{
     public boolean isTextValid(String textError){
         String text = editText.getText().toString();
         Pattern pattern = Pattern.compile("^[a-zA-Z ]+$");
-        if(!pattern.matcher(text).matches()){
-            if(maxLengthEnabled){
-                if(text.length() > textInputLayout.getCounterMaxLength()){
-                    textInputLayout.setError(textError);
-                    return false;
-                }
-            }else{
-                textInputLayout.setError(null);
-                return false;
-            }
 
-        }else {
-            textInputLayout.setError(null);
+        if(text.isEmpty()){
+            textInputLayout.setError(textError + ", field empty");
+            return false;
         }
-        return true;
+
+        if(pattern.matcher(text).matches() && text.length() <= textInputLayout.getCounterMaxLength()){
+            return true;
+        } else {
+            textInputLayout.setError(textError);
+            return false;
+        }
+
+        //return true;
     }
 
     public boolean isPhoneValid(String phone){

@@ -90,6 +90,12 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     }
 
     @Override
+    public void onResume(){
+        super.onResume();
+        setupAddressSelected();
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.iBtnSelectLocation:
@@ -98,9 +104,10 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
                 ((MainActivity)getActivity()).showFragment(placeInMapFragment);
                 break;
             case R.id.btnSave:
-                if(itvDescription.isTextValid("Description invalid") && itvName.isTextValid("Name invalid")){
+                if(itvName.isTextValid("Name invalid") && itvDescription.isTextValid("Description invalid")){
                     if(address != null){
-                        savePlace();
+                        //savePlace();
+                        Global.showToastMessage("Data valid");
                     }else {
                         Global.showToastMessage("Select place location");
                     }
@@ -200,11 +207,14 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     /*ON PLACE FRAGMENT LISTENER*/
     @Override
     public void onPlaceLocaled(Address address) {
-        Log.d(TAG, " Address selected >>> " + address.getAddressLine(0));
+        Log.d(TAG, " Address selected 123>>> " + address.getAddressLine(0));
         this.address = address;
-        Global.showToastMessage(address.getAddressLine(0));
-        tvAddressPlace.setText(" tes sadasd");// != null ? address.getAddressLine(0) : address.getLocality());
+        setupAddressSelected();
+    }
 
+    private void setupAddressSelected(){
+        if(address != null)
+            tvAddressPlace.setText(address.getAddressLine(0));
     }
 
     public interface OnRegisterPlaceFragmentListener {

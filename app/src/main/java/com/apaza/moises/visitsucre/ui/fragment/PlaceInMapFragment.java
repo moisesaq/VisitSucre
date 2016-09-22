@@ -15,6 +15,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -104,8 +106,8 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         marker = (MarkerAnimateView)view.findViewById(R.id.marker);
         tvAddress = (TextView) view.findViewById(R.id.tvAddress);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
-        Button btnOk = (Button) view.findViewById(R.id.btnOK);
-        btnOk.setOnClickListener(this);
+        Button btnSelected = (Button) view.findViewById(R.id.btnSelected);
+        btnSelected.setOnClickListener(this);
     }
 
     private void getCurrentLocation() {
@@ -154,21 +156,15 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnOK:
-                if(onPlaceInMapFragmentListener != null){
-                    Address address = (Address)tvAddress.getTag();
-                    if(address != null){
-                        Log.d(TAG, "adress selected");
-                        onBack();
-                        onPlaceInMapFragmentListener.onPlaceLocaled(address);
-
-                    }else{
-                        Log.d(TAG, "adress null");
-                    }
-                }else {
-                    Log.d(TAG, "Listener null");
+            case R.id.btnSelected:
+                Address address = (Address)tvAddress.getTag();
+                if(address != null && onPlaceInMapFragmentListener != null){
+                    //getActivity().onBackPressed();
+                    onPlaceInMapFragmentListener.onPlaceLocaled(address);
+                    onBack();
+                }else{
+                    Log.d(TAG, "address null");
                 }
-
                 break;
         }
     }
