@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.location.Address;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -68,9 +69,16 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_register_place, container, false);
+        if(view == null)
+            view = inflater.inflate(R.layout.fragment_register_place, container, false);
         setupView();
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     private void setupView() {
