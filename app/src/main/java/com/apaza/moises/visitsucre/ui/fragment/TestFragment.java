@@ -37,6 +37,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
@@ -173,12 +174,10 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
                     testRequestJsonObject(Constants.URL_PLACES);
                 else
                     testRequestJsonObject(Constants.URL_CATEGORIES);*/
-                animateDown();
                 break;
             case R.id.loadImage:
-                //testImageLoader();
+                testImageLoader();
                 //new TestNetPay().execute();
-                animateUp();
                 break;
             case R.id.search:
                 String text = textSearch.getText().toString();
@@ -309,6 +308,10 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     /*TEST VOLLEY WITH DB LOCAL*/
+
+    private void loadStaticMap(){
+        ImageRequest imageRequest = new ImageRequest()
+    }
     private void testImageLoader(){
         try{
             ImageLoader imageLoader = Global.getVolleySingleton().getImageLoader();

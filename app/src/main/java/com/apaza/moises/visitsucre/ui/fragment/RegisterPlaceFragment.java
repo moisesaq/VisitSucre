@@ -69,8 +69,8 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if(view == null)
-            view = inflater.inflate(R.layout.fragment_register_place, container, false);
+        super.onCreateView(inflater, container, savedInstanceState);
+        view = inflater.inflate(R.layout.fragment_register_place, container, false);
         setupView();
         return view;
     }
