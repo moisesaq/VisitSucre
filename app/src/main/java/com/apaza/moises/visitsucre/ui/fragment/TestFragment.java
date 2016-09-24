@@ -309,9 +309,6 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
 
     /*TEST VOLLEY WITH DB LOCAL*/
 
-    private void loadStaticMap(){
-        ImageRequest imageRequest = new ImageRequest()
-    }
     private void testImageLoader(){
         try{
             ImageLoader imageLoader = Global.getVolleySingleton().getImageLoader();
