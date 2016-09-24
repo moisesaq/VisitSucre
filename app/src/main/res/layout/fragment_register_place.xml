@@ -60,6 +60,17 @@
                     moi:maxLength="15"
                     android:inputType="textCapSentences"/>
 
+                <com.apaza.moises.visitsucre.ui.InputTextView
+                    android:id="@+id/itvDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    moi:iconImage="@mipmap/ic_pen_grey600_24dp"
+                    moi:hint="@string/description"
+                    moi:maxLengthEnabled="true"
+                    moi:maxLength="250"
+                    android:inputType="textMultiLine"
+                    android:lines="3"/>
+                
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -105,18 +116,6 @@
                     </LinearLayout>
 
                 </FrameLayout>
-
-
-                <com.apaza.moises.visitsucre.ui.InputTextView
-                    android:id="@+id/itvDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    moi:iconImage="@mipmap/ic_pen_grey600_24dp"
-                    moi:hint="@string/description"
-                    moi:maxLengthEnabled="true"
-                    moi:maxLength="250"
-                    android:inputType="textMultiLine"
-                    android:lines="3"/>
 
                 <Button
                     android:id="@+id/btnSave"
