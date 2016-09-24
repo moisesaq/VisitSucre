@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.global;
+package com.apaza.moises.visitsucre.web.api.volley;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;

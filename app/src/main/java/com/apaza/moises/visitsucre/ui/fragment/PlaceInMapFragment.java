@@ -309,34 +309,39 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
 
     private void searchLocation(final LatLng latLng){
         final Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-        new AsyncTask<Void, Void, List<Address>>(){
-            @Override
-            public void onPreExecute(){
-                tvAddress.setText("Searching...");
-            }
-
-            @Override
-            public List<Address> doInBackground(Void... params){
-                List<Address> list = null;
-                try{
-                    list = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 5);
-                }catch (Exception e){
-                    e.printStackTrace();
+        try {
+            new AsyncTask<Void, Void, List<Address>>(){
+                @Override
+                public void onPreExecute(){
+                    tvAddress.setText("Searching...");
                 }
-                return list;
-            }
 
-            @Override
-            public void onPostExecute(List<Address> result){
-                if(result != null && result.size() > 0){
-                    Address address = result.get(0);
-                    tvAddress.setText(address.getAddressLine(0) != null ? address.getAddressLine(0) : address.getLocality());
-                    tvAddress.setTag(address);
-                }else{
-                    tvAddress.setText("No result :(");
+                @Override
+                public List<Address> doInBackground(Void... params){
+                    List<Address> list = null;
+                    try{
+                        list = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    return list;
                 }
-            }
-        }.execute();
+
+                @Override
+                public void onPostExecute(List<Address> result){
+                    if(result != null && result.size() > 0){
+                        Address address = result.get(0);
+                        tvAddress.setText(address.getAddressLine(0) != null ? address.getAddressLine(0) : address.getLocality());
+                        tvAddress.setTag(address);
+                    }else{
+                        tvAddress.setText("No result :(");
+                    }
+                }
+            }.execute();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public interface OnPlaceInMapFragmentListener {

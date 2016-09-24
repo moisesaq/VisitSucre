@@ -27,12 +27,11 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_camera_burst_grey600_48dp"
-                    android:padding="@dimen/paddingMaxGlobal"
-                    android:layout_margin="@dimen/marginMaxGlobal"
+                    android:id="@+id/ivSelectImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@mipmap/default_profile"
+                    android:padding="@dimen/paddingMediumGlobal"
                     android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
@@ -61,28 +60,52 @@
                     moi:maxLength="15"
                     android:inputType="textCapSentences"/>
 
-                <LinearLayout
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:orientation="vertical">
 
-                    <ImageButton
-                        android:id="@+id/iBtnSelectLocation"
+                    <ImageView
+                        android:id="@+id/ivStaticMap"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_google_maps_grey600_24dp"
-                        android:padding="@dimen/paddingMinGlobal"
-                        android:visibility="visible"/>
+                        android:src="@mipmap/default_profile"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone"/>
 
-                    <TextView
-                        android:id="@+id/tvAddressPlace"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="test 123123" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
-                </LinearLayout>
+                        <ImageView
+                            android:id="@+id/icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_map_marker_grey600_24dp"
+                            android:padding="@dimen/paddingMinGlobal"/>
+
+                        <TextView
+                            android:id="@+id/tvLocationPlace"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:text="@string/select_location" />
+
+                        <ImageButton
+                            android:id="@+id/iBtnSelectLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_google_maps_grey600_24dp"
+                            android:padding="@dimen/paddingMinGlobal"
+                            android:visibility="visible"/>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
 
                 <com.apaza.moises.visitsucre.ui.InputTextView
                     android:id="@+id/itvDescription"
@@ -92,9 +115,8 @@
                     moi:hint="@string/description"
                     moi:maxLengthEnabled="true"
                     moi:maxLength="250"
-                    android:lines="3"
-                    android:inputType="textMultiLine"/>
-
+                    android:inputType="textMultiLine"
+                    android:lines="3"/>
 
                 <Button
                     android:id="@+id/btnSave"
@@ -103,7 +125,6 @@
                     android:background="@drawable/background_button"
                     android:textColor="@android:color/white"
                     android:text="@string/register" />
-
 
             </LinearLayout>
 

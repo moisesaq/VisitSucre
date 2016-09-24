@@ -24,7 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.Utils;
-import com.apaza.moises.visitsucre.global.VolleySingleton;
+import com.apaza.moises.visitsucre.web.api.volley.VolleySingleton;
 import com.apaza.moises.visitsucre.deprecated.Category;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.google.gson.Gson;
@@ -95,7 +95,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
     private void performSyncLocal(final SyncResult syncResult){
         Log.i(TAG, "Updating client....");
 
-        VolleySingleton.getInstance(getContext()).addToRequestQueue(
+        VolleySingleton.getInstance().addToRequestQueue(
                 new JsonObjectRequest(
                         Request.Method.GET,
                         Constants.URL_CATEGORIES,
@@ -281,7 +281,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         if(cursor.getCount() > 0){
             while (cursor.moveToNext()){
                 final int idLocal = cursor.getInt(1);//COLUMN_ID);
-                VolleySingleton.getInstance(getContext()).addToRequestQueue(
+                VolleySingleton.getInstance().addToRequestQueue(
                         new JsonObjectRequest(
                                 Request.Method.POST,
                                 Constants.URL_CATEGORIES,

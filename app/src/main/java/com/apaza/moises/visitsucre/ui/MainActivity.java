@@ -32,8 +32,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.database.Category;
 import com.apaza.moises.visitsucre.global.Constants;
-import com.apaza.moises.visitsucre.global.VolleySingleton;
-import com.apaza.moises.visitsucre.provider.DataBaseHandler;
+import com.apaza.moises.visitsucre.web.api.volley.VolleySingleton;
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.AboutSucreFragment;
 import com.apaza.moises.visitsucre.ui.fragment.CategoryListFragment;
@@ -276,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             jsonObject.put(ContractVisitSucre.Category.DESCRIPTION, description);
             showMessage("Category saved");
 
-            VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(
+            VolleySingleton.getInstance().addToRequestQueue(
                     new JsonObjectRequest(
                             Request.Method.POST,
                             Constants.URL_CATEGORIES,

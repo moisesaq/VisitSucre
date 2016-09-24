@@ -119,8 +119,8 @@ public class InputTextView extends LinearLayout{
 
     public void setLines(int lines){
         if(lines > 1){
-            editText.setGravity(Gravity.START|Gravity.TOP);
             editText.setLines(lines);
+            editText.setGravity(Gravity.START|Gravity.TOP);
         }
     }
     public void setHint(String text){

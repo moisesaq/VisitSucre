@@ -1,6 +1,5 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
@@ -37,7 +36,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
@@ -48,7 +46,7 @@ import com.apaza.moises.visitsucre.database.PlaceDao;
 import com.apaza.moises.visitsucre.database.UserDao;
 import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.Utils;
-import com.apaza.moises.visitsucre.global.VolleySingleton;
+import com.apaza.moises.visitsucre.web.api.volley.VolleySingleton;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.deprecated.Category;
@@ -332,7 +330,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
                         resultTest.setText("Error: " + error.toString());
                     }
         });
-        VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
     private void testRequestJsonObject(String url){
@@ -358,7 +356,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
                 resultTest.setText("Error: " + error.toString());
             }
         });
-        VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
     private void testJsonArrayRequest(String url, final String text){

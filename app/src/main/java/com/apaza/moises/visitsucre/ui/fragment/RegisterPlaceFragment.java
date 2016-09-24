@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,9 +31,6 @@ import com.apaza.moises.visitsucre.ui.MainActivity;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.CategoryAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 public class RegisterPlaceFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener,
         AdapterView.OnItemSelectedListener, PlaceInMapFragment.OnPlaceInMapFragmentListener{
     public static final String TAG = "REGISTER PLACE";
@@ -42,11 +40,11 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     private View view;
     private CategoryAdapter categoryAdapter;
-    private Spinner spCategory;
     private long idCategory;
 
+    private ImageView ivSelectImage, ivStaticMap;
     private InputTextView itvName, itvDescription;
-    private TextView tvAddressPlace;
+    private TextView tvLocationPlace;
     private Address address;
 
     private OnRegisterPlaceFragmentListener mListener;
@@ -93,10 +91,12 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
         spCategory.setAdapter(categoryAdapter);
         getLoaderManager().initLoader(2, null, this);
 
+        ivSelectImage = (ImageView)view.findViewById(R.id.ivSelectImage);
         itvName = (InputTextView)view.findViewById(R.id.itvName);
+        tvLocationPlace = (TextView)view.findViewById(R.id.tvLocationPlace);
         ImageButton iBtnSelectLocation = (ImageButton)view.findViewById(R.id.iBtnSelectLocation);
         iBtnSelectLocation.setOnClickListener(this);
-        tvAddressPlace = (TextView)view.findViewById(R.id.tvAddressPlace);
+        ivStaticMap = (ImageView)view.findViewById(R.id.ivStaticMap);
         itvDescription = (InputTextView) view.findViewById(R.id.itvDescription);
         Button btnSave = (Button)view.findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
@@ -118,7 +118,7 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
                 break;
             case R.id.btnSave:
                 if(address != null)
-                    prepareUrlStaticMap(address);
+                    loadStaticMap(address);
                 /*if(itvName.isTextValid("Name invalid") && itvDescription.isTextValid("Description invalid")){
                     if(address != null){
                         //savePlace();
@@ -177,7 +177,6 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     }
 
     /*LOADER*/
-
     @Override
     public void onDestroy(){
         super.onDestroy();
@@ -229,39 +228,24 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     private void setupAddressSelected(){
         if(address != null)
-            tvAddressPlace.setText(address.getAddressLine(0));
+            tvLocationPlace.setText(address.getAddressLine(0));
     }
 
-    private void loadStaticMap(){
-        Global.getVolleySingleton().getImageLoader().get("url", new ImageLoader.ImageListener() {
+    private void loadStaticMap(Address address){
+        Global.getApiVisitSucreClient().getGoogleMapStatic(address, new ImageLoader.ImageListener() {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-
+                if(response.getBitmap() != null){
+                    ivStaticMap.setVisibility(View.VISIBLE);
+                    ivStaticMap.setImageBitmap(response.getBitmap());
+                }
             }
 
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                ivStaticMap.setVisibility(View.GONE);
             }
         });
-    }
-
-    private String prepareUrlStaticMap(Address address){
-        String txtLocation = address.getLatitude() + "," + address.getLongitude();
-        String URL_BASE = "https://maps.googleapis.com/maps/api/staticmap?";
-
-        String URL_STATIC_MAP = "center=" + txtLocation + "&zoom=13&size=600x300&maptype=roadmap" +
-                                "&markers=color:red%7Clabel:P%7C" + txtLocation +
-                                "&key="+getString(R.string.google_key);
-
-        Log.d(TAG, "TEST URL >>> " + URL_BASE + URL_STATIC_MAP);
-        try {
-            Log.d(TAG, "TEST URL >>> " + URL_BASE + URLEncoder.encode(URL_STATIC_MAP, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        return URL_STATIC_MAP;
     }
 
     public interface OnRegisterPlaceFragmentListener {

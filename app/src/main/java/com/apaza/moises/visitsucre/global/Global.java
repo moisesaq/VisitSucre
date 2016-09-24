@@ -7,10 +7,12 @@ import android.widget.Toast;
 
 import com.apaza.moises.visitsucre.deprecated.HandlerDBVisitSucre;
 import com.apaza.moises.visitsucre.provider.DataBaseHandler;
+import com.apaza.moises.visitsucre.web.ApiVisitSucreClient;
+import com.apaza.moises.visitsucre.web.api.volley.VolleySingleton;
 
 public class Global {
     private static Activity context;
-    private static VolleySingleton volleySingleton;
+    private static ApiVisitSucreClient apiVisitSucreClient;
 
     private static HandlerDBVisitSucre handlerDBVisitSucre;
 
@@ -24,9 +26,7 @@ public class Global {
     }
 
     public static VolleySingleton getVolleySingleton(){
-        if(volleySingleton == null)
-            volleySingleton = VolleySingleton.getInstance(context);
-        return volleySingleton;
+        return VolleySingleton.getInstance();
     }
 
     public static HandlerDBVisitSucre getHandlerDBVisitSucre(){
@@ -37,6 +37,12 @@ public class Global {
 
     public static DataBaseHandler getDataBaseHandler(){
         return DataBaseHandler.getInstance(context);
+    }
+
+    public static ApiVisitSucreClient getApiVisitSucreClient(){
+        if(apiVisitSucreClient == null)
+            apiVisitSucreClient = new ApiVisitSucreClient(Constants.BASE_URL);
+        return apiVisitSucreClient;
     }
 
     public static void showMessage(String message){

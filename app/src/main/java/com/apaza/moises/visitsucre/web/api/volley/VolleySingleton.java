@@ -1,6 +1,5 @@
-package com.apaza.moises.visitsucre.global;
+package com.apaza.moises.visitsucre.web.api.volley;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.LruCache;
 
@@ -8,16 +7,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.apaza.moises.visitsucre.global.Global;
 
 public final class VolleySingleton {
 
     private static VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    private static Context context;
     private ImageLoader imageLoader;
 
-    private VolleySingleton(Context context){
-        VolleySingleton.context = context;
+    private VolleySingleton(){
         requestQueue = getRequestQueue();
         imageLoader = new ImageLoader(requestQueue, new ImageLoader.ImageCache() {
             private final LruCache<String, Bitmap> cache = new LruCache<>(20);
@@ -33,15 +31,15 @@ public final class VolleySingleton {
         });
     }
 
-    public static synchronized VolleySingleton getInstance(Context context){
+    public static synchronized VolleySingleton getInstance(){
         if(volleySingleton == null)
-            volleySingleton = new VolleySingleton(context);
+            volleySingleton = new VolleySingleton();
         return volleySingleton;
     }
 
     public RequestQueue getRequestQueue(){
         if(requestQueue == null)
-            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+            requestQueue = Volley.newRequestQueue(Global.getContext().getApplicationContext());
         return requestQueue;
     }
 
