@@ -3,12 +3,12 @@ package com.apaza.moises.visitsucre.global;
 public class Constants {
     private static final String PORT_HOST = ":3000";
 
-    private static final String IP = "http://192.168.1.43";
+    public static final String BASE_URL = "http://192.168.1.43";
 
-    public static String URL_CATEGORIES = IP + PORT_HOST + "/api/categories";
-    public static String URL_PLACES = IP + PORT_HOST + "/api/places";
-    public static String URL_FIND_PLACE = IP + PORT_HOST + "/api/place/find";
-    public static String URL_FIND_CATEGORY = IP + PORT_HOST + "/api/category/find";
+    public static String URL_CATEGORIES = BASE_URL + PORT_HOST + "/api/categories";
+    public static String URL_PLACES = BASE_URL + PORT_HOST + "/api/places";
+    public static String URL_FIND_PLACE = BASE_URL + PORT_HOST + "/api/place/find";
+    public static String URL_FIND_CATEGORY = BASE_URL + PORT_HOST + "/api/category/find";
     public static String URL_IMAGE = "http://vignette2.wikia.nocookie.net/ultradragonball/images/2/28/543px-MajinBuuFatNV.png/revision/latest?cb=20110330215918";
 
     /*FIELDS THE RESPONSE JSON*/

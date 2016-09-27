@@ -1,6 +1,5 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
@@ -47,7 +46,7 @@ import com.apaza.moises.visitsucre.database.PlaceDao;
 import com.apaza.moises.visitsucre.database.UserDao;
 import com.apaza.moises.visitsucre.global.Constants;
 import com.apaza.moises.visitsucre.global.Utils;
-import com.apaza.moises.visitsucre.global.VolleySingleton;
+import com.apaza.moises.visitsucre.web.api.volley.VolleySingleton;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.deprecated.Category;
@@ -173,12 +172,10 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
                     testRequestJsonObject(Constants.URL_PLACES);
                 else
                     testRequestJsonObject(Constants.URL_CATEGORIES);*/
-                animateDown();
                 break;
             case R.id.loadImage:
-                //testImageLoader();
+                testImageLoader();
                 //new TestNetPay().execute();
-                animateUp();
                 break;
             case R.id.search:
                 String text = textSearch.getText().toString();
@@ -309,6 +306,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
     }
 
     /*TEST VOLLEY WITH DB LOCAL*/
+
     private void testImageLoader(){
         try{
             ImageLoader imageLoader = Global.getVolleySingleton().getImageLoader();
@@ -332,7 +330,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
                         resultTest.setText("Error: " + error.toString());
                     }
         });
-        VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
     private void testRequestJsonObject(String url){
@@ -358,7 +356,7 @@ public class TestFragment extends BaseFragment implements View.OnClickListener, 
                 resultTest.setText("Error: " + error.toString());
             }
         });
-        VolleySingleton.getInstance(Global.getContext()).addToRequestQueue(jsonArrayRequest);
+        VolleySingleton.getInstance().addToRequestQueue(jsonArrayRequest);
     }
 
     private void testJsonArrayRequest(String url, final String text){

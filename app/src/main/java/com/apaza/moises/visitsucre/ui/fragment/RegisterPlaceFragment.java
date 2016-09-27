@@ -15,9 +15,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.database.Place;
 import com.apaza.moises.visitsucre.global.Global;
@@ -37,11 +40,11 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     private View view;
     private CategoryAdapter categoryAdapter;
-    private Spinner spCategory;
     private long idCategory;
 
+    private ImageView ivSelectImage, ivStaticMap;
     private InputTextView itvName, itvDescription;
-    private TextView tvAddressPlace;
+    private TextView tvLocationPlace;
     private Address address;
 
     private OnRegisterPlaceFragmentListener mListener;
@@ -69,8 +72,13 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+<<<<<<< HEAD
         if(view == null)
             view = inflater.inflate(R.layout.fragment_register_place, container, false);
+=======
+        super.onCreateView(inflater, container, savedInstanceState);
+        view = inflater.inflate(R.layout.fragment_register_place, container, false);
+>>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
         setupView();
         return view;
     }
@@ -82,16 +90,18 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     }
 
     private void setupView() {
-        spCategory = (Spinner)view.findViewById(R.id.spCategory);
+        Spinner spCategory = (Spinner)view.findViewById(R.id.spCategory);
         spCategory.setOnItemSelectedListener(this);
         categoryAdapter = new CategoryAdapter(getContext());
         spCategory.setAdapter(categoryAdapter);
         getLoaderManager().initLoader(2, null, this);
 
+        ivSelectImage = (ImageView)view.findViewById(R.id.ivSelectImage);
         itvName = (InputTextView)view.findViewById(R.id.itvName);
+        tvLocationPlace = (TextView)view.findViewById(R.id.tvLocationPlace);
         ImageButton iBtnSelectLocation = (ImageButton)view.findViewById(R.id.iBtnSelectLocation);
         iBtnSelectLocation.setOnClickListener(this);
-        tvAddressPlace = (TextView)view.findViewById(R.id.tvAddressPlace);
+        ivStaticMap = (ImageView)view.findViewById(R.id.ivStaticMap);
         itvDescription = (InputTextView) view.findViewById(R.id.itvDescription);
         Button btnSave = (Button)view.findViewById(R.id.btnSave);
         btnSave.setOnClickListener(this);
@@ -112,14 +122,20 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
                 ((MainActivity)getActivity()).showFragment(placeInMapFragment);
                 break;
             case R.id.btnSave:
+<<<<<<< HEAD
                 if(itvName.isTextValid("Name invalid") && itvDescription.isTextValid("Description invalid")){
+=======
+                if(address != null)
+                    loadStaticMap(address);
+                /*if(itvName.isTextValid("Name invalid") && itvDescription.isTextValid("Description invalid")){
+>>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
                     if(address != null){
                         //savePlace();
                         Global.showToastMessage("Data valid");
                     }else {
                         Global.showToastMessage("Select place location");
                     }
-                }
+                }*/
                 break;
         }
     }
@@ -170,7 +186,6 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     }
 
     /*LOADER*/
-
     @Override
     public void onDestroy(){
         super.onDestroy();
@@ -219,10 +234,34 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
         this.address = address;
         setupAddressSelected();
     }
+<<<<<<< HEAD
 
     private void setupAddressSelected(){
         if(address != null)
             tvAddressPlace.setText(address.getAddressLine(0));
+=======
+
+    private void setupAddressSelected(){
+        if(address != null)
+            tvLocationPlace.setText(address.getAddressLine(0));
+    }
+
+    private void loadStaticMap(Address address){
+        Global.getApiVisitSucreClient().getGoogleMapStatic(address, new ImageLoader.ImageListener() {
+            @Override
+            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
+                if(response.getBitmap() != null){
+                    ivStaticMap.setVisibility(View.VISIBLE);
+                    ivStaticMap.setImageBitmap(response.getBitmap());
+                }
+            }
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                ivStaticMap.setVisibility(View.GONE);
+            }
+        });
+>>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
     }
 
     public interface OnRegisterPlaceFragmentListener {

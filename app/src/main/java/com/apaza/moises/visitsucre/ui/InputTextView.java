@@ -3,18 +3,24 @@ package com.apaza.moises.visitsucre.ui;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Patterns;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
 
@@ -113,8 +119,8 @@ public class InputTextView extends LinearLayout{
 
     public void setLines(int lines){
         if(lines > 1){
-            editText.setGravity(Gravity.START|Gravity.TOP);
             editText.setLines(lines);
+            editText.setGravity(Gravity.START|Gravity.TOP);
         }
     }
     public void setHint(String text){
@@ -129,6 +135,7 @@ public class InputTextView extends LinearLayout{
         if(text.isEmpty()){
             textInputLayout.setError(textError + ", field empty");
             return false;
+<<<<<<< HEAD
         }
 
         if(pattern.matcher(text).matches() && text.length() <= textInputLayout.getCounterMaxLength()){
@@ -138,6 +145,18 @@ public class InputTextView extends LinearLayout{
             return false;
         }
 
+=======
+        }
+
+        if(pattern.matcher(text).matches() && text.length() <= textInputLayout.getCounterMaxLength()){
+            textInputLayout.setError(null);
+            return true;
+        } else {
+            textInputLayout.setError(textError);
+            return false;
+        }
+
+>>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
         //return true;
     }
 
@@ -159,5 +178,72 @@ public class InputTextView extends LinearLayout{
             textInputLayout.setError(null);
         }
         return true;
+    }
+
+    /*SAVE STATE OF THE VIEWS*/
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.childrenStates = new SparseArray();
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).saveHierarchyState(ss.childrenStates);
+        }
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        for (int i = 0; i < getChildCount(); i++) {
+            getChildAt(i).restoreHierarchyState(ss.childrenStates);
+        }
+    }
+
+    @Override
+    protected void dispatchSaveInstanceState(SparseArray<Parcelable> container) {
+        dispatchFreezeSelfOnly(container);
+    }
+
+    @Override
+    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
+        dispatchThawSelfOnly(container);
+    }
+
+    static class SavedState extends BaseSavedState {
+        SparseArray childrenStates;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in, ClassLoader classLoader) {
+            super(in);
+            childrenStates = in.readSparseArray(classLoader);
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeSparseArray(childrenStates);
+        }
+
+        public static final ClassLoaderCreator<SavedState> CREATOR
+                = new ClassLoaderCreator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel source, ClassLoader loader) {
+                return new SavedState(source, loader);
+            }
+
+            @Override
+            public SavedState createFromParcel(Parcel source) {
+                return createFromParcel(null);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

@@ -26,6 +26,7 @@
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="left"
             android:ems="10"/>
 
     </android.support.design.widget.TextInputLayout>
