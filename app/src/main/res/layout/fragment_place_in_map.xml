@@ -47,4 +47,14 @@
             android:id="@+id/btnSelected" />
     </LinearLayout>
 
+    <AutoCompleteTextView
+        android:id="@+id/autoCompletePlace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/marginMaxGlobal"
+        android:layout_marginRight="@dimen/marginMaxGlobal"
+        android:layout_marginTop="@dimen/marginMinGlobal"
+        android:hint="@string/address"
+        android:layout_gravity="center_horizontal|top" />
+
 </FrameLayout>

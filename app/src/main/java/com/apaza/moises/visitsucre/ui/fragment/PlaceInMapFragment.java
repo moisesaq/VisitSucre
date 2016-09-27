@@ -14,29 +14,35 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.database.Place;
 import com.apaza.moises.visitsucre.global.Utils;
+import com.apaza.moises.visitsucre.ui.fragment.adapter.PlaceAutoCompleteAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.ui.view.MarkerAnimateView;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -55,6 +61,9 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     private GoogleMap googleMap;
     private TextView tvAddress, tvDescription;
 
+    private AutoCompleteTextView autoCompletePlace;
+    private PlaceAutoCompleteAdapter autoCompleteAdapter;
+
     private LocationManager locationManager;
     private int TIME_FOR_UPDATE = 10000;
     private int DISTANCE_FOR_UPDATE = 10;
@@ -63,6 +72,9 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
     private LatLng lastLatLng;
 
     private MarkerAnimateView marker;
+
+    private static final LatLngBounds BUENOS_AIRES = new LatLngBounds(
+            new LatLng(Utils.latitudeDefault, Utils.longitudeDefault), new LatLng(Utils.latitudeDefault, -57.38021799928402));
 
     public PlaceInMapFragment() {
     }
@@ -106,9 +118,37 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         marker = (MarkerAnimateView)view.findViewById(R.id.marker);
         tvAddress = (TextView) view.findViewById(R.id.tvAddress);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+        autoCompletePlace = (AutoCompleteTextView)view.findViewById(R.id.autoCompletePlace);
+        autoCompleteAdapter = new PlaceAutoCompleteAdapter(getContext(), android.R.layout.simple_list_item_1, googleApiClient, BUENOS_AIRES, null);
+        autoCompletePlace.setOnItemClickListener(autoCompleteListener);
+        autoCompletePlace.setAdapter(autoCompleteAdapter);
+
         Button btnSelected = (Button) view.findViewById(R.id.btnSelected);
         btnSelected.setOnClickListener(this);
     }
+
+    private AdapterView.OnItemClickListener autoCompleteListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            final PlaceAutoCompleteAdapter.PlaceAutoComplete item = autoCompleteAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(googleApiClient, placeId);
+            placeResult.setResultCallback(updatePlaceDetailCallback);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> updatePlaceDetailCallback = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(@NonNull PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                Log.e("place", "Place query did not complete. Error: " +
+                        places.getStatus().toString());
+                return;
+            }
+            // Selecting the first object buffer.
+            final com.google.android.gms.location.places.Place place = places.get(0);
+        }
+    };
 
     private void getCurrentLocation() {
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -218,6 +258,11 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
                 .tilt(45)
                 .build();
         this.googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     /*LOCATION LISTENER*/
