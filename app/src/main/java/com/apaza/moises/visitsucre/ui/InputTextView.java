@@ -137,7 +137,7 @@ public class InputTextView extends LinearLayout{
             return false;
         }
 
-        if(pattern.matcher(text).matches() && text.length() <= textInputLayout.getCounterMaxLength()){
+        if(text.length() <= textInputLayout.getCounterMaxLength()){
             textInputLayout.setError(null);
             return true;
         } else {

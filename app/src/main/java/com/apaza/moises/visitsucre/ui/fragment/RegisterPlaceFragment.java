@@ -117,16 +117,16 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
                 ((MainActivity)getActivity()).showFragment(placeInMapFragment);
                 break;
             case R.id.btnSave:
-                if(address != null)
-                    loadStaticMap(address);
-                /*if(itvName.isTextValid("Name invalid") && itvDescription.isTextValid("Description invalid")){
+                /*if(address != null)
+                    loadStaticMap(address);*/
+                if(itvName.isTextValid("Name invalid") && itvDescription.isTextValid("Description invalid")){
                     if(address != null){
-                        //savePlace();
-                        Global.showToastMessage("Data valid");
+                        savePlace();
+                        //Global.showToastMessage("Data valid");
                     }else {
                         Global.showToastMessage("Select place location");
                     }
-                }*/
+                }
                 break;
         }
     }

@@ -21,7 +21,8 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.ViewHolder>{
     public static final int COLUMN_NAME = 1;
     public static final int COLUMN_ADDRESS = 2;
     public static final int COLUMN_DESCRIPTION = 3;
-    public static final int COLUMN_CATEGORY = 4;
+    public static final int COLUMN_ID_CATEGORY = 4;
+    public static final int COLUMN_CATEGORY = 5;
 
     private final Context context;
     private Cursor cursor;

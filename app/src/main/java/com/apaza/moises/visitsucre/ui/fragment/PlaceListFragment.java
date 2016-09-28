@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -18,9 +17,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.database.Category;
 import com.apaza.moises.visitsucre.database.PlaceDao;
+import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.PlaceAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
@@ -28,8 +31,11 @@ import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPlaceItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{
     private static final String ID_CATEGORY = "idCategory";
     private long idCategory;
+    private Category category;
 
     private View view;
+    private LinearLayout layoutEmpty;
+    private TextView tvEmpty;
     private RecyclerView listPlaces;
     private LinearLayoutManager linearLayoutManager;
     private PlaceAdapter adapter;
@@ -57,17 +63,22 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
         setHasOptionsMenu(true);
         if (getArguments() != null) {
             idCategory = getArguments().getLong(ID_CATEGORY);
+            category = Global.getDataBaseHandler().getDaoSession().getCategoryDao().load(idCategory);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_place_list, container, false);
-        setup();
+        setupView();
         return view;
     }
 
-    private void setup(){
+    private void setupView(){
+        layoutEmpty = (LinearLayout)view.findViewById(R.id.layoutEmpty);
+        tvEmpty = (TextView)view.findViewById(R.id.tvEmpty);
+        if(category != null)
+            tvEmpty.setText(String.format("No found %s", category.getName()));
         listPlaces = (RecyclerView)view.findViewById(R.id.listPlaces);
         listPlaces.setHasFixedSize(true);
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -76,6 +87,11 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
         adapter = new PlaceAdapter(getActivity(), this);
         listPlaces.setAdapter(adapter);
         getLoaderManager().restartLoader(1, null, this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -166,8 +182,15 @@ public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPl
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(adapter != null)
+        if(data.moveToFirst()){
             adapter.swapCursor(data);
+            layoutEmpty.setVisibility(View.GONE);
+            listPlaces.setVisibility(View.VISIBLE);
+        }else{
+            layoutEmpty.setVisibility(View.VISIBLE);
+            listPlaces.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
