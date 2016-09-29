@@ -1,8 +1,12 @@
 package com.apaza.moises.visitsucre.global;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
@@ -18,6 +22,23 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Utils {
+    public static final int CODE_PERMISSION_INTERNET = 99;
+    public static final String[] PERMISSION_INTERNET = {Manifest.permission.INTERNET, Manifest.permission.ACCESS_NETWORK_STATE};
+
+    public static final int CODE_PERMISSION_CAMERA = 100;
+    public static final String[] PERMISSION_CAMERA = {Manifest.permission.CAMERA,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+    public static final int CODE_PERMISSION_PASSENGER = 200;
+    public static final String[] PERMISSION_PASSENGER = {Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE};
+
+    public static String DIRECTORY_IMAGES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/visitSucre/";
+    public static final int REQUEST_CAMERA = 0;
+    public static final int SELECT_FILE = 1;
+
     public static final double latitudeDefault = -34.60386351802505;
     public static final double longitudeDefault = -58.38021799928402;
 
@@ -63,6 +84,25 @@ public class Utils {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    public static boolean hasPermission(String[] permissions){
+        int cont = 0;
+        for (String permission: permissions) {
+            if(ActivityCompat.checkSelfPermission(Global.getContext(), permission) == PackageManager.PERMISSION_GRANTED)
+                cont++;
+        }
+
+        return cont == permissions.length;
+    }
+
+    public static boolean resultPermission(int[] grantResults){
+        int cont = 0;
+        for(int i = 0; i < grantResults.length; i++){
+            if(grantResults[i] == PackageManager.PERMISSION_GRANTED )
+                cont++;
+        }
+        return cont == grantResults.length;
     }
 
 }

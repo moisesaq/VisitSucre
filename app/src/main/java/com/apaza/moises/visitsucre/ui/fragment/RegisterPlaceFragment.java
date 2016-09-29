@@ -1,10 +1,19 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.location.Address;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -42,7 +51,7 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     private CategoryAdapter categoryAdapter;
     private long idCategory;
 
-    private ImageView ivSelectImage, ivStaticMap;
+    private ImageView ivPlaceImage, ivStaticMap;
     private InputTextView itvName, itvDescription;
     private TextView tvLocationPlace;
     private Address address;
@@ -91,7 +100,9 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
         spCategory.setAdapter(categoryAdapter);
         getLoaderManager().initLoader(2, null, this);
 
-        ivSelectImage = (ImageView)view.findViewById(R.id.ivSelectImage);
+        ivPlaceImage = (ImageView)view.findViewById(R.id.ivPlaceImage);
+        FloatingActionButton fabSelectImage = (FloatingActionButton)view.findViewById(R.id.fabSelectImage);
+        fabSelectImage.setOnClickListener(this);
         itvName = (InputTextView)view.findViewById(R.id.itvName);
         tvLocationPlace = (TextView)view.findViewById(R.id.tvLocationPlace);
         ImageButton iBtnSelectLocation = (ImageButton)view.findViewById(R.id.iBtnSelectLocation);
@@ -111,6 +122,16 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.fabSelectImage:
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if(Utils.hasPermission(Utils.PERMISSION_CAMERA))
+                        selectImage();
+                    else
+                        requestPermissions(Utils.PERMISSION_CAMERA, Utils.CODE_PERMISSION_CAMERA);
+                }else{
+                    selectImage();
+                }
+                break;
             case R.id.iBtnSelectLocation:
                 PlaceInMapFragment placeInMapFragment = PlaceInMapFragment.newInstance(0);
                 placeInMapFragment.setOnPlaceInMapFragmentListener(this);
@@ -157,6 +178,19 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
     public void clearAllFields(){
         itvName.clearField();
         itvDescription.clearField();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case Utils.CODE_PERMISSION_CAMERA:
+                if (grantResults.length >= permissions.length && Utils.resultPermission(grantResults)){
+                    selectImage();
+                }else{
+                    Global.showToastMessage("Is required permission");
+                }
+                break;
+        }
     }
 
     @Override
@@ -246,6 +280,59 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
                 ivStaticMap.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void selectImage() {
+        final CharSequence[] items = {
+                getString(R.string.take_photo),
+                getString(R.string.from_gallery),
+                getString(android.R.string.cancel)
+        };
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        dialog.setTitle(getString(R.string.add_image));
+        dialog.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                Intent intent = null;
+                switch (item){
+                    case 0:
+                        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        /*File f = new File(Utils.DIRECTORY_IMAGES, "temp.jpg");
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));*/
+                        startActivityForResult(intent, Utils.REQUEST_CAMERA);
+                        break;
+                    case 1:
+                        intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(Intent.createChooser(intent, "Select File"), Utils.SELECT_FILE);
+                        break;
+                    case 2:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        });
+        dialog.create().show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK)
+            return;
+        switch (requestCode){
+            case Utils.REQUEST_CAMERA:
+                Uri capturedImage = data.getData();
+                Log.d(TAG, " URI CAMERA >>>> " + capturedImage.toString());
+                ivPlaceImage.setImageURI(capturedImage);
+                break;
+            case Utils.SELECT_FILE:
+                Uri selectedImage = data.getData();
+                Log.d(TAG, " URI GALLERY >>>> " + selectedImage.toString());
+                ivPlaceImage.setImageURI(selectedImage);
+                break;
+        }
     }
 
     public interface OnRegisterPlaceFragmentListener {
