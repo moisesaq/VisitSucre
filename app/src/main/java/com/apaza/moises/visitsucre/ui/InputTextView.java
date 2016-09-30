@@ -133,7 +133,7 @@ public class InputTextView extends LinearLayout{
         Pattern pattern = Pattern.compile("^[a-zA-Z ]+$");
 
         if(text.isEmpty()){
-            textInputLayout.setError(textError + ", field empty");
+            textInputLayout.setError(textInputLayout.getHint() + ", field empty");
             return false;
         }
 

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:moi="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/paddingMediumGlobal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/ib_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/ImageButtonCircleGrayLight"
+            android:src="@mipmap/ic_camera_burst_grey600_48dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginLeft="@dimen/marginMediumGlobal"
+            android:text="@string/select_icon"
+            android:id="@+id/textView"/>
+
+    </LinearLayout>
+
+    <com.apaza.moises.visitsucre.ui.InputTextView
+        android:id="@+id/itv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        moi:hint="@string/name"
+        moi:maxLengthEnabled="true"
+        moi:maxLength="25"
+        android:inputType="textCapSentences"/>
+
+    <com.apaza.moises.visitsucre.ui.InputTextView
+        android:id="@+id/itv_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        moi:iconImage="@mipmap/ic_pen_grey600_24dp"
+        moi:hint="@string/description"
+        moi:maxLengthEnabled="true"
+        moi:maxLength="250"
+        android:inputType="textMultiLine|textCapSentences"
+        android:lines="3"/>
+
+    <Button
+        android:id="@+id/btnAddCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_button"
+        android:textColor="@android:color/white"
+        android:text="@string/register" />
+
+</LinearLayout>

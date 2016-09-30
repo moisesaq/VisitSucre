@@ -36,15 +36,25 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="ImageButtonTechno">
+    <!--<item name="android:background">@drawable/background_transparent</item>-->
+
+    <style name="ImageButtonCircle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:padding">@dimen/paddingMediumGlobal</item>
         <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/image_button</item>
     </style>
 
-    <!--<item name="android:background">@drawable/background_transparent</item>-->
+    <style name="ImageButtonCircleGrayLight" parent="ImageButtonCircle">
+        <item name="android:background">@drawable/image_button_circle</item>
+    </style>
+
+    <style name="ImageButtonTechno.Default" parent="ImageButtonCircle">
+        <item name="android:background">@drawable/background_transparent</item>
+        <item name="android:padding">1dp</item>
+    </style>
 
     <style name="StyleDivideHorizontal">
         <item name="android:layout_width">0.5dp</item>

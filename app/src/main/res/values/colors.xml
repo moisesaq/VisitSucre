@@ -15,4 +15,8 @@
     <color name="red">#F44336</color>
     <color name="redDark">#B20000</color>
     <color name="transparentTechno">#80000000</color>
+
+    <color name="whiteSmoke">#F5F5F5</color>
+    <color name="grayLight">#D3D3D3</color>
+
 </resources>

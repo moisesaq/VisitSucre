@@ -39,7 +39,7 @@
             android:id="@+id/skip"
             android:layout_gravity="left"
             android:src="@mipmap/ic_menu_back"
-            style="@style/ImageButtonTechno"
+            style="@style/ImageButtonCircle"
             android:background="@drawable/background_transparent"/>
 
         <me.relex.circleindicator.CircleIndicator
@@ -52,7 +52,7 @@
             android:id="@+id/next"
             android:layout_gravity="right"
             android:src="@mipmap/ic_menu_forward"
-            style="@style/ImageButtonTechno"
+            style="@style/ImageButtonCircle"
             android:visibility="visible"
             android:background="@drawable/circle_button"/>
 
