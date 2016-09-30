@@ -135,6 +135,17 @@ public class InputTextView extends LinearLayout{
         if(text.isEmpty()){
             textInputLayout.setError(textInputLayout.getHint() + ", field empty");
             return false;
+<<<<<<< HEAD
+        }
+
+        if(pattern.matcher(text).matches() && text.length() <= textInputLayout.getCounterMaxLength()){
+            return true;
+        } else {
+            textInputLayout.setError(textError);
+            return false;
+        }
+
+=======
         }
 
         if(text.length() <= textInputLayout.getCounterMaxLength()){
@@ -145,6 +156,7 @@ public class InputTextView extends LinearLayout{
             return false;
         }
 
+>>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
         //return true;
     }
 

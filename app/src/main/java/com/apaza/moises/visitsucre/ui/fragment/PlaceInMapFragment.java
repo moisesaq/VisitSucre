@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -118,11 +120,14 @@ public class PlaceInMapFragment extends BaseFragment implements OnMapReadyCallba
         marker = (MarkerAnimateView)view.findViewById(R.id.marker);
         tvAddress = (TextView) view.findViewById(R.id.tvAddress);
         tvDescription = (TextView) view.findViewById(R.id.tvDescription);
+<<<<<<< HEAD
+=======
         autoCompletePlace = (AutoCompleteTextView)view.findViewById(R.id.autoCompletePlace);
         autoCompleteAdapter = new PlaceAutoCompleteAdapter(getContext(), android.R.layout.simple_list_item_1, googleApiClient, BUENOS_AIRES, null);
         autoCompletePlace.setOnItemClickListener(autoCompleteListener);
         autoCompletePlace.setAdapter(autoCompleteAdapter);
 
+>>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
         Button btnSelected = (Button) view.findViewById(R.id.btnSelected);
         btnSelected.setOnClickListener(this);
     }
