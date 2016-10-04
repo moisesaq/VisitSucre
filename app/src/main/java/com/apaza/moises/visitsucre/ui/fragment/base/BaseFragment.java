@@ -8,12 +8,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.apaza.moises.visitsucre.ui.MainActivity;
-<<<<<<< HEAD
-=======
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
->>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
 
 public class BaseFragment extends Fragment {
 

@@ -28,8 +28,10 @@ public class CategoryAdapter extends CursorAdapter{
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         if(cursor != null){
-            ImageView logo = (ImageView)view.findViewById(R.id.ivLogo);
-
+            ImageView icon = (ImageView)view.findViewById(R.id.ivLogo);
+            String textIcon = cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Logo.columnName));
+            if(textIcon != null)
+                icon.setImageResource(Integer.parseInt(textIcon));
             TextView name = (TextView)view.findViewById(R.id.tvName);
             name.setText(cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Name.columnName)));
 

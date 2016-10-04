@@ -24,6 +24,7 @@ import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.InputTextView;
+import com.apaza.moises.visitsucre.ui.MainActivity;
 import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.web.api.volley.VolleySingleton;
 
@@ -32,11 +33,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddCategoryFragment extends BaseFragment implements View.OnClickListener{
+public class AddCategoryFragment extends BaseFragment implements View.OnClickListener, GalleryIconDialog.OnGalleryIconDialogListener{
 
     public static final String TAG = "ADD CATEGORY FRAGMENT";
 
     private View view;
+    private ImageButton ibIcon;
     private InputTextView itvName, itvDescription;
 
     public static AddCategoryFragment newInstance(){
@@ -57,7 +59,7 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void setupView(){
-        ImageButton ibIcon = (ImageButton)view.findViewById(R.id.ib_icon);
+        ibIcon = (ImageButton)view.findViewById(R.id.ib_icon);
         ibIcon.setOnClickListener(this);
         itvName = (InputTextView)view.findViewById(R.id.itv_name);
         itvDescription = (InputTextView)view.findViewById(R.id.itv_description);
@@ -69,6 +71,9 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.ib_icon:
+                GalleryIconDialog galleryIconDialog = GalleryIconDialog.newInstance(this);
+                //galleryIconDialog.show(getActivity().getSupportFragmentManager(), "galleryDialog");
+                ((MainActivity)getActivity()).showFragment(galleryIconDialog);
                 break;
             case R.id.btnAddCategory:
                 if(itvName.isTextValid("Name Invalid") && itvDescription.isTextValid("Description invalid")){
@@ -81,6 +86,11 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
     public void saved(String name, String description){
         Category category = new Category();
         category.setName(name);
+        if(ibIcon.getTag() != null){
+            int icon = (int)ibIcon.getTag();
+            category.setLogo(String.valueOf(icon));
+        }
+
         category.setDescription(description);
         category.setCreatedAt(Utils.getCurrentDate());
         long idCategory = Global.getDataBaseHandler().getDaoSession().getCategoryDao().insert(category);
@@ -159,5 +169,11 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onIconSelected(int icon) {
+        ibIcon.setImageResource(icon);
+        ibIcon.setTag(icon);
     }
 }

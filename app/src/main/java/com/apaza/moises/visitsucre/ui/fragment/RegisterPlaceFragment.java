@@ -95,9 +95,9 @@ public class RegisterPlaceFragment extends BaseFragment implements LoaderManager
 
     private void setupView() {
         Spinner spCategory = (Spinner)view.findViewById(R.id.spCategory);
-        spCategory.setOnItemSelectedListener(this);
         categoryAdapter = new CategoryAdapter(getContext());
         spCategory.setAdapter(categoryAdapter);
+        spCategory.setOnItemSelectedListener(this);
         getLoaderManager().initLoader(2, null, this);
 
         ivPlaceImage = (ImageView)view.findViewById(R.id.ivPlaceImage);

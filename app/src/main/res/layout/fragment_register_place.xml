@@ -78,17 +78,9 @@
                         android:id="@+id/ivStaticMap"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-<<<<<<< HEAD
-                        moi:iconImage="@mipmap/ic_camera_iris_grey600_24dp"
-                        moi:hint="@string/name"
-                        moi:maxLengthEnabled="true"
-                        moi:maxLength="15"
-                        android:inputType="textCapSentences"/>
-=======
                         android:src="@mipmap/default_profile"
                         android:scaleType="centerCrop"
                         android:visibility="gone"/>
->>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -109,11 +101,7 @@
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
-<<<<<<< HEAD
-                            android:text="test 123123" />
-=======
                             android:text="@string/select_location" />
->>>>>>> 259ea6601dbcc28c5a17cb28b316513e70f46ee1
 
                         <ImageButton
                             android:id="@+id/iBtnSelectLocation"
