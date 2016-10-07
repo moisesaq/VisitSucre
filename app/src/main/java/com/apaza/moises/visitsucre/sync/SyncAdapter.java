@@ -246,6 +246,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
         }
     }
 
+    /*START SYNCHRONIZE*/
     public static void synchronizeNow(Context context, boolean onlyUpload){
         Log.d(TAG, "REQUEST OF SYNCHRONIZE MANUAL...");
         Bundle bundle = new Bundle();

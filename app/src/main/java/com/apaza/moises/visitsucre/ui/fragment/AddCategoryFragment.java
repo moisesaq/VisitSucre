@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -41,6 +40,8 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
     private ImageButton ibIcon;
     private InputTextView itvName, itvDescription;
 
+    private int imageSelected = 0;
+
     public static AddCategoryFragment newInstance(){
         return new AddCategoryFragment();
     }
@@ -68,6 +69,17 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if(imageSelected != 0){
+            ibIcon.setImageResource(imageSelected);
+            String resourceName = getResources().getResourceEntryName(imageSelected);
+            ibIcon.setTag(resourceName);
+            Global.showToastMessage("IMAGE " + resourceName);
+        }
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.ib_icon:
@@ -87,8 +99,11 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
         Category category = new Category();
         category.setName(name);
         if(ibIcon.getTag() != null){
-            int icon = (int)ibIcon.getTag();
-            category.setLogo(String.valueOf(icon));
+            String icon = (String)ibIcon.getTag();
+            category.setLogo(icon);
+        }else{
+            Global.showToastMessage("Icon null");
+            return;
         }
 
         category.setDescription(description);
@@ -104,6 +119,8 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
     public void clearFields(){
         itvName.clearField();
         itvDescription.clearField();
+        ibIcon.setImageResource(R.mipmap.ic_camera_burst_grey600_48dp);
+        imageSelected = 0;
     }
 
     public void saveCategory(String name, String description){
@@ -171,9 +188,9 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    /*GALLERY DIALOG LISTENER*/
     @Override
     public void onIconSelected(int icon) {
-        ibIcon.setImageResource(icon);
-        ibIcon.setTag(icon);
+        imageSelected = icon;
     }
 }

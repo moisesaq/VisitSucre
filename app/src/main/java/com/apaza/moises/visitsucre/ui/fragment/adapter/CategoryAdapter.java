@@ -30,8 +30,11 @@ public class CategoryAdapter extends CursorAdapter{
         if(cursor != null){
             ImageView icon = (ImageView)view.findViewById(R.id.ivLogo);
             String textIcon = cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Logo.columnName));
-            if(textIcon != null)
-                icon.setImageResource(Integer.parseInt(textIcon));
+            if(textIcon != null){
+                int resId = context.getResources().getIdentifier(textIcon, "mipmap", context.getPackageName());
+                icon.setImageResource(resId);
+            }
+
             TextView name = (TextView)view.findViewById(R.id.tvName);
             name.setText(cursor.getString(cursor.getColumnIndex(CategoryDao.Properties.Name.columnName)));
 

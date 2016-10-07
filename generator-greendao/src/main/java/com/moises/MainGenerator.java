@@ -27,27 +27,30 @@ public class MainGenerator extends UtilDB{
     private static void generateUser(Schema schema){
         user = schema.addEntity(Table.USER);
         user.addIdProperty();
+        user.addStringProperty(ColumnUser.ID_USER_REMOTE);
         user.addStringProperty(ColumnUser.NAME);
         user.addStringProperty(ColumnUser.LAST_NAME);
         user.addStringProperty(ColumnUser.PHONE);
         user.addStringProperty(ColumnUser.EMAIL);
         user.addStringProperty(ColumnUser.IMAGE_PROFILE);
-        user.addContentProvider();
+        //user.addContentProvider();
     }
 
     private static void generateCategory(Schema schema){
         category = schema.addEntity(Table.CATEGORY);
         category.addIdProperty();
+        category.addStringProperty(ColumnCategory.ID_CATEGORY_REMOTE).unique();
         category.addStringProperty(ColumnCategory.NAME);
         category.addStringProperty(ColumnCategory.LOGO);
         category.addDateProperty(ColumnCategory.CREATED_AT);
         category.addStringProperty(ColumnCategory.DESCRIPTION);
-        category.addContentProvider();
+        //category.addContentProvider();
     }
 
     private static void generatePlace(Schema schema){
         place = schema.addEntity(Table.PLACE);
         place.addIdProperty();
+        place.addStringProperty(ColumnPlace.ID_PLACE_REMOTE);
         place.addStringProperty(ColumnPlace.NAME);
         place.addStringProperty(ColumnPlace.ADDRESS);
         place.addDoubleProperty(ColumnPlace.LATITUDE);
@@ -69,12 +72,13 @@ public class MainGenerator extends UtilDB{
         userToPlace.setName("UserPlace");
         userToPlace.orderAsc(createdAt);
 
-        place.addContentProvider();
+        //place.addContentProvider();
     }
 
     private static void generateImage(Schema schema){
         Entity image = schema.addEntity(Table.IMAGE);
         image.addIdProperty();
+        image.addStringProperty(ColumnImage.ID_IMAGE_REMOTE);
         image.addStringProperty(ColumnImage.PATH);
         image.addStringProperty(ColumnImage.DESCRIPTION);
         Property idPlace = image.addLongProperty(ColumnImage.ID_PLACE).getProperty();
@@ -83,6 +87,6 @@ public class MainGenerator extends UtilDB{
         ToMany placeToImage = place.addToMany(image, idPlace);
         placeToImage.setName("PlaceImage");
 
-        image.addContentProvider();
+        //image.addContentProvider();
     }
 }

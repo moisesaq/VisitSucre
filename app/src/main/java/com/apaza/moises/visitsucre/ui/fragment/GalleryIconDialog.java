@@ -49,17 +49,6 @@ public class GalleryIconDialog extends DialogFragment implements AdapterView.OnI
         return view;
     }
 
-    /*@NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
-        dialog.setTitle("Icons");
-        setupView();
-        if(view != null)
-            dialog.setView(view);
-        return dialog.create();
-    }*/
-
     private void setupView() {
         GridView gridViewIcons = (GridView)view.findViewById(R.id.gridViewIcons);
         iconAdapter = new IconAdapter(getContext());
@@ -74,7 +63,6 @@ public class GalleryIconDialog extends DialogFragment implements AdapterView.OnI
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         int icon = iconAdapter.getImageId(position);
-        Global.showToastMessage("IMAGE " + getResources().getResourceEntryName(icon));
         if(onGalleryIconDialogListener != null){
             onGalleryIconDialogListener.onIconSelected(icon);
             onBack();

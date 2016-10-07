@@ -12,6 +12,7 @@ public class UtilDB {
     }
 
     public interface ColumnUser{
+        String ID_USER_REMOTE = "idUserRemote";
         String NAME = "name";
         String LAST_NAME = "lastName";
         String PHONE = "phone";
@@ -20,6 +21,7 @@ public class UtilDB {
     }
 
     public interface ColumnCategory{
+        String ID_CATEGORY_REMOTE = "idCategoryRemote";
         String NAME = "name";
         String LOGO = "logo";
         String CREATED_AT = "createdAt";
@@ -27,6 +29,7 @@ public class UtilDB {
     }
 
     public interface ColumnPlace{
+        String ID_PLACE_REMOTE = "idPlaceRemote";
         String NAME = "name";
         String ADDRESS = "address";
         String LATITUDE = "latitude";
@@ -38,6 +41,7 @@ public class UtilDB {
     }
 
     public interface ColumnImage{
+        String ID_IMAGE_REMOTE = "idImageRemote";
         String PATH = "path";
         String DESCRIPTION = "description";
         String ID_PLACE = "idPlace";
