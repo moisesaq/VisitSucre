@@ -11,6 +11,7 @@ import de.greenrobot.dao.DaoException;
 public class User {
 
     private Long id;
+    private String idUserRemote;
     private String name;
     private String lastName;
     private String phone;
@@ -32,8 +33,9 @@ public class User {
         this.id = id;
     }
 
-    public User(Long id, String name, String lastName, String phone, String email, String imageProfile) {
+    public User(Long id, String idUserRemote, String name, String lastName, String phone, String email, String imageProfile) {
         this.id = id;
+        this.idUserRemote = idUserRemote;
         this.name = name;
         this.lastName = lastName;
         this.phone = phone;
@@ -53,6 +55,14 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdUserRemote() {
+        return idUserRemote;
+    }
+
+    public void setIdUserRemote(String idUserRemote) {
+        this.idUserRemote = idUserRemote;
     }
 
     public String getName() {

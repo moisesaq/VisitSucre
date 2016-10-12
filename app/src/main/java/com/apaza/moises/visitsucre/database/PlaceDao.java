@@ -29,14 +29,15 @@ public class PlaceDao extends AbstractDao<Place, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Address = new Property(2, String.class, "address", false, "ADDRESS");
-        public final static Property Latitude = new Property(3, Double.class, "latitude", false, "LATITUDE");
-        public final static Property Longitude = new Property(4, Double.class, "longitude", false, "LONGITUDE");
-        public final static Property Description = new Property(5, String.class, "description", false, "DESCRIPTION");
-        public final static Property CreatedAt = new Property(6, java.util.Date.class, "createdAt", false, "CREATED_AT");
-        public final static Property IdCategory = new Property(7, Long.class, "idCategory", false, "ID_CATEGORY");
-        public final static Property IdUser = new Property(8, Long.class, "idUser", false, "ID_USER");
+        public final static Property IdPlaceRemote = new Property(1, String.class, "idPlaceRemote", false, "ID_PLACE_REMOTE");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Address = new Property(3, String.class, "address", false, "ADDRESS");
+        public final static Property Latitude = new Property(4, Double.class, "latitude", false, "LATITUDE");
+        public final static Property Longitude = new Property(5, Double.class, "longitude", false, "LONGITUDE");
+        public final static Property Description = new Property(6, String.class, "description", false, "DESCRIPTION");
+        public final static Property CreatedAt = new Property(7, java.util.Date.class, "createdAt", false, "CREATED_AT");
+        public final static Property IdCategory = new Property(8, Long.class, "idCategory", false, "ID_CATEGORY");
+        public final static Property IdUser = new Property(9, Long.class, "idUser", false, "ID_USER");
     };
 
     private DaoSession daoSession;
@@ -58,14 +59,15 @@ public class PlaceDao extends AbstractDao<Place, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"PLACE\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"ADDRESS\" TEXT," + // 2: address
-                "\"LATITUDE\" REAL," + // 3: latitude
-                "\"LONGITUDE\" REAL," + // 4: longitude
-                "\"DESCRIPTION\" TEXT," + // 5: description
-                "\"CREATED_AT\" INTEGER," + // 6: createdAt
-                "\"ID_CATEGORY\" INTEGER," + // 7: idCategory
-                "\"ID_USER\" INTEGER);"); // 8: idUser
+                "\"ID_PLACE_REMOTE\" TEXT," + // 1: idPlaceRemote
+                "\"NAME\" TEXT," + // 2: name
+                "\"ADDRESS\" TEXT," + // 3: address
+                "\"LATITUDE\" REAL," + // 4: latitude
+                "\"LONGITUDE\" REAL," + // 5: longitude
+                "\"DESCRIPTION\" TEXT," + // 6: description
+                "\"CREATED_AT\" INTEGER," + // 7: createdAt
+                "\"ID_CATEGORY\" INTEGER," + // 8: idCategory
+                "\"ID_USER\" INTEGER);"); // 9: idUser
     }
 
     /** Drops the underlying database table. */
@@ -84,44 +86,49 @@ public class PlaceDao extends AbstractDao<Place, Long> {
             stmt.bindLong(1, id);
         }
  
+        String idPlaceRemote = entity.getIdPlaceRemote();
+        if (idPlaceRemote != null) {
+            stmt.bindString(2, idPlaceRemote);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String address = entity.getAddress();
         if (address != null) {
-            stmt.bindString(3, address);
+            stmt.bindString(4, address);
         }
  
         Double latitude = entity.getLatitude();
         if (latitude != null) {
-            stmt.bindDouble(4, latitude);
+            stmt.bindDouble(5, latitude);
         }
  
         Double longitude = entity.getLongitude();
         if (longitude != null) {
-            stmt.bindDouble(5, longitude);
+            stmt.bindDouble(6, longitude);
         }
  
         String description = entity.getDescription();
         if (description != null) {
-            stmt.bindString(6, description);
+            stmt.bindString(7, description);
         }
  
         java.util.Date createdAt = entity.getCreatedAt();
         if (createdAt != null) {
-            stmt.bindLong(7, createdAt.getTime());
+            stmt.bindLong(8, createdAt.getTime());
         }
  
         Long idCategory = entity.getIdCategory();
         if (idCategory != null) {
-            stmt.bindLong(8, idCategory);
+            stmt.bindLong(9, idCategory);
         }
  
         Long idUser = entity.getIdUser();
         if (idUser != null) {
-            stmt.bindLong(9, idUser);
+            stmt.bindLong(10, idUser);
         }
     }
 
@@ -142,14 +149,15 @@ public class PlaceDao extends AbstractDao<Place, Long> {
     public Place readEntity(Cursor cursor, int offset) {
         Place entity = new Place( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // address
-            cursor.isNull(offset + 3) ? null : cursor.getDouble(offset + 3), // latitude
-            cursor.isNull(offset + 4) ? null : cursor.getDouble(offset + 4), // longitude
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // description
-            cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)), // createdAt
-            cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7), // idCategory
-            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8) // idUser
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // idPlaceRemote
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // address
+            cursor.isNull(offset + 4) ? null : cursor.getDouble(offset + 4), // latitude
+            cursor.isNull(offset + 5) ? null : cursor.getDouble(offset + 5), // longitude
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // description
+            cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)), // createdAt
+            cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8), // idCategory
+            cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9) // idUser
         );
         return entity;
     }
@@ -158,14 +166,15 @@ public class PlaceDao extends AbstractDao<Place, Long> {
     @Override
     public void readEntity(Cursor cursor, Place entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setAddress(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setLatitude(cursor.isNull(offset + 3) ? null : cursor.getDouble(offset + 3));
-        entity.setLongitude(cursor.isNull(offset + 4) ? null : cursor.getDouble(offset + 4));
-        entity.setDescription(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setCreatedAt(cursor.isNull(offset + 6) ? null : new java.util.Date(cursor.getLong(offset + 6)));
-        entity.setIdCategory(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
-        entity.setIdUser(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
+        entity.setIdPlaceRemote(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setAddress(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setLatitude(cursor.isNull(offset + 4) ? null : cursor.getDouble(offset + 4));
+        entity.setLongitude(cursor.isNull(offset + 5) ? null : cursor.getDouble(offset + 5));
+        entity.setDescription(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setCreatedAt(cursor.isNull(offset + 7) ? null : new java.util.Date(cursor.getLong(offset + 7)));
+        entity.setIdCategory(cursor.isNull(offset + 8) ? null : cursor.getLong(offset + 8));
+        entity.setIdUser(cursor.isNull(offset + 9) ? null : cursor.getLong(offset + 9));
      }
     
     /** @inheritdoc */

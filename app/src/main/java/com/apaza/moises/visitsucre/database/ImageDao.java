@@ -29,9 +29,10 @@ public class ImageDao extends AbstractDao<Image, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Path = new Property(1, String.class, "path", false, "PATH");
-        public final static Property Description = new Property(2, String.class, "description", false, "DESCRIPTION");
-        public final static Property IdPlace = new Property(3, Long.class, "idPlace", false, "ID_PLACE");
+        public final static Property IdImageRemote = new Property(1, String.class, "idImageRemote", false, "ID_IMAGE_REMOTE");
+        public final static Property Path = new Property(2, String.class, "path", false, "PATH");
+        public final static Property Description = new Property(3, String.class, "description", false, "DESCRIPTION");
+        public final static Property IdPlace = new Property(4, Long.class, "idPlace", false, "ID_PLACE");
     };
 
     private DaoSession daoSession;
@@ -52,9 +53,10 @@ public class ImageDao extends AbstractDao<Image, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"IMAGE\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"PATH\" TEXT," + // 1: path
-                "\"DESCRIPTION\" TEXT," + // 2: description
-                "\"ID_PLACE\" INTEGER);"); // 3: idPlace
+                "\"ID_IMAGE_REMOTE\" TEXT," + // 1: idImageRemote
+                "\"PATH\" TEXT," + // 2: path
+                "\"DESCRIPTION\" TEXT," + // 3: description
+                "\"ID_PLACE\" INTEGER);"); // 4: idPlace
     }
 
     /** Drops the underlying database table. */
@@ -73,19 +75,24 @@ public class ImageDao extends AbstractDao<Image, Long> {
             stmt.bindLong(1, id);
         }
  
+        String idImageRemote = entity.getIdImageRemote();
+        if (idImageRemote != null) {
+            stmt.bindString(2, idImageRemote);
+        }
+ 
         String path = entity.getPath();
         if (path != null) {
-            stmt.bindString(2, path);
+            stmt.bindString(3, path);
         }
  
         String description = entity.getDescription();
         if (description != null) {
-            stmt.bindString(3, description);
+            stmt.bindString(4, description);
         }
  
         Long idPlace = entity.getIdPlace();
         if (idPlace != null) {
-            stmt.bindLong(4, idPlace);
+            stmt.bindLong(5, idPlace);
         }
     }
 
@@ -106,9 +113,10 @@ public class ImageDao extends AbstractDao<Image, Long> {
     public Image readEntity(Cursor cursor, int offset) {
         Image entity = new Image( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // path
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // description
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // idPlace
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // idImageRemote
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // path
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // description
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4) // idPlace
         );
         return entity;
     }
@@ -117,9 +125,10 @@ public class ImageDao extends AbstractDao<Image, Long> {
     @Override
     public void readEntity(Cursor cursor, Image entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setPath(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setDescription(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setIdPlace(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setIdImageRemote(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setPath(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setDescription(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setIdPlace(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
      }
     
     /** @inheritdoc */

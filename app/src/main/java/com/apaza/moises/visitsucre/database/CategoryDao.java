@@ -24,10 +24,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Logo = new Property(2, String.class, "logo", false, "LOGO");
-        public final static Property CreatedAt = new Property(3, java.util.Date.class, "createdAt", false, "CREATED_AT");
-        public final static Property Description = new Property(4, String.class, "description", false, "DESCRIPTION");
+        public final static Property IdCategoryRemote = new Property(1, String.class, "idCategoryRemote", false, "ID_CATEGORY_REMOTE");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Logo = new Property(3, String.class, "logo", false, "LOGO");
+        public final static Property CreatedAt = new Property(4, java.util.Date.class, "createdAt", false, "CREATED_AT");
+        public final static Property Description = new Property(5, String.class, "description", false, "DESCRIPTION");
     };
 
     private DaoSession daoSession;
@@ -47,10 +48,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"CATEGORY\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"LOGO\" TEXT," + // 2: logo
-                "\"CREATED_AT\" INTEGER," + // 3: createdAt
-                "\"DESCRIPTION\" TEXT);"); // 4: description
+                "\"ID_CATEGORY_REMOTE\" TEXT UNIQUE ," + // 1: idCategoryRemote
+                "\"NAME\" TEXT," + // 2: name
+                "\"LOGO\" TEXT," + // 3: logo
+                "\"CREATED_AT\" INTEGER," + // 4: createdAt
+                "\"DESCRIPTION\" TEXT);"); // 5: description
     }
 
     /** Drops the underlying database table. */
@@ -69,24 +71,29 @@ public class CategoryDao extends AbstractDao<Category, Long> {
             stmt.bindLong(1, id);
         }
  
+        String idCategoryRemote = entity.getIdCategoryRemote();
+        if (idCategoryRemote != null) {
+            stmt.bindString(2, idCategoryRemote);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String logo = entity.getLogo();
         if (logo != null) {
-            stmt.bindString(3, logo);
+            stmt.bindString(4, logo);
         }
  
         java.util.Date createdAt = entity.getCreatedAt();
         if (createdAt != null) {
-            stmt.bindLong(4, createdAt.getTime());
+            stmt.bindLong(5, createdAt.getTime());
         }
  
         String description = entity.getDescription();
         if (description != null) {
-            stmt.bindString(5, description);
+            stmt.bindString(6, description);
         }
     }
 
@@ -107,10 +114,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     public Category readEntity(Cursor cursor, int offset) {
         Category entity = new Category( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // logo
-            cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)), // createdAt
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // description
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // idCategoryRemote
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // logo
+            cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)), // createdAt
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // description
         );
         return entity;
     }
@@ -119,10 +127,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     @Override
     public void readEntity(Cursor cursor, Category entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setLogo(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setCreatedAt(cursor.isNull(offset + 3) ? null : new java.util.Date(cursor.getLong(offset + 3)));
-        entity.setDescription(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setIdCategoryRemote(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setLogo(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setCreatedAt(cursor.isNull(offset + 4) ? null : new java.util.Date(cursor.getLong(offset + 4)));
+        entity.setDescription(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }
     
     /** @inheritdoc */

@@ -24,11 +24,12 @@ public class UserDao extends AbstractDao<User, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property LastName = new Property(2, String.class, "lastName", false, "LAST_NAME");
-        public final static Property Phone = new Property(3, String.class, "phone", false, "PHONE");
-        public final static Property Email = new Property(4, String.class, "email", false, "EMAIL");
-        public final static Property ImageProfile = new Property(5, String.class, "imageProfile", false, "IMAGE_PROFILE");
+        public final static Property IdUserRemote = new Property(1, String.class, "idUserRemote", false, "ID_USER_REMOTE");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property LastName = new Property(3, String.class, "lastName", false, "LAST_NAME");
+        public final static Property Phone = new Property(4, String.class, "phone", false, "PHONE");
+        public final static Property Email = new Property(5, String.class, "email", false, "EMAIL");
+        public final static Property ImageProfile = new Property(6, String.class, "imageProfile", false, "IMAGE_PROFILE");
     };
 
     private DaoSession daoSession;
@@ -48,11 +49,12 @@ public class UserDao extends AbstractDao<User, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"USER\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"NAME\" TEXT," + // 1: name
-                "\"LAST_NAME\" TEXT," + // 2: lastName
-                "\"PHONE\" TEXT," + // 3: phone
-                "\"EMAIL\" TEXT," + // 4: email
-                "\"IMAGE_PROFILE\" TEXT);"); // 5: imageProfile
+                "\"ID_USER_REMOTE\" TEXT," + // 1: idUserRemote
+                "\"NAME\" TEXT," + // 2: name
+                "\"LAST_NAME\" TEXT," + // 3: lastName
+                "\"PHONE\" TEXT," + // 4: phone
+                "\"EMAIL\" TEXT," + // 5: email
+                "\"IMAGE_PROFILE\" TEXT);"); // 6: imageProfile
     }
 
     /** Drops the underlying database table. */
@@ -71,29 +73,34 @@ public class UserDao extends AbstractDao<User, Long> {
             stmt.bindLong(1, id);
         }
  
+        String idUserRemote = entity.getIdUserRemote();
+        if (idUserRemote != null) {
+            stmt.bindString(2, idUserRemote);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String lastName = entity.getLastName();
         if (lastName != null) {
-            stmt.bindString(3, lastName);
+            stmt.bindString(4, lastName);
         }
  
         String phone = entity.getPhone();
         if (phone != null) {
-            stmt.bindString(4, phone);
+            stmt.bindString(5, phone);
         }
  
         String email = entity.getEmail();
         if (email != null) {
-            stmt.bindString(5, email);
+            stmt.bindString(6, email);
         }
  
         String imageProfile = entity.getImageProfile();
         if (imageProfile != null) {
-            stmt.bindString(6, imageProfile);
+            stmt.bindString(7, imageProfile);
         }
     }
 
@@ -114,11 +121,12 @@ public class UserDao extends AbstractDao<User, Long> {
     public User readEntity(Cursor cursor, int offset) {
         User entity = new User( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // lastName
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // phone
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // email
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // imageProfile
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // idUserRemote
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // lastName
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // phone
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // email
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // imageProfile
         );
         return entity;
     }
@@ -127,11 +135,12 @@ public class UserDao extends AbstractDao<User, Long> {
     @Override
     public void readEntity(Cursor cursor, User entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setLastName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setPhone(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setEmail(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setImageProfile(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setIdUserRemote(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setLastName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setPhone(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setEmail(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setImageProfile(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     /** @inheritdoc */

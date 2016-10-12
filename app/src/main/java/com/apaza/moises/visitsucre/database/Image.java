@@ -10,6 +10,7 @@ import de.greenrobot.dao.DaoException;
 public class Image {
 
     private Long id;
+    private String idImageRemote;
     private String path;
     private String description;
     private Long idPlace;
@@ -31,8 +32,9 @@ public class Image {
         this.id = id;
     }
 
-    public Image(Long id, String path, String description, Long idPlace) {
+    public Image(Long id, String idImageRemote, String path, String description, Long idPlace) {
         this.id = id;
+        this.idImageRemote = idImageRemote;
         this.path = path;
         this.description = description;
         this.idPlace = idPlace;
@@ -50,6 +52,14 @@ public class Image {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdImageRemote() {
+        return idImageRemote;
+    }
+
+    public void setIdImageRemote(String idImageRemote) {
+        this.idImageRemote = idImageRemote;
     }
 
     public String getPath() {

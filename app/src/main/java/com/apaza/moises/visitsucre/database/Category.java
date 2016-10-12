@@ -11,6 +11,7 @@ import de.greenrobot.dao.DaoException;
 public class Category {
 
     private Long id;
+    private String idCategoryRemote;
     private String name;
     private String logo;
     private java.util.Date createdAt;
@@ -31,8 +32,9 @@ public class Category {
         this.id = id;
     }
 
-    public Category(Long id, String name, String logo, java.util.Date createdAt, String description) {
+    public Category(Long id, String idCategoryRemote, String name, String logo, java.util.Date createdAt, String description) {
         this.id = id;
+        this.idCategoryRemote = idCategoryRemote;
         this.name = name;
         this.logo = logo;
         this.createdAt = createdAt;
@@ -51,6 +53,14 @@ public class Category {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdCategoryRemote() {
+        return idCategoryRemote;
+    }
+
+    public void setIdCategoryRemote(String idCategoryRemote) {
+        this.idCategoryRemote = idCategoryRemote;
     }
 
     public String getName() {

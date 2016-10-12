@@ -11,6 +11,7 @@ import de.greenrobot.dao.DaoException;
 public class Place {
 
     private Long id;
+    private String idPlaceRemote;
     private String name;
     private String address;
     private Double latitude;
@@ -41,8 +42,9 @@ public class Place {
         this.id = id;
     }
 
-    public Place(Long id, String name, String address, Double latitude, Double longitude, String description, java.util.Date createdAt, Long idCategory, Long idUser) {
+    public Place(Long id, String idPlaceRemote, String name, String address, Double latitude, Double longitude, String description, java.util.Date createdAt, Long idCategory, Long idUser) {
         this.id = id;
+        this.idPlaceRemote = idPlaceRemote;
         this.name = name;
         this.address = address;
         this.latitude = latitude;
@@ -65,6 +67,14 @@ public class Place {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getIdPlaceRemote() {
+        return idPlaceRemote;
+    }
+
+    public void setIdPlaceRemote(String idPlaceRemote) {
+        this.idPlaceRemote = idPlaceRemote;
     }
 
     public String getName() {
