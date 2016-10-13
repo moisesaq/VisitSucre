@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
+import com.google.android.gms.location.DetectedActivity;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
@@ -30,7 +31,7 @@ public class Utils {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-    public static final int CODE_PERMISSION_PASSENGER = 200;
+    public static final int CODE_PERMISSION_LOCATION = 200;
     public static final String[] PERMISSION_PASSENGER = {Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_PHONE_STATE};
@@ -50,7 +51,7 @@ public class Utils {
     public static final String BROADCAST_ACTION = "broadcast-action";
     public static final String ACTIVITY_KEY = "activites-key";
     public static final long ACTIVITY_RECOGNITION_INTERVAL = 0;
-    public static final long UPDATE_INTERVAL = 1000;
+    public static final long UPDATE_INTERVAL = 10000;
     public static final long UPDATE_FASTEST_INTERVAL = UPDATE_INTERVAL / 2;
 
     public static String getCurrentLanguage() {
@@ -110,6 +111,42 @@ public class Utils {
                 cont++;
         }
         return cont == grantResults.length;
+    }
+
+    public static String getStringActivity(int type) {
+        switch (type) {
+            case DetectedActivity.IN_VEHICLE:
+                return "Vehículo";
+            case DetectedActivity.ON_BICYCLE:
+                return "Bicicleta";
+            case DetectedActivity.ON_FOOT:
+                return "Caminando o corriendo";
+            case DetectedActivity.RUNNING:
+                return "Corriendo";
+            case DetectedActivity.STILL:
+                return "Sin movimiento";
+            case DetectedActivity.TILTING:
+                return "Inclinación brusca";
+            case DetectedActivity.UNKNOWN:
+                return "Desconocido";
+            case DetectedActivity.WALKING:
+                return "Caminando";
+            default:
+                return "Tipo no idenficado";
+        }
+    }
+
+    public static int getActivityIcon(int type) {
+        switch (type) {
+            case DetectedActivity.STILL:
+                return R.drawable.ic_still;
+            case DetectedActivity.WALKING:
+                return R.drawable.ic_walk;
+            case DetectedActivity.RUNNING:
+                return R.drawable.ic_run;
+            default:
+                return R.drawable.ic_question;
+        }
     }
 
 }

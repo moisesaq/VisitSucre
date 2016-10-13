@@ -20,13 +20,15 @@ import com.apaza.moises.visitsucre.ui.fragment.AddCategoryFragment;
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.AboutSucreFragment;
 import com.apaza.moises.visitsucre.ui.fragment.CategoryListFragment;
+import com.apaza.moises.visitsucre.ui.fragment.LocationTrackerFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceInMapFragment;
 import com.apaza.moises.visitsucre.ui.fragment.PlaceListFragment;
 import com.apaza.moises.visitsucre.ui.fragment.RegisterPlaceFragment;
 import com.apaza.moises.visitsucre.ui.fragment.TestFragment;
 import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseActivity;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
         CategoryListFragment.OnCategoryListFragmentListener,
         PlaceListFragment.OnFragmentInteractionListener, FragmentManager.OnBackStackChangedListener{
@@ -50,12 +52,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SyncAdapter.setupSyncAdapter(this);
 
         fragmentManager = getSupportFragmentManager();
-        //fragmentManager.addOnBackStackChangedListener(this);
 
         setupToolbar();
         setupNavigationView();
-        showFragment(AddCategoryFragment.newInstance());
-        //showFragment(PlaceListFragment.newInstance(0));
+        showFragment(LocationTrackerFragment.newInstance());
     }
 
     private void setupNavigationView(){

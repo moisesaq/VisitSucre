@@ -45,4 +45,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_gravity="center_horizontal"
         android:text="Activity"/>
+
+    <ImageView
+        android:id="@+id/iv_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@mipmap/ic_launcher"/>
 </LinearLayout>
