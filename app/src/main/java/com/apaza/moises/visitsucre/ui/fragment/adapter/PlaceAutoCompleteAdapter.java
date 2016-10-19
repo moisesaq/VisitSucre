@@ -1,6 +1,7 @@
 package com.apaza.moises.visitsucre.ui.fragment.adapter;
 
 import android.content.Context;
+import android.text.style.CharacterStyle;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
@@ -112,7 +113,7 @@ public class PlaceAutoCompleteAdapter extends ArrayAdapter<PlaceAutoCompleteAdap
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
                 // Get the details of this prediction and copy it into a new PlaceAutocomplete object.
-                resultList.add(new PlaceAutoComplete(prediction.getPlaceId(), prediction.getDescription()));
+                resultList.add(new PlaceAutoComplete(prediction.getPlaceId(), prediction.getPlaceId()));//prediction.getDescription()));//FIXME fix here
             }
 
             // Release the buffer now that all data has been copied.

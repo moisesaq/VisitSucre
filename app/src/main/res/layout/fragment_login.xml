@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ripple="http://schemas.android.com/apk/res-auto"
+    xmlns:moi="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/paddingMaxGlobal"
     tools:context=".ui.fragment.LoginFragment">
 
@@ -25,45 +25,27 @@
             android:layout_marginTop="@dimen/marginMinGlobal"
             android:orientation="horizontal">
 
-            <com.andexert.library.RippleView
-                android:id="@+id/loginWithFace"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <Button
+                android:id="@+id/b_login_with_face"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                ripple:rv_type="doubleRipple"
-                ripple:rv_zoom="true">
+                android:layout_marginLeft="@dimen/marginMinGlobal"
+                android:layout_marginRight="@dimen/marginMinGlobal"
+                android:background="@drawable/background_button_facebook"
+                android:textColor="@android:color/white"
+                android:text="@string/facebook"
+                android:drawableLeft="@mipmap/ic_connect_facebook"/>
 
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginMinGlobal"
-                    android:layout_marginRight="@dimen/marginMinGlobal"
-                    android:background="@drawable/background_button_facebook"
-                    android:textColor="@android:color/white"
-                    android:text="@string/facebook"
-                    android:drawableLeft="@mipmap/ic_connect_facebook"/>
-
-            </com.andexert.library.RippleView>
-
-            <com.andexert.library.RippleView
-                android:id="@+id/loginWithG"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <Button
+                android:id="@+id/b_login_with_g"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                ripple:rv_type="doubleRipple"
-                ripple:rv_zoom="true">
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/marginMinGlobal"
-                    android:layout_marginRight="@dimen/marginMinGlobal"
-                    android:background="@drawable/background_button_g"
-                    android:textColor="@android:color/white"
-                    android:text="@string/google"
-                    android:drawableLeft="@mipmap/ic_connect_google"/>
-
-            </com.andexert.library.RippleView>
+                android:layout_marginLeft="@dimen/marginMinGlobal"
+                android:layout_marginRight="@dimen/marginMinGlobal"
+                android:background="@drawable/background_button_g"
+                android:textColor="@android:color/white"
+                android:text="@string/google"
+                android:drawableLeft="@mipmap/ic_connect_google"/>
 
         </LinearLayout>
 
@@ -75,99 +57,42 @@
             android:textColor="@color/textSecondary"
             android:layout_marginTop="@dimen/marginMaxGlobal"/>
 
-        <LinearLayout
+        <com.technorides.technoridesandroidpassenger.ui.View.InputTextView
+            android:id="@+id/itv_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            moi:iconImage="@mipmap/ic_email_grey600_24dp"
+            moi:hint="@string/email"
+            moi:errorEnabled="true"
+            android:text="barto@technorides.com"
+            android:inputType="textEmailAddress"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_email"/>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/tilEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:ems="10"
-                    android:layout_weight="1"
-                    android:hint="@string/email"/>
-
-            </android.support.design.widget.TextInputLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <com.technorides.technoridesandroidpassenger.ui.View.InputTextView
+            android:id="@+id/itv_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            moi:iconImage="@mipmap/ic_lock_grey600_24dp"
+            moi:hint="@string/password"
+            moi:errorEnabled="true"
+            android:text="asdasd"
+            android:inputType="textPassword"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/ic_password"/>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/tilPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:ems="10"
-                    android:hint="@string/password"
-                    android:drawableRight="@mipmap/ic_visibility_off"/>
-
-            </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
-
-        <com.andexert.library.RippleView
-            android:id="@+id/login"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/b_login"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/marginMaxGlobal"
-            ripple:rv_type="doubleRipple"
-            ripple:rv_zoom="true">
+            android:background="@drawable/background_button"
+            android:textColor="@android:color/white"
+            android:text="@string/login" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_button"
-                android:textColor="@android:color/white"
-                android:text="@string/login" />
-
-        </com.andexert.library.RippleView>
-
-        <com.andexert.library.RippleView
+        <TextView
             android:id="@+id/forgotPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            ripple:rv_type="simpleRipple"
-            ripple:rv_zoom="true"
-            ripple:rv_color="@color/colorPrimary">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/forgot_password"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/textSecondary"/>
-
-        </com.andexert.library.RippleView>
-
+            style="@style/TextViewTechnoSmall"
+            android:text="@string/forgot_password"
+            android:textColor="@color/colorTextOnBoarding"
+            android:layout_marginTop="@dimen/marginMediumGlobal"
+            android:background="?selectableItemBackground"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
     <LinearLayout
@@ -177,29 +102,18 @@
         android:layout_gravity="bottom|center_horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/TextViewTechnoSmall"
             android:text="@string/first_time_here"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/textSecondary"/>
+            android:textColor="@color/colorTextOnBoarding"/>
 
-        <com.andexert.library.RippleView
+        <TextView
             android:id="@+id/signUp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ripple:rv_type="simpleRipple"
-            ripple:rv_zoom="true"
-            ripple:rv_color="@color/colorPrimary">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/signUp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginLeft="@dimen/marginMinGlobal" />
-
-        </com.andexert.library.RippleView>
+            style="@style/TextViewTechnoSmall"
+            android:text="@string/signUp"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            android:background="?selectableItemBackground"
+            android:layout_marginLeft="@dimen/marginMinGlobal" />
     </LinearLayout>
 
 </FrameLayout>

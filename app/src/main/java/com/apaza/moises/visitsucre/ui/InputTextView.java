@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.global.SavedState;
 
 import java.util.regex.Pattern;
 
@@ -196,41 +197,5 @@ public class InputTextView extends LinearLayout{
     @Override
     protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
         dispatchThawSelfOnly(container);
-    }
-
-    static class SavedState extends BaseSavedState {
-        SparseArray childrenStates;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private SavedState(Parcel in, ClassLoader classLoader) {
-            super(in);
-            childrenStates = in.readSparseArray(classLoader);
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeSparseArray(childrenStates);
-        }
-
-        public static final ClassLoaderCreator<SavedState> CREATOR
-                = new ClassLoaderCreator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(Parcel source, ClassLoader loader) {
-                return new SavedState(source, loader);
-            }
-
-            @Override
-            public SavedState createFromParcel(Parcel source) {
-                return createFromParcel(null);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
     }
 }

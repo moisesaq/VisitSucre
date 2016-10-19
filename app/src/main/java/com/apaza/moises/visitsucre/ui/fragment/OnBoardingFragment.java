@@ -98,7 +98,6 @@ public class OnBoardingFragment extends BaseFragment implements View.OnClickList
                     viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
                 break;
             case R.id.signUp:
-                mListener.onSignUpClick();
                 break;
             case R.id.accessView:
                 mListener.onAccessClick();
@@ -149,7 +148,6 @@ public class OnBoardingFragment extends BaseFragment implements View.OnClickList
     }
 
     public interface OnBoardingFragmentListener {
-        void onSignUpClick();
         void onAccessClick();
     }
 

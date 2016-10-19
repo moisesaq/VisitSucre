@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "260735357225",
+    "firebase_url": "https://visitsucre-1331.firebaseio.com",
+    "project_id": "visitsucre-1331",
+    "storage_bucket": "visitsucre-1331.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260735357225:android:2d5cb96c43f14bab",
+        "android_client_info": {
+          "package_name": "com.apaza.moises.visitsucre"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "260735357225-e0541cvsqfr0vfarkufbfo1b04jrtqp0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apaza.moises.visitsucre",
+            "certificate_hash": "9360A29D2F05E575F5E660D1FDF324FD89D7EDE8"
+          }
+        },
+        {
+          "client_id": "260735357225-2kkckl3tt8l50fsrtqajtq14i3qkkvci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAI9N_0M-OgIwgbTLCM3djm1cRRBsG3m8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "260735357225-2kkckl3tt8l50fsrtqajtq14i3qkkvci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,11 +12,9 @@ import android.view.MenuItem;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.ui.fragment.LoginFragment;
 import com.apaza.moises.visitsucre.ui.fragment.OnBoardingFragment;
-import com.apaza.moises.visitsucre.ui.fragment.SignUpFragment;
 
 public class SignUpActivity extends AppCompatActivity implements OnBoardingFragment.OnBoardingFragmentListener,
-                                                                    LoginFragment.OnLoginFragmentListener,
-                                                                    SignUpFragment.OnSignUpFragmentListener{
+                                                                    LoginFragment.OnLoginFragmentListener{
 
     Toolbar toolbar;
     @Override
@@ -36,12 +34,8 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
         ft.commit();
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem menuItem = menu.findItem(android.R.id.home);
-        /*View view = menuItem.setAction*/
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -55,26 +49,19 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
         return super.onOptionsItemSelected(item);
     }
 
-    //Methods override of OnBoardingFragment
-    @Override
-    public void onSignUpClick() {
-        showFragment(SignUpFragment.newInstance(""));
-    }
-
+    /*ON BOARDING FRAGMENT LISTENER*/
     @Override
     public void onAccessClick() {
         showFragment(LoginFragment.newInstance());
     }
 
-    //Methods override of LoginFragment
+    /*LOGIN FRAGMENT LISTENER*/
     @Override
     public void onForgotPasswordClick() {
-
     }
 
     @Override
     public void onSignUpFromLoginClick() {
-
     }
 
     @Override
@@ -84,16 +71,4 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
         else
             finish();
     }
-
-    //Methods override of SignUpFragment
-    @Override
-    public void onCreateAccountClick() {
-
-    }
-
-    @Override
-    public void onAccessFromSignUpClick() {
-
-    }
-
 }

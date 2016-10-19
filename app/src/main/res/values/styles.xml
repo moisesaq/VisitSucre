@@ -76,4 +76,37 @@
         <item name="android:textColor">#FF7043</item>
     </style>
 
+    <style name="StyleCustomContainer">
+        <item name="android:paddingLeft">@dimen/paddingMinGlobal</item>
+        <item name="android:paddingRight">@dimen/paddingMinGlobal</item>
+        <item name="android:paddingBottom">@dimen/paddingMediumGlobal</item>
+        <item name="android:paddingTop">@dimen/paddingMediumGlobal</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="ImageViewIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">@dimen/paddingMinGlobal</item>
+        <item name="android:layout_marginLeft">@dimen/marginMediumGlobal</item>
+        <item name="android:layout_marginRight">@dimen/marginMediumGlobal</item>
+    </style>
+
+    <style name="TextViewTechnoMedium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextViewTechnoSmall">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>
