@@ -32,7 +32,8 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        startSplash();
+        //startSplash();
+        goToSignUpActivity();
     }
 
     private void startSplash(){
@@ -44,8 +45,8 @@ public class SplashActivity extends AppCompatActivity {
             public void onFinish() {
                 counter.setText("Go!");
                 //DetailPlaceActivity.createInstance(SplashActivity.this, "");
-                goToMainActivity();
-                //goToSignUpActivity();
+                //goToMainActivity();
+                goToSignUpActivity();
             }
         }.start();
     }

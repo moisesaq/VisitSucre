@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction ft = fragmentManager.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.replace(R.id.containerMain, fragment);
+        ft.replace(R.id.fl_main_container, fragment);
         ft.commit();
         //Log.i(TAG, "STACK COUNT >>>>> " + fragmentManager.getBackStackEntryCount() + " TAG FRAGMENT " + fragment.getClass().getSimpleName());
     }

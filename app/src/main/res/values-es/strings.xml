@@ -3,10 +3,7 @@
     <string name="app_name">VisitSucre</string>
     <string name="hello_moises">Hola Moises</string>
 
-    <string name="signUp">Regístrate</string>
     <string name="access">Acceder</string>
-    <string name="already_have_account">¿Ya tienes una cuenta?</string>
-    <string name="first_time_here">¿Primera vez aquí?</string>
     <string name="forgot_password">¿Se te olvidó tu contraseña?</string>
     <string name="password">Contraseña</string>
     <string name="connect_with">Conectar con</string>

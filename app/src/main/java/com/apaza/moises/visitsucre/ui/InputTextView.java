@@ -3,14 +3,9 @@ package com.apaza.moises.visitsucre.ui;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Patterns;
 import android.util.SparseArray;
@@ -18,27 +13,22 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.global.OnTextChangeListener;
+import com.apaza.moises.visitsucre.global.SavedState;
 
 import java.util.regex.Pattern;
 
-public class InputTextView extends LinearLayout{
+public class InputTextView extends LinearLayout implements View.OnClickListener{
 
     private ImageView icon;
     private TextInputLayout textInputLayout;
     private EditText editText;
-
-    private Drawable imageIcon;
-    private boolean maxLengthEnabled;
-    private int maxLength;
-    private int inputType;
-    private String hint;
-
-    private int lines;
+    private ImageButton imageButton;
 
     public InputTextView(Context context) {
         super(context);
@@ -48,21 +38,7 @@ public class InputTextView extends LinearLayout{
     public InputTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setupView();
-        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.InputTextView);
-        imageIcon = typedArray.getDrawable(R.styleable.InputTextView_iconImage);
-        setImageIcon(imageIcon);
-        maxLengthEnabled = typedArray.getBoolean(R.styleable.InputTextView_maxLengthEnabled, false);
-        setMaxLengthEnabled(maxLengthEnabled);
-        maxLength = typedArray.getInteger(R.styleable.InputTextView_maxLength, 0);
-        setMaxLength(maxLength);
-        inputType = typedArray.getInt(R.styleable.InputTextView_android_inputType, InputType.TYPE_NULL);
-        setInputType(inputType);
-
-        lines = typedArray.getInt(R.styleable.InputTextView_android_lines, 1);
-        setLines(lines);
-        hint = typedArray.getString(R.styleable.InputTextView_hint);
-        setHint(hint);
-        typedArray.recycle();
+        initialize(attrs);
     }
 
     private void setupView(){
@@ -72,22 +48,50 @@ public class InputTextView extends LinearLayout{
         textInputLayout = (TextInputLayout)findViewById(R.id.textInputLayout);
         textInputLayout.setErrorEnabled(true);
         editText = (EditText)findViewById(R.id.editText);
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+        editText.addTextChangedListener(new OnTextChangeListener() {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 textInputLayout.setError(null);
             }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
         });
+
+        imageButton = (ImageButton)findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(this);
+    }
+
+    private void initialize(AttributeSet attrs){
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.InputTextView);
+
+        Drawable imageIcon = typedArray.getDrawable(R.styleable.InputTextView_iconImage);
+        setImageIcon(imageIcon);
+
+        boolean errorEnabled = typedArray.getBoolean(R.styleable.InputTextView_errorEnabled, false);
+        setErrorEnabled(errorEnabled);
+
+        boolean maxLengthEnabled = typedArray.getBoolean(R.styleable.InputTextView_maxLengthEnabled, false);
+        setMaxLengthEnabled(maxLengthEnabled);
+
+        int maxLength = typedArray.getInteger(R.styleable.InputTextView_maxLength, 0);
+        setMaxLength(maxLength);
+
+        int inputType = typedArray.getInt(R.styleable.InputTextView_android_inputType, InputType.TYPE_NULL);
+        setInputType(inputType);
+
+        int lines = typedArray.getInt(R.styleable.InputTextView_android_lines, 1);
+        setLines(lines);
+
+        String text = typedArray.getString(R.styleable.InputTextView_android_text);
+        setText(text);
+
+        String hint = typedArray.getString(R.styleable.InputTextView_hint);
+        setHint(hint);
+
+        typedArray.recycle();
+    }
+
+    public void setText(String text){
+        if(text != null)
+            editText.setText(text);
     }
 
     public String getText(){
@@ -105,6 +109,10 @@ public class InputTextView extends LinearLayout{
         }
     }
 
+    public void setErrorEnabled(boolean enabled){
+        textInputLayout.setErrorEnabled(enabled);
+    }
+
     public void setMaxLengthEnabled(boolean enabled){
         textInputLayout.setCounterEnabled(enabled);
     }
@@ -114,6 +122,8 @@ public class InputTextView extends LinearLayout{
     }
 
     public void setInputType(int inputType){
+        if(inputType == InputType.TYPE_TEXT_VARIATION_PASSWORD || inputType == 129)
+            imageButton.setVisibility(View.VISIBLE);
         editText.setInputType(inputType);
     }
 
@@ -123,9 +133,31 @@ public class InputTextView extends LinearLayout{
             editText.setGravity(Gravity.START|Gravity.TOP);
         }
     }
+
     public void setHint(String text){
-        if(!text.isEmpty())
+        if(text != null && !text.isEmpty())
             textInputLayout.setHint(text);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.imageButton:
+                setVisibilityPassword();
+                break;
+        }
+
+    }
+
+    public void setVisibilityPassword(){
+        if(editText.getInputType() == InputType.TYPE_TEXT_VARIATION_PASSWORD || editText.getInputType() == 129){
+            editText.setInputType(InputType.TYPE_CLASS_TEXT);
+            imageButton.setImageResource(R.mipmap.ic_visibility_on);
+        }else{
+            editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            imageButton.setImageResource(R.mipmap.ic_visibility_off);
+        }
+        editText.setSelection(editText.getText().length());
     }
 
     public boolean isTextValid(String textError){
@@ -137,17 +169,27 @@ public class InputTextView extends LinearLayout{
             return false;
         }
 
-        if(text.length() <= textInputLayout.getCounterMaxLength()){
-            textInputLayout.setError(null);
-            return true;
-        } else {
-            textInputLayout.setError(textError);
-            return false;
+        if(textInputLayout.isCounterEnabled()){
+            if(text.length() <= textInputLayout.getCounterMaxLength()){
+                textInputLayout.setError(null);
+                return true;
+            }else{
+                textInputLayout.setError(textError);
+                return false;
+            }
         }
-        //return true;
+        textInputLayout.setError(null);
+        return true;
     }
 
-    public boolean isPhoneValid(String phone){
+    public boolean isPhoneValid(){
+        String phone = editText.getText().toString().trim();
+
+        if(phone.isEmpty()){
+            textInputLayout.setError("Phone empty");
+            return false;
+        }
+
         if(!Patterns.PHONE.matcher(phone).matches()){
             textInputLayout.setError("Phone invalid");
             return false;
@@ -157,7 +199,13 @@ public class InputTextView extends LinearLayout{
         return true;
     }
 
-    public boolean isEmailValid(String email){
+    public boolean isEmailValid(){
+        String email = editText.getText().toString().trim();
+        if(email.isEmpty()){
+            textInputLayout.setError(textInputLayout.getHint() + ", field empty");
+            return false;
+        }
+
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             textInputLayout.setError("Email invalid");
             return false;
@@ -165,6 +213,20 @@ public class InputTextView extends LinearLayout{
             textInputLayout.setError(null);
         }
         return true;
+    }
+
+    public boolean isPasswordValid(){
+        String password = editText.getText().toString().trim();
+        if(password.isEmpty()){
+            textInputLayout.setError(textInputLayout.getHint() + ", field empty");
+            return false;
+        }
+        textInputLayout.setError(null);
+        return true;
+    }
+
+    public void setError(String error){
+        textInputLayout.setError(error);
     }
 
     /*SAVE STATE OF THE VIEWS*/
@@ -196,41 +258,5 @@ public class InputTextView extends LinearLayout{
     @Override
     protected void dispatchRestoreInstanceState(SparseArray<Parcelable> container) {
         dispatchThawSelfOnly(container);
-    }
-
-    static class SavedState extends BaseSavedState {
-        SparseArray childrenStates;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private SavedState(Parcel in, ClassLoader classLoader) {
-            super(in);
-            childrenStates = in.readSparseArray(classLoader);
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeSparseArray(childrenStates);
-        }
-
-        public static final ClassLoaderCreator<SavedState> CREATOR
-                = new ClassLoaderCreator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(Parcel source, ClassLoader loader) {
-                return new SavedState(source, loader);
-            }
-
-            @Override
-            public SavedState createFromParcel(Parcel source) {
-                return createFromParcel(null);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
     }
 }
