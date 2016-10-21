@@ -1,5 +1,6 @@
 package com.apaza.moises.visitsucre.ui;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,11 +13,15 @@ import android.view.MenuItem;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.ui.fragment.LoginFragment;
 import com.apaza.moises.visitsucre.ui.fragment.OnBoardingFragment;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity implements OnBoardingFragment.OnBoardingFragmentListener,
-                                                                    LoginFragment.OnLoginFragmentListener{
+        LoginFragment.CallBack {
 
     Toolbar toolbar;
+    public static final int REQUEST_GOOGLE_PLAY_SERVICES = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +35,7 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.replace(R.id.containerMain, fragment);
+        ft.replace(R.id.fl_container_sign_up, fragment);
         ft.commit();
     }
 
@@ -52,16 +57,23 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
     /*ON BOARDING FRAGMENT LISTENER*/
     @Override
     public void onAccessClick() {
-        showFragment(LoginFragment.newInstance());
+        showFragment(LoginFragment.newInstance(getApplicationContext(), FirebaseAuth.getInstance()));
     }
 
-    /*LOGIN FRAGMENT LISTENER*/
+    /*CALLBACK LOGIN FRAGMENT*/
     @Override
     public void onForgotPasswordClick() {
     }
 
     @Override
-    public void onSignUpFromLoginClick() {
+    public void onInvokeGooglePlayServices(int codeError) {
+        showPlayServicesErrorDialog(codeError);
+    }
+
+    void showPlayServicesErrorDialog(final int errorCode) {
+        Dialog dialog = GoogleApiAvailability.getInstance()
+                .getErrorDialog(SignUpActivity.this, errorCode, REQUEST_GOOGLE_PLAY_SERVICES);
+        dialog.show();
     }
 
     @Override

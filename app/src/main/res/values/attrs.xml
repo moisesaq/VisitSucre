@@ -4,9 +4,11 @@
 
     <declare-styleable name="InputTextView">
         <attr name="iconImage"/>
+        <attr name="errorEnabled" format="boolean"/>
         <attr name="maxLengthEnabled" format="boolean"/>
         <attr name="maxLength" format="integer"/>
         <attr name="hint" format="string"/>
+        <attr name="android:text"/>
         <attr name="android:inputType"/>
         <attr name="android:lines"/>
     </declare-styleable>

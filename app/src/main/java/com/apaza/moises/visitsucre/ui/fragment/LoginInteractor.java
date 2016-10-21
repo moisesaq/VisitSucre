@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -14,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginInteractor {
 
+    private static final String TAG = "LOGIN INTERACTOR";
     private final Context mContext;
     private FirebaseAuth mFirebaseAuth;
 
@@ -27,7 +29,6 @@ public class LoginInteractor {
     }
 
     public void login(String email, String password, final CallBack callBack){
-
         /*CHECK INTERNET*/
         if(!isNetworkAvailable()){
             callBack.onNetworkConnectFailed();
@@ -67,6 +68,7 @@ public class LoginInteractor {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, task.getResult().toString());
                         if(!task.isSuccessful()){
                             callBack.onAuthFailed(task.getException().toString());
                         }else{

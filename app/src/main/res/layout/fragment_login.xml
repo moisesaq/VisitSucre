@@ -7,10 +7,12 @@
     tools:context=".ui.fragment.LoginFragment">
 
     <LinearLayout
+        android:id="@+id/layoutLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <TextView
             android:layout_width="wrap_content"
@@ -27,7 +29,8 @@
 
             <Button
                 android:id="@+id/b_login_with_face"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginMinGlobal"
                 android:layout_marginRight="@dimen/marginMinGlobal"
@@ -38,7 +41,8 @@
 
             <Button
                 android:id="@+id/b_login_with_g"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/marginMinGlobal"
                 android:layout_marginRight="@dimen/marginMinGlobal"
@@ -57,17 +61,17 @@
             android:textColor="@color/textSecondary"
             android:layout_marginTop="@dimen/marginMaxGlobal"/>
 
-        <com.technorides.technoridesandroidpassenger.ui.View.InputTextView
+        <com.apaza.moises.visitsucre.ui.InputTextView
             android:id="@+id/itv_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             moi:iconImage="@mipmap/ic_email_grey600_24dp"
             moi:hint="@string/email"
             moi:errorEnabled="true"
-            android:text="barto@technorides.com"
+            android:text="barto@visitsucre.com"
             android:inputType="textEmailAddress"/>
 
-        <com.technorides.technoridesandroidpassenger.ui.View.InputTextView
+        <com.apaza.moises.visitsucre.ui.InputTextView
             android:id="@+id/itv_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,24 +100,24 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layoutLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_gravity="bottom|center_horizontal">
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar" />
 
         <TextView
             style="@style/TextViewTechnoSmall"
-            android:text="@string/first_time_here"
+            android:text="@string/loading"
             android:textColor="@color/colorTextOnBoarding"/>
 
-        <TextView
-            android:id="@+id/signUp"
-            style="@style/TextViewTechnoSmall"
-            android:text="@string/signUp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
-            android:background="?selectableItemBackground"
-            android:layout_marginLeft="@dimen/marginMinGlobal" />
     </LinearLayout>
 
 </FrameLayout>

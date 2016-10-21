@@ -75,10 +75,8 @@ public class OnBoardingFragment extends BaseFragment implements View.OnClickList
         next = (ImageButton)view.findViewById(R.id.next);
         next.setOnClickListener(this);
 
-        Button btnSignUp = (Button) view.findViewById(R.id.signUp);
-        btnSignUp.setOnClickListener(this);
-        TextView accessView = (TextView) view.findViewById(R.id.accessView);
-        accessView.setOnClickListener(this);
+        Button bAccess = (Button) view.findViewById(R.id.b_access);
+        bAccess.setOnClickListener(this);
     }
 
 
@@ -97,10 +95,9 @@ public class OnBoardingFragment extends BaseFragment implements View.OnClickList
                 else
                     viewPager.setCurrentItem(viewPager.getCurrentItem()+1);
                 break;
-            case R.id.signUp:
-                break;
-            case R.id.accessView:
-                mListener.onAccessClick();
+            case R.id.b_access:
+                if(mListener != null)
+                    mListener.onAccessClick();
                 break;
         }
     }
@@ -112,12 +109,12 @@ public class OnBoardingFragment extends BaseFragment implements View.OnClickList
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnBoardingFragmentListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentSignUpListener");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnBoardingFragmentListener){
+            mListener = (OnBoardingFragmentListener) context;
+        }else {
+            throw new ClassCastException(context.toString() + " must implement OnFragmentSignUpListener");
         }
     }
 

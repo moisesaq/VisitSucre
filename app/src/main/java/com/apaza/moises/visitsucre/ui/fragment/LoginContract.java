@@ -7,8 +7,6 @@ public class LoginContract {
 
     interface View extends BaseView<Presenter>{
         void showProgress(boolean show);
-        void setEmailError(String error);
-        void setPasswordError(String error);
         void showLoginError(String msg);
         void showLoginSuccess();
         void showGooglePlayServicesDialog(int codeError);
