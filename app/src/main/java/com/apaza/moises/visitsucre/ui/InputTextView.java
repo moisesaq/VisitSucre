@@ -122,8 +122,8 @@ public class InputTextView extends LinearLayout implements View.OnClickListener{
     }
 
     public void setInputType(int inputType){
-        if(inputType == InputType.TYPE_TEXT_VARIATION_PASSWORD || inputType == 129)
-            imageButton.setVisibility(View.VISIBLE);
+        /*if(inputType == InputType.TYPE_TEXT_VARIATION_PASSWORD || inputType == 129)
+            imageButton.setVisibility(View.VISIBLE);*/
         editText.setInputType(inputType);
     }
 
@@ -143,7 +143,7 @@ public class InputTextView extends LinearLayout implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.imageButton:
-                setVisibilityPassword();
+                //setVisibilityPassword();
                 break;
         }
 
