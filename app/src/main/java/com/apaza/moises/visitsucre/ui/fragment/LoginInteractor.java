@@ -68,7 +68,7 @@ public class LoginInteractor {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, task.getResult().toString());
+                        //Log.d(TAG, task.getResult().toString());
                         if(!task.isSuccessful()){
                             callBack.onAuthFailed(task.getException().toString());
                         }else{

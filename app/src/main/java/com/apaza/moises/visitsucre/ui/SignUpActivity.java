@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.ui.fragment.LoginFragment;
 import com.apaza.moises.visitsucre.ui.fragment.OnBoardingFragment;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -25,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Global.setContext(this);
         setContentView(R.layout.activity_sign_up);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
