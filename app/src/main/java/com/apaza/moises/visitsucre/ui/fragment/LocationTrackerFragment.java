@@ -71,6 +71,9 @@ public class LocationTrackerFragment extends BaseFragment implements GoogleApiCl
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        buildGoogleApiClient();
+        createLocationRequest();
+        buildRequestSettingsLocation();
     }
 
     @Nullable
@@ -87,9 +90,6 @@ public class LocationTrackerFragment extends BaseFragment implements GoogleApiCl
         tvActivity = (TextView) view.findViewById(R.id.tv_activity);
         ivActivity = (ImageView)view.findViewById(R.id.iv_activity);
 
-        buildGoogleApiClient();
-        createLocationRequest();
-        buildRequestSettingsLocation();
         checkLocationSettings();
         detectionBroadcastReceiver = new ActivityDetectionBroadcastReceiver();
     }
