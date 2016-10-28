@@ -25,31 +25,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginMinGlobal"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/b_login_with_face"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/lb_login_facebook"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginMinGlobal"
-                android:layout_marginRight="@dimen/marginMinGlobal"
-                android:background="@drawable/background_button_facebook"
-                android:textColor="@android:color/white"
-                android:text="@string/facebook"
-                android:drawableLeft="@mipmap/ic_connect_facebook"/>
+                android:paddingTop="@dimen/paddingMediumGlobal"
+                android:paddingBottom="@dimen/paddingMediumGlobal"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/marginMinGlobal"/>
 
-            <Button
-                android:id="@+id/b_login_with_g"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/b_sign_in"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/marginMinGlobal"
-                android:layout_marginRight="@dimen/marginMinGlobal"
-                android:background="@drawable/background_button_g"
-                android:textColor="@android:color/white"
-                android:text="@string/google"
-                android:drawableLeft="@mipmap/ic_connect_google"/>
+                android:layout_marginTop="@dimen/marginMinGlobal"/>
 
         </LinearLayout>
 

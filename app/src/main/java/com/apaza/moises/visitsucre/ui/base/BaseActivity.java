@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.ui.fragment.base;
+package com.apaza.moises.visitsucre.ui.base;
 
 import android.support.v7.app.AppCompatActivity;
 

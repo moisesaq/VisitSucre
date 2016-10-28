@@ -1,5 +1,6 @@
 package com.apaza.moises.visitsucre.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.ui.fragment.AddCategoryFragment;
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.fragment.AboutSucreFragment;
@@ -26,7 +27,9 @@ import com.apaza.moises.visitsucre.ui.fragment.PlaceListFragment;
 import com.apaza.moises.visitsucre.ui.fragment.RegisterPlaceFragment;
 import com.apaza.moises.visitsucre.ui.fragment.TestFragment;
 import com.apaza.moises.visitsucre.global.Global;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseActivity;
+import com.apaza.moises.visitsucre.ui.base.BaseActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         RegisterPlaceFragment.OnRegisterPlaceFragmentListener,
@@ -49,10 +52,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_main);
         Global.setContext(this);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null)
+            goToLoginActivity();
+        else{
+            Utils.showToastMessage("Login successful");
+            Log.d(TAG, user.toString());
+        }
+
         SyncAdapter.setupSyncAdapter(this);
-
         fragmentManager = getSupportFragmentManager();
-
         setupToolbar();
         setupNavigationView();
         showFragment(LocationTrackerFragment.newInstance());
@@ -72,6 +81,12 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 return true;
             }
         });*/
+    }
+
+    private void goToLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override

@@ -1,12 +1,16 @@
 package com.apaza.moises.visitsucre.ui.fragment;
 
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +22,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.global.Utils;
+import com.apaza.moises.visitsucre.ui.base.BaseFragment;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,8 +84,6 @@ public class OnBoardingFragment extends BaseFragment implements View.OnClickList
         Button bAccess = (Button) view.findViewById(R.id.b_access);
         bAccess.setOnClickListener(this);
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -208,6 +212,21 @@ public class OnBoardingFragment extends BaseFragment implements View.OnClickList
         return list;
     }
 
+    /*PRINT THE KEY HASH*/
+    private void printKeyHash() {
+        try {
+            PackageInfo info = getActivity().getPackageManager().getPackageInfo("com.technorides.technoridesandroidpassenger", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("KeyHash:", e.toString());
+        } catch (NoSuchAlgorithmException e) {
+            Log.e("KeyHash:", e.toString());
+        }
+    }
 
     private class ItemOnBoarding{
         int image, title, subtitle;

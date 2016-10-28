@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.base.BaseFragment;
 
 public class AboutSucreFragment extends BaseFragment {
     public static final String TAG = "ABOUT SUCRE FRAGMENT";

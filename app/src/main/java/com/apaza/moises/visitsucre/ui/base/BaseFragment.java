@@ -1,4 +1,4 @@
-package com.apaza.moises.visitsucre.ui.fragment.base;
+package com.apaza.moises.visitsucre.ui.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -65,11 +65,11 @@ public class BaseFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*switch (item.getItemId()){
-            case android.R.id.home:
-                getActivity().onBackPressed();
-                return true;
-        }*/
+            /*switch (item.getItemId()){
+                case android.R.id.home:
+                    getActivity().onBackPressed();
+                    return true;
+            }*/
         return super.onOptionsItemSelected(item);
     }
 

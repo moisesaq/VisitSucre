@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
@@ -111,6 +112,10 @@ public class Utils {
                 cont++;
         }
         return cont == grantResults.length;
+    }
+
+    public static void showToastMessage(String message){
+        Toast.makeText(Global.getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     public static String getStringActivity(int type) {

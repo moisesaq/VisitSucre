@@ -11,12 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.ui.fragment.LoginFragment;
 import com.apaza.moises.visitsucre.ui.fragment.OnBoardingFragment;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SignUpActivity extends AppCompatActivity implements OnBoardingFragment.OnBoardingFragmentListener,
+public class LoginActivity extends AppCompatActivity implements OnBoardingFragment.OnBoardingFragmentListener,
         LoginFragment.CallBack {
 
     Toolbar toolbar;
@@ -25,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Global.setContext(this);
         setContentView(R.layout.activity_sign_up);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -35,7 +37,7 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(fragment.getClass().getSimpleName());
-        ft.replace(R.id.fl_container_sign_up, fragment);
+        ft.replace(R.id.container_login, fragment);
         ft.commit();
     }
 
@@ -72,7 +74,7 @@ public class SignUpActivity extends AppCompatActivity implements OnBoardingFragm
 
     void showPlayServicesErrorDialog(final int errorCode) {
         Dialog dialog = GoogleApiAvailability.getInstance()
-                .getErrorDialog(SignUpActivity.this, errorCode, REQUEST_GOOGLE_PLAY_SERVICES);
+                .getErrorDialog(LoginActivity.this, errorCode, REQUEST_GOOGLE_PLAY_SERVICES);
         dialog.show();
     }
 
