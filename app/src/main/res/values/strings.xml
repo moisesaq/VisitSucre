@@ -3,6 +3,7 @@
     <string name="account_type">com.apaza.moises.visitsucre.account</string>
     <string name="provider_authority">com.apaza.moises.visitsucre</string>
     <string name="action_settings">Settings</string>
+    <string name="facebook_app_id">182042862201768</string>
 
     <string name="google_key">AIzaSyCS_fNa0Ea1GZEii0HUULcwnuF-2ThVnsQ</string>
 

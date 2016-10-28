@@ -24,7 +24,7 @@ import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.apaza.moises.visitsucre.sync.SyncAdapter;
 import com.apaza.moises.visitsucre.ui.InputTextView;
 import com.apaza.moises.visitsucre.ui.MainActivity;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.base.BaseFragment;
 import com.apaza.moises.visitsucre.web.api.volley.VolleySingleton;
 
 import org.json.JSONObject;
@@ -193,4 +193,5 @@ public class AddCategoryFragment extends BaseFragment implements View.OnClickLis
     public void onIconSelected(int icon) {
         imageSelected = icon;
     }
+
 }

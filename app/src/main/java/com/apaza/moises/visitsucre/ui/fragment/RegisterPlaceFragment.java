@@ -37,8 +37,8 @@ import com.apaza.moises.visitsucre.global.Utils;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 import com.apaza.moises.visitsucre.ui.InputTextView;
 import com.apaza.moises.visitsucre.ui.MainActivity;
+import com.apaza.moises.visitsucre.ui.base.BaseFragment;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.CategoryAdapter;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 
 public class RegisterPlaceFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>, View.OnClickListener,
         AdapterView.OnItemSelectedListener, PlaceInMapFragment.OnPlaceInMapFragmentListener{

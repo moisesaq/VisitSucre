@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.apaza.moises.visitsucre.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -32,12 +34,12 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        //startSplash();
-        goToSignUpActivity();
+        startSplash();
+        //goToLoginActivity();
     }
 
     private void startSplash(){
-        new CountDownTimer(2000, 1000) {
+        new CountDownTimer(4000, 1000) {
             public void onTick(long millisUntilFinished) {
                 counter.setText("" + millisUntilFinished / 1000);
             }
@@ -46,7 +48,12 @@ public class SplashActivity extends AppCompatActivity {
                 counter.setText("Go!");
                 //DetailPlaceActivity.createInstance(SplashActivity.this, "");
                 //goToMainActivity();
-                goToSignUpActivity();
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if(user != null)
+                    goToMainActivity();
+                else{
+                    goToLoginActivity();
+                }
             }
         }.start();
     }
@@ -56,8 +63,8 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToSignUpActivity(){
-        Intent intent = new Intent(this, SignUpActivity.class);
+    private void goToLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         this.finish();
     }

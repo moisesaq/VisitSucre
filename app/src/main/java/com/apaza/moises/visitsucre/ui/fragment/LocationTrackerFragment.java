@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.base.BaseFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;

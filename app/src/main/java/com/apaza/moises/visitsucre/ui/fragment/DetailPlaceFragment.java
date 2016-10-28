@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.apaza.moises.visitsucre.R;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.base.BaseFragment;
 
 public class DetailPlaceFragment extends BaseFragment {
     private static final String ARG_PARAM1 = "param1";

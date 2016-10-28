@@ -24,8 +24,8 @@ import com.apaza.moises.visitsucre.R;
 import com.apaza.moises.visitsucre.database.Category;
 import com.apaza.moises.visitsucre.database.PlaceDao;
 import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.ui.base.BaseFragment;
 import com.apaza.moises.visitsucre.ui.fragment.adapter.PlaceAdapter;
-import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
 import com.apaza.moises.visitsucre.provider.ContractVisitSucre;
 
 public class PlaceListFragment extends BaseFragment implements PlaceAdapter.OnPlaceItemClickListener, LoaderManager.LoaderCallbacks<Cursor>{
