@@ -71,7 +71,6 @@ public class DetailPlaceActivity extends AppCompatActivity {
         ImageView image = (ImageView) findViewById(R.id.image_paralax);
         Glide.with(this)
                 .load(id)
-                .centerCrop()
                 .into(image);
     }
 
