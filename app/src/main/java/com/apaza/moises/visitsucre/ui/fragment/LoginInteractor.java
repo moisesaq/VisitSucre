@@ -64,10 +64,18 @@ public class LoginInteractor {
     }
 
     private void signInUser(String email, String password, final CallBack callBack){
+<<<<<<< HEAD
         mFirebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         //Log.d(TAG, task.getResult().toString());
+=======
+        mFirebaseAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, task.getResult().toString());
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
                         if(!task.isSuccessful()){
                             callBack.onAuthFailed(task.getException().toString());
                         }else{

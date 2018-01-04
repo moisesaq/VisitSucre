@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+<<<<<<< HEAD
 
 import com.apaza.moises.visitsucre.global.Global;
 import com.apaza.moises.visitsucre.global.Utils;
@@ -50,12 +51,27 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
     private static final String TAG = "LOGIN FRAGMENT";
     private static final int RC_SIGN_IN = 1009;
 
+=======
+import android.widget.Toast;
+
+import com.apaza.moises.visitsucre.global.Global;
+import com.apaza.moises.visitsucre.ui.InputTextView;
+import com.apaza.moises.visitsucre.ui.MainActivity;
+import com.apaza.moises.visitsucre.R;
+import com.apaza.moises.visitsucre.ui.fragment.base.BaseFragment;
+import com.apaza.moises.visitsucre.ui.view.ImageTextView;
+import com.google.firebase.auth.FirebaseAuth;
+
+public class LoginFragment extends BaseFragment implements View.OnClickListener, LoginContract.View{
+
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
     private CallBack mCallBack;
     private LoginContract.Presenter presenter;
 
     private View view;
     private InputTextView itvEmail, itvPassword;
     private LinearLayout layoutLogin, layoutLoading;
+<<<<<<< HEAD
 
     /*LOGIN FACEBOOK*/
     private CallbackManager callbackManager;
@@ -118,7 +134,15 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     private void setup(){
         layoutLogin = (LinearLayout)view.findViewById(R.id.layoutLogin);
+<<<<<<< HEAD
         layoutLoading = (LinearLayout)view.findViewById(R.id.layoutLoading);
+=======
+        layoutLoading = (LinearLayout)view.findViewById(R.id.layoutLoading); 
+        Button loginWithFace = (Button) view.findViewById(R.id.b_login_with_face);
+        loginWithFace.setOnClickListener(this);
+        Button loginWithG = (Button)view.findViewById(R.id.b_login_with_g);
+        loginWithG.setOnClickListener(this);
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
         itvEmail = (InputTextView) view.findViewById(R.id.itv_email);
         itvPassword = (InputTextView) view.findViewById(R.id.itv_password);
         Button login = (Button)view.findViewById(R.id.b_login);
@@ -127,6 +151,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         forgotPassword.setOnClickListener(this);
     }
 
+<<<<<<< HEAD
     private void setupLoginWithFacebook(){
         LoginButton loginWithFacebook = (LoginButton) view.findViewById(R.id.lb_login_facebook);
         //loginWithFacebook.setReadPermissions(Arrays.asList("public_profile", "email", "user_birthday", "user_friends"));
@@ -147,35 +172,59 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         firebaseAuth.addAuthStateListener(fireAuthStateListener);
     }
 
+=======
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
     @Override
     public void onResume(){
         super.onResume();
         presenter.start();
+<<<<<<< HEAD
     }
 
     @Override
     public void onStop(){
         super.onStop();
         firebaseAuth.removeAuthStateListener(fireAuthStateListener);
+=======
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+<<<<<<< HEAD
             case R.id.b_sign_in:
                 signIn();
+=======
+            case R.id.b_login_with_face:
+                Toast.makeText(getActivity(), "Face", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.b_login_with_g:
+                Toast.makeText(getActivity(), "G+", Toast.LENGTH_SHORT).show();
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
                 break;
             case R.id.b_login:
                 attemptLogin();
                 break;
             case R.id.forgotPassword:
+<<<<<<< HEAD
                 //mCallBack.onForgotPasswordClick();
                 signOut();
+=======
+                mCallBack.onForgotPasswordClick();
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
                 break;
         }
     }
 
+    private void attemptLogin() {
+        if(itvEmail.isEmailValid() && itvPassword.isTextValid("Invalid"))
+            presenter.attemptLogin(itvEmail.getText(), itvPassword.getText());
+    }
+
+    /*LOGIN CONTRACT VIEW*/
     @Override
+<<<<<<< HEAD
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -217,6 +266,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     /*LOGIN CONTRACT VIEW*/
     @Override
+=======
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
     public void showProgress(boolean show) {
         layoutLoading.setVisibility(show? View.VISIBLE: View.GONE);
         layoutLogin.setVisibility(show? View.GONE: View.VISIBLE);
@@ -229,7 +280,13 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     @Override
     public void showLoginSuccess() {
+<<<<<<< HEAD
         goToMainActivity();
+=======
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        startActivity(intent);
+        getActivity().finish();
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
     }
 
     @Override
@@ -256,6 +313,7 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
         }
     }
 
+<<<<<<< HEAD
     private void goToMainActivity(){
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -311,6 +369,8 @@ public class LoginFragment extends BaseFragment implements View.OnClickListener,
 
     }
 
+=======
+>>>>>>> 83ca68189d036a9a1d75e2de47611f2d65ca65ad
     public interface CallBack {
         void onForgotPasswordClick();
         void onInvokeGooglePlayServices(int codeError);
